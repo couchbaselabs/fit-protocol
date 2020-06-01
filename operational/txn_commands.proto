@@ -1,0 +1,228 @@
+syntax = "proto3";
+option java_package = "com.couchbase.grpc.protocol";
+package txnService;
+
+enum EventType {
+    EventCleanupFailedEvent = 0;
+    EventIllegalDocumentState = 1;
+    EventLostCleanupThreadEndedPrematurely = 2;
+    EventTransactionCleanupAttempt = 3;
+    EventTransactionCleanupEndRunEvent = 4;
+    EventTransactionCleanupStartRunEvent = 5;
+    EventTransactionsStarted = 6;
+    EventUnknown = 7;
+}
+
+message Event {
+    EventType type=1;
+}
+
+// The exception received by the application, if any
+enum TransactionException {
+    NO_EXCEPTION_THROWN = 0;
+    EXCEPTION_FAILED = 1;
+    EXCEPTION_EXPIRED = 2;
+    EXCEPTION_UNKNOWN = 3;
+    EXCEPTION_COMMIT_AMBIGUOUS = 4;
+    EXCEPTION_FAILED_POST_COMMIT = 5;
+}
+
+message ExpectedCause {
+    oneof cause {
+        // Tests should specify the expected cause wherever possible
+        bool doNotCheck = 1;
+        ExternalException exception = 2;
+    }
+}
+
+// This maps to the Error defined in the design doc
+message ErrorWrapper {
+    ErrorClass errorClass = 1;
+    bool autoRollbackAttempt = 2;
+    bool retryTransaction = 3;
+    TransactionException toRaise = 4;
+    ExpectedCause cause = 5;
+}
+
+// The root cause of the TransactionException.  Will only be checked if TransactionException != NO_EXCEPTION_THROWN
+enum ExternalException {
+    Unknown = 0;
+    ActiveTransactionRecordEntryNotFound = 1;
+    ActiveTransactionRecordFull = 2;
+    ActiveTransactionRecordNotFound = 3;
+    DocumentAlreadyInTransaction = 4;
+    DocumentExistsException = 5;
+    DocumentNotFoundException = 6;
+    NotSet = 7;
+}
+
+enum ErrorClass {
+    EC_FAIL_HARD = 0;
+    EC_FAIL_OTHER = 1;
+    EC_FAIL_TRANSIENT = 2;
+    EC_FAIL_AMBIGUOUS = 3;
+    EC_FAIL_DOC_ALREADY_EXISTS = 4;
+    EC_FAIL_DOC_NOT_FOUND = 5;
+    EC_FAIL_PATH_ALREADY_EXISTS = 10;
+    EC_FAIL_PATH_NOT_FOUND = 6;
+    EC_FAIL_CAS_MISMATCH = 7;
+    EC_FAIL_WRITE_WRITE_CONFLICT = 8;
+    EC_FAIL_ATR_FULL = 9;
+    EC_FAIL_EXPIRY = 11;
+}
+
+message ExpectedResult {
+    oneof result {
+        // If the command should succeed
+        bool success = 1;
+
+        // If the command is permitted to do anything, e.g. succeed or throw errors.  Required for some complex tests
+        // where it's tricky to calculate what a given op will do.
+        bool anythingAllowed = 2;
+
+        // The operation throws an ErrorWrapper, the only exception an operation may throw.
+        ErrorWrapper error = 3;
+    }
+}
+
+message DocId {
+    // Note currently the bucket/scope/collection fields aren't used, they are provided for forwards-compatibility
+    // on cross-collection/bucket tests.
+    string bucketName = 1;
+    string scopeName = 2;
+    string collectionName = 3;
+    string docId = 4;
+}
+
+enum DocStatus {
+    NORMAL = 0;
+    IN_TXN_COMMITTED = 1;
+    IN_TXN_OTHER = 2;
+    OWN_WRITE = 3;
+    AMBIGUOUS = 4;
+}
+
+message CommandGet {
+    DocId docId = 1;
+
+    // What result(s) the command is allowed to return.  Anything outside this will fail the test.
+    // Tests can generally just set one expected result.  Multiple results are allowed to support tricky situations,
+    // such as an op generally failing with FAIL_TRANSIENT until it fails with FAIL_EXPIRY
+    repeated ExpectedResult expectedResult = 2;
+
+    // If not-null, the performer will check the fetched data equals this.  Useful for read-your-own-write tests.
+    string expectedContentJson = 3;
+
+    // If not-null, the performer will check the fetched document status equals this.
+    DocStatus expectedStatus = 4;
+}
+
+message CommandGetOptional {
+    CommandGet get = 1;
+
+    // Use this instead of passing EXPECT_FAIL_DOC_NOT_FOUND or EXPECT_FAIL_DOC_ALREADY_EXISTS
+    bool expectDocPresent = 2;
+}
+
+message CommandInsert {
+    DocId docId = 1;
+    string contentJson = 2;
+
+    // What result(s) the command is allowed to return.  Anything outside this will fail the test.
+    repeated ExpectedResult expectedResult = 3;
+}
+
+message CommandReplace {
+    DocId docId = 1;
+    string contentJson = 2;
+
+    // What result(s) the command is allowed to return.  Anything outside this will fail the test.
+    repeated ExpectedResult expectedResult = 3;
+
+    // Whether to use the result of the last get operation
+    bool useStashedResult = 4;
+}
+
+message CommandRemove {
+    DocId docId = 1;
+
+    // What result(s) the command is allowed to return.  Anything outside this will fail the test.
+    repeated ExpectedResult expectedResult = 2;
+
+    // Whether to use the result of the last get operation
+    bool useStashedResult = 3;
+}
+
+message CommandCommit {
+    // What result(s) the command is allowed to return.  Anything outside this will fail the test.
+    repeated ExpectedResult expectedResult = 1;
+}
+
+message CommandRollback {
+    // What result(s) the command is allowed to return.  Anything outside this will fail the test.
+    repeated ExpectedResult expectedResult = 1;
+}
+
+message CommandWaitOnLatch {
+    string latchName = 1;
+}
+
+message CommandSetLatch {
+    string latchName = 1;
+}
+
+// Simply a batch of commands
+message CommandBatch {
+    // A limited subset of commands are supported here:
+    // CommandInsert, CommandReplace, CommandRemove and CommandGet
+    repeated TransactionCommand commands = 1;
+
+    // If the commands are being performed in parallel, how many to do concurrently
+    int32 parallelism = 2;
+}
+
+// Replace a document using a regular KV operation.  The command is expected to succeed.
+message CommandReplaceRegularKV {
+    DocId docId = 1;
+    string contentJson = 2;
+}
+
+// Remove a document using a regular KV operation.  The command is expected to succeed.
+message CommandRemoveRegularKV {
+    DocId docId = 1;
+}
+
+// Insert a document using a regular KV operation.  The command is expected to succeed.
+message CommandInsertRegularKV {
+    DocId docId = 1;
+    string contentJson = 2;
+}
+
+// Simulates the application throwing an exception inside the lambda.  Could be used to simulate an application bug,
+// or the application choosing to rollback this way (as opposed to ctx.rollback(), e.g. app-rollback).
+// Application exceptions will be classified as FAIL_OTHER.
+message CommandThrowException {
+}
+
+message TransactionCommand {
+    oneof command {
+        CommandInsert insert = 1;
+        CommandReplace replace = 2;
+        CommandRemove remove = 3;
+        CommandCommit commit = 4;
+        CommandRollback rollback = 5;
+        CommandGet get = 6;
+        CommandGetOptional getOptional = 7;
+        CommandWaitOnLatch waitOnLatch = 8;
+        CommandSetLatch setLatch = 9;
+
+        // All operations in the batch will be performed in parallel
+        CommandBatch parallelize = 10;
+
+        CommandReplaceRegularKV replaceRegularKV = 11;
+        CommandRemoveRegularKV removeRegularKV = 12;
+        CommandInsertRegularKV insertRegularKV = 13;
+
+        CommandThrowException throwException = 14;
+    }
+}

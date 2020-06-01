@@ -1,0 +1,44 @@
+syntax = "proto3";
+option java_package = "com.couchbase.grpc.protocol";
+import "txn_hooks.proto";
+
+message TransactionProcessCleanupQueueRequest {
+    string transactionsFactoryRef = 1;
+}
+
+message TransactionCleanupRequest {
+    string atrId = 1;
+    string attemptId = 2;
+    string transactionId = 3;
+    // Any hooks can only use HookPoints in the CLEANUP_* range
+    repeated Hook hook = 4;
+}
+
+message TransactionCleanupATRRequest {
+    string atrId = 1;
+    // Any hooks can only use HookPoints in the CLEANUP_* range
+    repeated Hook hook = 2;
+}
+
+message TransactionCleanupAttempt {
+    // Whether the attempt succeeded
+    bool success = 1;
+
+    // All logs related to the attempt
+    repeated string logs = 2;
+}
+
+message TransactionCleanupATRResult {
+    repeated TransactionCleanupAttempt result = 1;
+
+    // Total number of entries found in the ATR
+    int32 numEntries = 2;
+
+    // Total number of expired entries found in the ATR
+    int32 numExpiredEntries = 3;
+}
+
+message TransactionCleanupQueueResult {
+    repeated TransactionCleanupAttempt attempts = 1;
+}
+

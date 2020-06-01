@@ -1,0 +1,233 @@
+// TODO share this between client and server
+syntax = "proto3";
+option java_package = "com.couchbase.grpc.protocol";
+package txnService;
+import "txn_commands.proto";
+import "txn_hooks.proto";
+import "txn_client_record.proto";
+import "txn_cleanup.proto";
+
+// The driver provides the full transaction as a sequence of operations, which the performer executes.
+service PerformerTransactionService {
+    // Creates a connection from txn_server to cb server
+    // TODO probably a neater way of doing this. Maybe send in TransactionsFactoryCreateRequest.
+    rpc createConn (conn_info) returns (APIResponse);
+
+    // Create a Transactions (e.g. a transactions factory), returning a transactionsFactoryRef
+    rpc transactionsFactoryCreate (TransactionsFactoryCreateRequest) returns (TransactionsFactoryCreateResponse);
+
+    rpc transactionsFactoryClose (TransactionsFactoryCloseRequest) returns (TransactionGenericResponse);
+
+    // Transactions that can communicate bi-directionally with the tests
+    // This is for more complex tests that require e.g. concurrent transactions, gating each other's progress
+    rpc transactionStream (stream TransactionStreamDriverToPerformer) returns (stream TransactionStreamPerformerToDriver);
+
+    // Creates and runs a transaction, using a transactionsFactoryRef to a previously created Transactions.  Returns the
+    // result.
+    rpc transactionCreate (TransactionCreateRequest) returns (TransactionResult);
+
+    // Performs cleanup of a single transaction.
+    rpc transactionCleanup (TransactionCleanupRequest) returns (TransactionCleanupAttempt);
+
+    // Performs cleanup of a full ATR.  Useful for testing multiple performers concurrently cleaning up same ATR.
+    // Note it will only cleanup expired entries.
+    rpc transactionCleanupATR (TransactionCleanupATRRequest) returns (TransactionCleanupATRResult);
+
+    // Request a Transactions object forces cleanup of all requests on its queue
+    rpc transactionProcessCleanupQueue (TransactionProcessCleanupQueueRequest) returns (TransactionCleanupQueueResult);
+
+    // Request that the implementation do its normal client record processing logic (creating CR if needed).
+    rpc clientRecordProcess (ClientRecordProcessRequest) returns (ClientRecordProcessResponse);
+
+    // Request that implementation remove this client from the client record, from all buckets
+    rpc clientRecordRemove (ClientRecordRemoveRequest) returns (ClientRecordRemoveResponse);
+}
+
+
+
+message TransactionStartRequest {
+}
+
+message TransactionStreamDriverToPerformer {
+    oneof request {
+        // This will setup a TwoWayTransaction but not start it.
+        // Must only be one of these per stream..
+        TransactionCreateRequest create = 1;
+
+        // Starts a previously setup TwoWayTransaction
+        // Must only be one of these per stream.  Must come after TransactionCreateRequest.
+        TransactionStartRequest start = 2;
+
+        // A request broadcast from another TwoWayTransaction, that is being broadcast to the rest via the driver.
+        BroadcastToOtherConcurrentTransactionsRequest broadcast = 3;
+    }
+}
+
+// This will be propagated to other concurrent transactions, e.g. it can be used for
+//  gating and communicating between concurrent transactions
+message BroadcastToOtherConcurrentTransactionsRequest {
+    oneof request {
+        // Countdown a latch
+        CommandSetLatch latchSet = 2;
+    }
+}
+
+message TransactionCreated {
+}
+
+message TransactionStreamPerformerToDriver {
+    oneof response {
+        // The transaction is completed, and the stream is done
+        TransactionResult finalResult = 1;
+
+        // The transaction has been created e.g. as result of a TransactionCreateRequest, and is now ready
+        // to start e.g. a TransactionStartRequest
+        TransactionCreated created = 2;
+
+        BroadcastToOtherConcurrentTransactionsRequest broadcast = 3;
+    }
+}
+
+
+
+enum AttemptStates {
+    NOTHING_WRITTEN=0;
+    PENDING=1;
+    ABORTED=2;
+    COMMITTED=3;
+    COMPLETED=4;
+    ROLLED_BACK=5;
+}
+
+enum Durability {
+    NONE = 0;
+    MAJORITY = 1;
+    MAJORITY_AND_PERSIST_TO_ACTIVE = 2;
+    PERSIST_TO_MAJORITY = 3;
+}
+
+
+
+// Creates a Transactions object, e.g. a transactions factory
+message TransactionsFactoryCreateRequest {
+    Durability durability = 1;
+    int32 expirationMillis = 2;
+    // Any hooks can only use HookPoints before the CLEANUP_* range
+    repeated Hook hook = 3;
+    bool cleanupLostAttempts = 4;
+    bool cleanupClientAttempts = 5;
+    int64 cleanupWindowMillis = 6;
+}
+
+// Shuts down a previously created Transactions (factory)
+message TransactionsFactoryCloseRequest {
+    string transactionsFactoryRef = 1;
+}
+
+
+message TransactionsFactoryCreateResponse {
+    string transactionsFactoryRef = 1;
+}
+
+message TransactionCreateResponse {
+    string transactionRef = 1;
+}
+
+message TransactionGenericResponse {
+}
+
+message TransactionAttempt {
+    AttemptStates state=1;
+    string attemptId=2;
+}
+
+// The result of a mutation.  Currently empty as we only check the count of these.
+message MutationToken {
+}
+
+
+// The result of closing a transaction: whether the transaction succeeded, its logs,
+// any exception thrown...
+message TransactionResult {
+    repeated MutationToken mutationTokens=1;
+    repeated TransactionAttempt attempts=2;
+    string atrCollection=3;
+    string atrId=4;
+    TransactionException exception=5;
+    ExternalException exceptionCause=10;
+    repeated string log=6;
+    string transactionId=7;
+
+    // How many attempts need to be cleaned up, as a direct result of this transaction.
+    // This field is only valid if cleanupClientAttempts was set (transactions will not queue a cleanup attempt if
+    // there is nothing to handle it)
+    int32 cleanupRequestsPending = 8;
+
+    // Whether the cleanupRequestsPending field is valid, e.g. whether it can be checked
+    bool cleanupRequestsValid = 9;
+
+    bool unstagingComplete = 11;
+}
+
+// The current transient state of the ongoing transaction
+message TransactionState{
+    int32 attemptNumber=1;
+}
+
+message conn_info {
+    string handle_bucket=3;
+    string payload=4;
+    string handle_hostname=5;
+    int32 handle_port=6;
+    string handle_password=7;
+    string handle_username=8;
+    bool handle_ssl=9;
+    int32 handle_autofailover_ms=10;
+    string handle_cert=11;
+}
+
+
+message APIResponse {
+    bool APISuccessStatus = 1;
+    string APIStatusInfo = 2;
+}
+
+// Note these latches don't work like real CountdownLatches (or equivalent).
+// Each concurrent transaction gets its own version of the latch, and they are synchronized by the driver.
+message Latch {
+    int32 initialCount = 1;
+    string name = 2;
+}
+
+message TransactionCreateRequest {
+    // A reference to a previously constructed Transactions object (e.g. factory).
+    string transactionsFactoryRef = 1;
+
+    // A transaction can consist of multiple attempts.  Usually we want each attempt to do the same thing,
+    // but there are a handful of tests where we need more complex logic and need to do different things
+    // on different attempts.
+    // If the transaction does more attempts than are in this field, the commands in the last attempt are
+    // what will be repeated.
+    repeated TransactionAttemptRequest attempts = 2;
+
+    PerTransactionConfig config = 3;
+
+    // Any latches that the transaction should create.
+    repeated Latch latches = 4;
+
+    // Just for debugging, name the test
+    string name = 5;
+
+    // Instead of the performer returning any raised events, the driver specifies which are expected.
+    // Event buses can be asynchronous so this prevents the performer having to wait for an unknown amount of
+    // time on each test.
+    repeated Event expectedEvents = 6;
+}
+
+message TransactionAttemptRequest {
+    repeated TransactionCommand commands = 1;
+}
+
+// Currently empty as they are not presently tested.
+message PerTransactionConfig {
+}
