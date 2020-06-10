@@ -11,7 +11,7 @@ import "txn_cleanup.proto";
 service PerformerTransactionService {
     // Creates a connection from txn_server to cb server
     // TODO probably a neater way of doing this. Maybe send in TransactionsFactoryCreateRequest.
-    rpc createConn (conn_info) returns (APIResponse);
+    rpc createConnection (ConnectionInformation) returns (APIResponse);
 
     // Create a Transactions (e.g. a transactions factory), returning a transactionsFactoryRef
     rpc transactionsFactoryCreate (TransactionsFactoryCreateRequest) returns (TransactionsFactoryCreateResponse);
@@ -174,7 +174,7 @@ message TransactionState{
     int32 attemptNumber=1;
 }
 
-message conn_info {
+message ConnectionInformation {
     string handle_bucket=3;
     string payload=4;
     string handle_hostname=5;
@@ -188,8 +188,7 @@ message conn_info {
 
 
 message APIResponse {
-    bool APISuccessStatus = 1;
-    string APIStatusInfo = 2;
+
 }
 
 // Note these latches don't work like real CountdownLatches (or equivalent).
