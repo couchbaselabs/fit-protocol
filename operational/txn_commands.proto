@@ -54,6 +54,7 @@ enum ExternalException {
     DocumentExistsException = 5;
     DocumentNotFoundException = 6;
     NotSet = 7;
+    FeatureNotAvailableException = 8;
 }
 
 enum ErrorClass {

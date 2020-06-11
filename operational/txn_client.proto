@@ -6,12 +6,13 @@ import "txn_commands.proto";
 import "txn_hooks.proto";
 import "txn_client_record.proto";
 import "txn_cleanup.proto";
+import "txn_extensions.proto";
 
 // The driver provides the full transaction as a sequence of operations, which the performer executes.
 service PerformerTransactionService {
     // Creates a connection from txn_server to cb server
     // TODO probably a neater way of doing this. Maybe send in TransactionsFactoryCreateRequest.
-    rpc createConnection (ConnectionInformation) returns (APIResponse);
+    rpc createConn (CreateConnectionRequest) returns (CreateConnectionResponse);
 
     // Create a Transactions (e.g. a transactions factory), returning a transactionsFactoryRef
     rpc transactionsFactoryCreate (TransactionsFactoryCreateRequest) returns (TransactionsFactoryCreateResponse);
@@ -174,7 +175,7 @@ message TransactionState{
     int32 attemptNumber=1;
 }
 
-message ConnectionInformation {
+message CreateConnectionRequest {
     string handle_bucket=3;
     string payload=4;
     string handle_hostname=5;
@@ -187,8 +188,12 @@ message ConnectionInformation {
 }
 
 
-message APIResponse {
-
+message CreateConnectionResponse {
+    bool APISuccessStatus = 1;
+    string APIStatusInfo = 2;
+    repeated PerformerCaps performerCaps = 3;
+    // Human-readable string identifying the performer.  For now, "java" is fine.
+    string performerUserAgent = 4;
 }
 
 // Note these latches don't work like real CountdownLatches (or equivalent).
