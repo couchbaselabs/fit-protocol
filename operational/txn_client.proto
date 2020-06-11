@@ -12,7 +12,7 @@ import "txn_extensions.proto";
 service PerformerTransactionService {
     // Creates a connection from txn_server to cb server
     // TODO probably a neater way of doing this. Maybe send in TransactionsFactoryCreateRequest.
-    rpc createConn (CreateConnectionRequest) returns (CreateConnectionResponse);
+    rpc createConnection (CreateConnectionRequest) returns (CreateConnectionResponse);
 
     // Create a Transactions (e.g. a transactions factory), returning a transactionsFactoryRef
     rpc transactionsFactoryCreate (TransactionsFactoryCreateRequest) returns (TransactionsFactoryCreateResponse);
@@ -189,11 +189,9 @@ message CreateConnectionRequest {
 
 
 message CreateConnectionResponse {
-    bool APISuccessStatus = 1;
-    string APIStatusInfo = 2;
-    repeated PerformerCaps performerCaps = 3;
+    repeated PerformerCaps performerCaps = 1;
     // Human-readable string identifying the performer.  For now, "java" is fine.
-    string performerUserAgent = 4;
+    string performerUserAgent = 2;
 }
 
 // Note these latches don't work like real CountdownLatches (or equivalent).
