@@ -187,11 +187,15 @@ message CreateConnectionRequest {
     string handle_cert=11;
 }
 
-
+// Returns the capabilities of the performer (or more specifically, the transactions-implementation-under-test by that
+// performer)
 message CreateConnectionResponse {
     repeated PerformerCaps performerCaps = 1;
     // Human-readable string identifying the performer.  For now, "java" is fine.
     string performerUserAgent = 2;
+    // Defined https://hackmd.io/foGjnSSIQmqfks2lXwNp8w#Protocol-Versions
+    // Must be "1.0" or "2.0", any other values will cause the driver to abort.
+    string protocolVersion = 3;
 }
 
 // Note these latches don't work like real CountdownLatches (or equivalent).

@@ -3,8 +3,9 @@ option java_package = "com.couchbase.grpc.protocol";
 
 // Defined https://hackmd.io/foGjnSSIQmqfks2lXwNp8w#Protocol-Extensions
 enum PerformerCaps {
-    EXT_SHADOW_INSERTS = 0;
-    EXT_TRANSACTION_ID = 1;
-    EXT_DEFERRED_COMMIT = 2;
-    EXT_IMPROVED_TIMESTAMPS = 3;
+    // This is mandatory if PROTOCOL_VERSION_2_0 or higher is sent.
+    EXT_TRANSACTION_ID = 0;
+
+    EXT_DEFERRED_COMMIT = 1;
+    EXT_IMPROVED_TIMESTAMPS = 2;
 }
