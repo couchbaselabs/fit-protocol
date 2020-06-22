@@ -1,5 +1,6 @@
 syntax = "proto3";
 option java_package = "com.couchbase.grpc.protocol";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
 
 // Defined https://hackmd.io/foGjnSSIQmqfks2lXwNp8w#Protocol-Extensions
 enum PerformerCaps {

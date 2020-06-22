@@ -1,5 +1,6 @@
 syntax = "proto3";
 option java_package = "com.couchbase.grpc.protocol";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
 
 // Generally the BEFORE_ hook is used to inject an error, e.g. as if the server had returned a failure
 // The AFTER_ hook is used for ambiguity testing.  E.g. the op succeeded but FAIL_AMBIGUOUS was returned.

@@ -1,6 +1,7 @@
 // TODO share this between client and server
 syntax = "proto3";
 option java_package = "com.couchbase.grpc.protocol";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
 package txnService;
 import "txn_commands.proto";
 import "txn_hooks.proto";
