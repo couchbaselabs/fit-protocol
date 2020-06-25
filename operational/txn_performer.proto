@@ -1,13 +1,17 @@
-// TODO share this between client and server
 syntax = "proto3";
+
+// See README.md in this directory for a description of these.
+package protocol;
 option java_package = "com.couchbase.grpc.protocol";
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
-package txnService;
+option java_multiple_files = true;
+
 import "txn_commands.proto";
 import "txn_hooks.proto";
 import "txn_client_record.proto";
 import "txn_cleanup.proto";
 import "txn_extensions.proto";
+import "txn_basic.proto";
 
 // The driver provides the full transaction as a sequence of operations, which the performer executes.
 service PerformerTransactionService {
@@ -90,16 +94,6 @@ message TransactionStreamPerformerToDriver {
     }
 }
 
-
-
-enum AttemptStates {
-    NOTHING_WRITTEN=0;
-    PENDING=1;
-    ABORTED=2;
-    COMMITTED=3;
-    COMPLETED=4;
-    ROLLED_BACK=5;
-}
 
 enum Durability {
     NONE = 0;
