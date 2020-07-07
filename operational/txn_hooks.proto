@@ -42,6 +42,7 @@ enum HookPoint {
     BEFORE_GET_DOC_IN_EXISTS_DURING_STAGED_INSERT = 31;
     AFTER_ATR_PENDING = 32;
     BEFORE_ATR_COMPLETE = 33;
+    BEFORE_ATR_COMMIT_AMBIGUITY_RESOLUTION = 36;
 
     // Injects that the transaction has expired at a certain point
     // Does not take a HookAction
@@ -49,7 +50,6 @@ enum HookPoint {
     HAS_EXPIRED = 34;
 
     // Overrides the ATR id chosen for a given vbucket
-
     ATR_ID_FOR_VBUCKET = 35;
 
     // Cleanup hooks
@@ -64,7 +64,8 @@ enum HookPoint {
 
     // Client record hooks
     // TODO all need adding to RFC
-    CLIENT_RECORD_BEFORE_UPDATE_CAS = 201;    CLIENT_RECORD_BEFORE_CREATE = 202;
+    CLIENT_RECORD_BEFORE_UPDATE_CAS = 201;
+    CLIENT_RECORD_BEFORE_CREATE = 202;
     CLIENT_RECORD_BEFORE_GET = 203;
     CLIENT_RECORD_BEFORE_UPDATE = 204;
     CLIENT_RECORD_BEFORE_REMOVE_CLIENT = 205;

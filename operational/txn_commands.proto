@@ -59,6 +59,7 @@ enum ExternalException {
     DocumentNotFoundException = 6;
     NotSet = 7;
     FeatureNotAvailableException = 8;
+    TransactionAbortedExternally = 9;
 }
 
 enum ErrorClass {
