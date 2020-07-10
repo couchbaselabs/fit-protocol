@@ -29,6 +29,7 @@ message TransactionCleanupATRRequest {
     repeated Hook hook = 2;
 }
 
+// The result of attempting to cleanup a single attempt entry in an ATR
 message TransactionCleanupAttempt {
     // Whether the attempt succeeded
     bool success = 1;
@@ -39,6 +40,15 @@ message TransactionCleanupAttempt {
     // The state of the ATR entry, before cleanup.
     // This field is optional.  It will allow additional verification in some tests if it is provided.
     AttemptStates state = 3;
+
+    // The key of the ATR document
+    string atrId = 4;
+
+    // The name of the bucket the ATR is on
+    string atrBucketName = 5;
+
+    // The ID of the transaction attempt that was being cleaned up
+    string attemptId = 6;
 }
 
 message TransactionCleanupATRResult {
