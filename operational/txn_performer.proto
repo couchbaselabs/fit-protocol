@@ -172,15 +172,11 @@ message TransactionState{
 }
 
 message CreateConnectionRequest {
-    string handle_bucket=3;
-    string payload=4;
-    string handle_hostname=5;
-    int32 handle_port=6;
-    string handle_password=7;
-    string handle_username=8;
-    bool handle_ssl=9;
-    int32 handle_autofailover_ms=10;
-    string handle_cert=11;
+    string clusterHostname=1;
+    string clusterUsername=2;
+    string clusterPassword=3;
+    string bucketName=4;
+
 }
 
 // Returns the capabilities of the performer (or more specifically, the transactions-implementation-under-test by that
