@@ -64,7 +64,6 @@ enum HookPoint {
     CLEANUP_MARKER_LAST = 199;
 
     // Client record hooks
-    // TODO all need adding to RFC
     CLIENT_RECORD_BEFORE_UPDATE_CAS = 201;
     CLIENT_RECORD_BEFORE_CREATE = 202;
     CLIENT_RECORD_BEFORE_GET = 203;

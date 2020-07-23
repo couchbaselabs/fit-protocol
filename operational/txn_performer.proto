@@ -16,8 +16,8 @@ import "txn_basic.proto";
 
 // The driver provides the full transaction as a sequence of operations, which the performer executes.
 service PerformerTransactionService {
-    // Creates a connection from txn_server to cb server
-    // TODO probably a neater way of doing this. Maybe send in TransactionsFactoryCreateRequest.
+
+    // Creates a connection between performer and couchbase server
     rpc createConnection (CreateConnectionRequest) returns (CreateConnectionResponse);
 
     // Create a Transactions (e.g. a transactions factory), returning a transactionsFactoryRef
