@@ -61,6 +61,7 @@ enum ExternalException {
     NotSet = 7;
     FeatureNotAvailableException = 8;
     TransactionAbortedExternally = 9;
+    PreviousOperationFailed = 10;
 }
 
 enum ErrorClass {
@@ -232,4 +233,7 @@ message TransactionCommand {
 
         CommandThrowException throwException = 14;
     }
+
+    // Added for TXNJ-249: make the application (erroneously) catch and not propagate the error.
+    bool doNotPropagateError = 100;
 }
