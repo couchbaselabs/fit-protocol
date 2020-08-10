@@ -62,6 +62,7 @@ enum ExternalException {
     FeatureNotAvailableException = 8;
     TransactionAbortedExternally = 9;
     PreviousOperationFailed = 10;
+    ForwardCompatibilityFailure = 11;
 }
 
 enum ErrorClass {

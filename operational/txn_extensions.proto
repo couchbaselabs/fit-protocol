@@ -13,5 +13,4 @@ enum PerformerCaps {
     EXT_TRANSACTION_ID = 0;
 
     EXT_DEFERRED_COMMIT = 1;
-    EXT_IMPROVED_TIMESTAMPS = 2;
 }
