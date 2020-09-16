@@ -15,3 +15,8 @@ enum AttemptStates {
     COMPLETED=4;
     ROLLED_BACK=5;
 }
+
+enum UnstagingMode {
+    TIME_OPTIMIZED = 0;
+    MEMORY_OPTIMIZED = 1;
+}

@@ -13,4 +13,8 @@ enum PerformerCaps {
     EXT_TRANSACTION_ID = 0;
 
     EXT_DEFERRED_COMMIT = 1;
+
+    // At least one of EXT_MEMORY_OPT_UNSTAGING and EXT_TIME_OPT_UNSTAGING must be supported
+    EXT_MEMORY_OPT_UNSTAGING = 2;
+    EXT_TIME_OPT_UNSTAGING = 3;
 }
