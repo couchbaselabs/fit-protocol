@@ -33,7 +33,8 @@ service PerformerTransactionService {
     // result.
     rpc transactionCreate (TransactionCreateRequest) returns (TransactionResult);
 
-    // Performs cleanup of a single transaction.
+    // Performs cleanup of a single transaction.  It will fetch the ATR entry first.
+    // This tests the internals of the cleanup algo, the part shared by the two cleanup systems.
     rpc transactionCleanup (TransactionCleanupRequest) returns (TransactionCleanupAttempt);
 
     // Performs cleanup of a full ATR.  Useful for testing multiple performers concurrently cleaning up same ATR.
