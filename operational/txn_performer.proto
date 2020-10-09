@@ -184,8 +184,13 @@ message CreateConnectionRequest {
 // performer)
 message CreateConnectionResponse {
     repeated PerformerCaps performerCaps = 1;
-    // Human-readable string identifying the performer.  For now, "java" is fine.
+
+    // Human-readable string identifying the performer.  For example, "java".
     string performerUserAgent = 2;
+
+    // Identifies the version of the library under test.  For example, "1.1.2".
+    string performerLibraryVersion = 4;
+
     // Defined https://hackmd.io/foGjnSSIQmqfks2lXwNp8w#Protocol-Versions
     // Must be "1.0" or "2.0", any other values will cause the driver to abort.
     string protocolVersion = 3;
