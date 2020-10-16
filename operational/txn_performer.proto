@@ -138,6 +138,7 @@ message TransactionGenericResponse {
 message TransactionAttempt {
     AttemptStates state=1;
     string attemptId=2;
+    DocId atr = 3;   // Can be empty iff state=NOTHING_WRITTEN
 }
 
 // The result of a mutation.  Currently empty as we only check the count of these.
@@ -150,8 +151,8 @@ message MutationToken {
 message TransactionResult {
     repeated MutationToken mutationTokens=1;
     repeated TransactionAttempt attempts=2;
-    string atrCollection=3;
-    string atrId=4;
+    string atrCollection=3 [deprecated=true];   // TransactionAttempt.atr should be set instead.
+    string atrId=4 [deprecated=true];           // TransactionAttempt.atr should be set instead.
     TransactionException exception=5;
     ExternalException exceptionCause=10;
     repeated string log=6;

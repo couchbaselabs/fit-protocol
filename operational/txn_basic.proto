@@ -20,3 +20,16 @@ enum UnstagingMode {
     TIME_OPTIMIZED = 0;
     MEMORY_OPTIMIZED = 1;
 }
+
+message Collection {
+    string bucketName = 1;
+    string scopeName = 2;
+    string collectionName = 3;
+}
+
+message DocId {
+    string bucketName = 1;
+    string scopeName = 2;
+    string collectionName = 3;
+    string docId = 4;
+}

@@ -7,6 +7,8 @@ option java_package = "com.couchbase.grpc.protocol";
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
 option java_multiple_files = true;
 
+import "txn_basic.proto";
+
 enum EventType {
     EventCleanupFailedEvent = 0;
     EventIllegalDocumentState = 1;
@@ -92,15 +94,6 @@ message ExpectedResult {
         // The operation throws an ErrorWrapper, the only exception an operation may throw.
         ErrorWrapper error = 3;
     }
-}
-
-message DocId {
-    // Note currently the bucket/scope/collection fields aren't used, they are provided for forwards-compatibility
-    // on cross-collection/bucket tests.
-    string bucketName = 1;
-    string scopeName = 2;
-    string collectionName = 3;
-    string docId = 4;
 }
 
 enum DocStatus {
