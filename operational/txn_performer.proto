@@ -116,6 +116,7 @@ message TransactionsFactoryCreateRequest {
     bool cleanupClientAttempts = 5;
     int64 cleanupWindowMillis = 6;
     UnstagingMode unstagingMode = 7;
+    Collection metadataCollection = 8;
 }
 
 // Shuts down a previously created Transactions (factory)
