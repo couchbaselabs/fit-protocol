@@ -17,6 +17,7 @@ message ClientRecordProcessRequest {
     string collectionName = 4;
     // Any hooks can only use HookPoints in the CLIENT_RECORD_* range
     repeated Hook hook = 5;
+    string clusterConnectionId=6;
 }
 
 message ClientRecordProcessResponse {
@@ -37,6 +38,8 @@ message ClientRecordRemoveRequest {
     string clientUUID = 1;
     // Any hooks can only use HookPoints in the CLIENT_RECORD_* range
     repeated Hook hook = 2;
+
+    string clusterConnectionId=8;
 }
 
 message ClientRecordRemoveResponse {

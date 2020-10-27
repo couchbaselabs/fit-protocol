@@ -23,6 +23,9 @@ message TransactionCleanupRequest {
     string transactionId = 3;
     // Any hooks can only use HookPoints in the CLEANUP_* range
     repeated Hook hook = 4;
+
+    // TODO move this to Transaction Object: SDKQE-2148
+    string clusterConnectionId=6;
 }
 
 message TransactionCleanupATRRequest {
@@ -31,6 +34,8 @@ message TransactionCleanupATRRequest {
     DocId atr = 3;
     // Any hooks can only use HookPoints in the CLEANUP_* range
     repeated Hook hook = 2;
+
+    string clusterConnectionId=4;
 }
 
 // The result of attempting to cleanup a single attempt entry in an ATR

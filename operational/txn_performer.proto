@@ -117,6 +117,7 @@ message TransactionsFactoryCreateRequest {
     int64 cleanupWindowMillis = 6;
     UnstagingMode unstagingMode = 7;
     Collection metadataCollection = 8;
+    string clusterConnectionId=9;
 }
 
 // Shuts down a previously created Transactions (factory)
@@ -180,6 +181,7 @@ message CreateConnectionRequest {
     string clusterUsername=2;
     string clusterPassword=3;
     string bucketName=4;
+    bool useAsDefaultConnection=5;
 
 }
 
@@ -197,6 +199,8 @@ message CreateConnectionResponse {
     // Defined https://hackmd.io/foGjnSSIQmqfks2lXwNp8w#Protocol-Versions
     // Must be "1.0" or "2.0", any other values will cause the driver to abort.
     string protocolVersion = 3;
+
+    string clusterConnectionId=5;
 }
 
 // Note these latches don't work like real CountdownLatches (or equivalent).
@@ -229,6 +233,8 @@ message TransactionCreateRequest {
     // Event buses can be asynchronous so this prevents the performer having to wait for an unknown amount of
     // time on each test.
     repeated Event expectedEvents = 6;
+
+    string clusterConnectionId=7;
 }
 
 message TransactionAttemptRequest {
