@@ -20,4 +20,5 @@ enum PerformerCaps {
 
     EXT_CUSTOM_METADATA_COLLECTION = 4;
     EXT_BINARY_METADATA = 5;
+    EXT_QUERY = 6;
 }

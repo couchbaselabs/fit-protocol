@@ -65,6 +65,7 @@ enum ExternalException {
     TransactionAbortedExternally = 9;
     PreviousOperationFailed = 10;
     ForwardCompatibilityFailure = 11;
+    ParsingFailure = 12;
 }
 
 enum ErrorClass {
@@ -91,17 +92,24 @@ message ExpectedResult {
         // where it's tricky to calculate what a given op will do.
         bool anythingAllowed = 2;
 
-        // The operation throws an ErrorWrapper, the only exception an operation may throw.
+        // The operation throws an ErrorWrapper/TransactionOperationFailed, the only exception an operation may throw.
+        // Update: as of EXT_QUERY, that is no longer the case, some operations can throw some other exceptions.
         ErrorWrapper error = 3;
+
+        // Require a non-TransactionOperationFailed exception.
+        ExternalException exception = 4;
     }
 }
 
+// This was only exposed in the Java API and is deprecated as of 1.1.3
+// Other implementations are not required to check this.
 enum DocStatus {
     NORMAL = 0;
     IN_TXN_COMMITTED = 1;
     IN_TXN_OTHER = 2;
     OWN_WRITE = 3;
     AMBIGUOUS = 4;
+    DO_NOT_CHECK = 5;
 }
 
 message CommandGet {
@@ -115,7 +123,7 @@ message CommandGet {
     // If not-null, the performer will check the fetched data equals this.  Useful for read-your-own-write tests.
     string expectedContentJson = 3;
 
-    // If not-null, the performer will check the fetched document status equals this.
+    // If not DO_NOT_CHECK, the performer will check the fetched document status equals this.
     DocStatus expectedStatus = 4;
 }
 
@@ -200,6 +208,32 @@ message CommandInsertRegularKV {
     string contentJson = 2;
 }
 
+// Run a query command.
+message CommandQuery {
+    string statement = 1;
+
+    // What result(s) the command is allowed to return.  Anything outside this will fail the test.
+    repeated ExpectedResult expectedResult = 2;
+
+    // Whether to check the returned rows against expectedRows
+    bool checkRowContent = 3;
+
+    // What rows the query should return, as JSON
+    repeated string expectedRows = 4;
+
+    // Whether to check the number of returned rows against expectedRowCount
+    bool checkRowCount = 6;
+
+    // What rows the query should return, as JSON
+    repeated string expectedRowCount = 7;
+
+    // Whether to check the returned mutations
+    bool checkMutations = 8;
+
+    // How many mutations the query should create
+    int32 expectedMutations = 9;
+}
+
 // Simulates the application throwing an exception inside the lambda.  Could be used to simulate an application bug,
 // or the application choosing to rollback this way (as opposed to ctx.rollback(), e.g. app-rollback).
 // Application exceptions will be classified as FAIL_OTHER.
@@ -226,6 +260,8 @@ message TransactionCommand {
         CommandInsertRegularKV insertRegularKV = 13;
 
         CommandThrowException throwException = 14;
+
+        CommandQuery query = 15;
     }
 
     // Added for TXNJ-249: make the application (erroneously) catch and not propagate the error.
