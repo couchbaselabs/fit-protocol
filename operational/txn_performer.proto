@@ -152,9 +152,12 @@ message MutationToken {
 // any exception thrown...
 message TransactionResult {
     repeated MutationToken mutationTokens=1;
-    repeated TransactionAttempt attempts=2;
-    string atrCollection=3 [deprecated=true];   // TransactionAttempt.atr should be set instead.
-    string atrId=4 [deprecated=true];           // TransactionAttempt.atr should be set instead.
+
+    // Next three fields are all now deprecated.  They are no longer used by FIT and performers do not need to return them.
+    repeated TransactionAttempt attempts=2 [deprecated=true];
+    string atrCollection=3 [deprecated=true];
+    string atrId=4 [deprecated=true];
+
     TransactionException exception=5;
     ExternalException exceptionCause=10;
     repeated string log=6;
