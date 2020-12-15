@@ -44,6 +44,7 @@ enum HookPoint {
     AFTER_ATR_PENDING = 32;
     BEFORE_ATR_COMPLETE = 33;
     BEFORE_ATR_COMMIT_AMBIGUITY_RESOLUTION = 36;
+    BEFORE_QUERY = 37;
 
     // Injects that the transaction has expired at a certain point
     // Does not take a HookAction
