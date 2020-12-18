@@ -224,8 +224,8 @@ message CommandQuery {
     // Whether to check the number of returned rows against expectedRowCount
     bool checkRowCount = 6;
 
-    // What rows the query should return, as JSON
-    repeated string expectedRowCount = 7;
+    // How many rows the query should return
+    int32 expectedRowCount = 7;
 
     // Whether to check the returned mutations
     bool checkMutations = 8;
