@@ -151,6 +151,7 @@ message MutationToken {
 // The result of closing a transaction: whether the transaction succeeded, its logs,
 // any exception thrown...
 message TransactionResult {
+    // With CBD-3802 this is now only checked for the Java performer, other implementations should not provide this.
     repeated MutationToken mutationTokens=1;
 
     // Next three fields are all now deprecated.  They are no longer used by FIT and performers do not need to return them.
