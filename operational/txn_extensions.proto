@@ -24,4 +24,5 @@ enum PerformerCaps {
     EXT_STORE_DURABILITY = 7;
 
     BF_CBD_3787 = 100;
+    BF_CBD_3794 = 101;
 }
