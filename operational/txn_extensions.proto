@@ -22,4 +22,6 @@ enum PerformerCaps {
     EXT_BINARY_METADATA = 5;
     EXT_QUERY = 6;
     EXT_STORE_DURABILITY = 7;
+
+    BF_CBD_3787 = 100;
 }
