@@ -67,6 +67,7 @@ enum ExternalException {
     ForwardCompatibilityFailure = 11;
     ParsingFailure = 12;
     IllegalStateException = 13;
+    CouchbaseException = 14;
 }
 
 enum ErrorClass {
