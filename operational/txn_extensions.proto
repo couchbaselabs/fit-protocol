@@ -25,4 +25,5 @@ enum PerformerCaps {
 
     BF_CBD_3787 = 100;
     BF_CBD_3794 = 101;
+    BF_CBD_3705 = 102;
 }
