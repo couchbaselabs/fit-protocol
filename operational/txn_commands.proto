@@ -234,6 +234,21 @@ message CommandQuery {
 
     // How many mutations the query should create
     int32 expectedMutations = 9;
+
+    CommandQueryParameters queryParameters =10;
+}
+
+
+// Parameters for the Query Statement
+message CommandQueryParameters {
+    int32 timeout=10;
+
+    ScanConsistency scanConsistency =11;
+}
+
+enum ScanConsistency {
+    REQUEST_PLUS=0;
+    NOT_BOUNDED=1;
 }
 
 // Simulates the application throwing an exception inside the lambda.  Could be used to simulate an application bug,
