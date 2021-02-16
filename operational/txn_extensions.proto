@@ -28,4 +28,5 @@ enum PerformerCaps {
     BF_CBD_3838 = 11;
     EXT_REMOVE_COMPLETED = 12;
     EXT_ALL_KV_COMBINATIONS = 13;
+    EXT_UNKNOWN_ATR_STATES = 14;
 }

@@ -14,6 +14,7 @@ enum AttemptStates {
     COMMITTED=3;
     COMPLETED=4;
     ROLLED_BACK=5;
+    UNKNOWN=6;
 }
 
 enum UnstagingMode {
