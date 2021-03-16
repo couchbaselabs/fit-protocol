@@ -34,3 +34,8 @@ message DocId {
     string collectionName = 3;
     string docId = 4;
 }
+
+message Scope {
+    string bucketName = 1;
+    string scopeName = 2;
+}

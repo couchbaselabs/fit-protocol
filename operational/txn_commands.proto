@@ -237,6 +237,8 @@ message CommandQuery {
     int32 expectedMutations = 9;
 
     CommandQueryParameters queryParameters =10;
+
+    Scope scope = 11;
 }
 
 
