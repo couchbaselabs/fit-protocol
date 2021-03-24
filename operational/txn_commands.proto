@@ -69,6 +69,7 @@ enum ExternalException {
     IllegalStateException = 13;
     CouchbaseException = 14;
     ServiceNotAvailableException =15;
+    RequestCanceledException =16;
 }
 
 enum ErrorClass {
