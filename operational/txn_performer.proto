@@ -20,6 +20,13 @@ service PerformerTransactionService {
     // Creates a connection between performer and couchbase server
     rpc createConnection (CreateConnectionRequest) returns (CreateConnectionResponse);
 
+    // Disconnects all hanging connections between performer and cluster. Issued after executing all tests
+    rpc disconnectConnections (DisconnectConnectionsRequest) returns (DisconnectConnectionsResponse);
+
+    // Closes all unclosed transaction factories. Issued after executing all tests
+    rpc closeTransactions (CloseTransactionsRequest) returns (CloseTransactionsResponse);
+
+
     // Create a Transactions (e.g. a transactions factory), returning a transactionsFactoryRef
     rpc transactionsFactoryCreate (TransactionsFactoryCreateRequest) returns (TransactionsFactoryCreateResponse);
 
@@ -46,11 +53,21 @@ service PerformerTransactionService {
 
     // Request that the implementation do its normal client record processing logic (creating CR if needed).
     rpc clientRecordProcess (ClientRecordProcessRequest) returns (ClientRecordProcessResponse);
-
     // Request that implementation remove this client from the client record, from all buckets
     rpc clientRecordRemove (ClientRecordRemoveRequest) returns (ClientRecordRemoveResponse);
 }
 
+message DisconnectConnectionsRequest {
+}
+
+message DisconnectConnectionsResponse {
+}
+
+message CloseTransactionsRequest {
+}
+
+message CloseTransactionsResponse {
+}
 
 
 message TransactionStartRequest {
@@ -188,6 +205,8 @@ message CreateConnectionRequest {
     bool useAsDefaultConnection=5;
 
 }
+
+
 
 // Returns the capabilities of the performer (or more specifically, the transactions-implementation-under-test by that
 // performer)
