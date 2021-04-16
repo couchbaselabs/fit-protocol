@@ -55,6 +55,9 @@ service PerformerTransactionService {
     rpc clientRecordProcess (ClientRecordProcessRequest) returns (ClientRecordProcessResponse);
     // Request that implementation remove this client from the client record, from all buckets
     rpc clientRecordRemove (ClientRecordRemoveRequest) returns (ClientRecordRemoveResponse);
+
+    // Request that the performer Echo a string to the performer logs.
+    rpc echo (EchoRequest) returns (EchoResponse);
 }
 
 message DisconnectConnectionsRequest {
@@ -71,6 +74,14 @@ message CloseTransactionsResponse {
 
 
 message TransactionStartRequest {
+}
+
+message EchoRequest {
+    string message = 1;
+    string testName = 2;
+}
+
+message EchoResponse {
 }
 
 message TransactionStreamDriverToPerformer {
