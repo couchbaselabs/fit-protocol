@@ -13,6 +13,7 @@ import "txn_client_record.proto";
 import "txn_cleanup.proto";
 import "txn_extensions.proto";
 import "txn_basic.proto";
+import "google/protobuf/wrappers.proto";
 
 // The driver provides the full transaction as a sequence of operations, which the performer executes.
 service PerformerTransactionService {
@@ -55,6 +56,8 @@ service PerformerTransactionService {
     rpc clientRecordProcess (ClientRecordProcessRequest) returns (ClientRecordProcessResponse);
     // Request that implementation remove this client from the client record, from all buckets
     rpc clientRecordRemove (ClientRecordRemoveRequest) returns (ClientRecordRemoveResponse);
+
+    rpc transactionSingleStatement (TransactionSingleStatementRequest) returns (TransactionSingleStatementResponse);
 
     // Request that the performer Echo a string to the performer logs.
     rpc echo (EchoRequest) returns (EchoResponse);
@@ -277,4 +280,26 @@ message TransactionAttemptRequest {
 
 // Currently empty as they are not presently tested.
 message PerTransactionConfig {
+}
+
+message TransactionSingleStatementRequest {
+    // A reference to a previously constructed Transactions object (e.g. factory).
+    string transactionsFactoryRef = 1;
+
+    // A reference to a previously constructed cluster connection.
+    string clusterConnectionId = 2;
+
+    // The query to run
+    CommandQuery query = 3;
+
+    // Override the Transactions durability level.
+    // TODO make this optional SDKQE-2345
+    Durability durability = 4;
+
+    // Overriding the Transactions expiration time.
+    google.protobuf.Int64Value expirationMillis = 5;
+}
+
+message TransactionSingleStatementResponse {
+    TransactionResult result = 1;
 }
