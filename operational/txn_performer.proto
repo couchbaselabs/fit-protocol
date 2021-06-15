@@ -57,7 +57,7 @@ service PerformerTransactionService {
     // Request that implementation remove this client from the client record, from all buckets
     rpc clientRecordRemove (ClientRecordRemoveRequest) returns (ClientRecordRemoveResponse);
 
-    rpc transactionSingleStatement (TransactionSingleStatementRequest) returns (TransactionSingleStatementResponse);
+    rpc transactionSingleQuery (TransactionSingleQueryRequest) returns (TransactionSingleQueryResponse);
 
     // Request that the performer Echo a string to the performer logs.
     rpc echo (EchoRequest) returns (EchoResponse);
@@ -282,7 +282,7 @@ message TransactionAttemptRequest {
 message PerTransactionConfig {
 }
 
-message TransactionSingleStatementRequest {
+message TransactionSingleQueryRequest {
     // A reference to a previously constructed Transactions object (e.g. factory).
     string transactionsFactoryRef = 1;
 
@@ -300,6 +300,6 @@ message TransactionSingleStatementRequest {
     google.protobuf.Int64Value expirationMillis = 5;
 }
 
-message TransactionSingleStatementResponse {
+message TransactionSingleQueryResponse {
     TransactionResult result = 1;
 }
