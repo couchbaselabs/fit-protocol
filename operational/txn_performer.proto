@@ -217,7 +217,7 @@ message CreateConnectionRequest {
     string clusterPassword=3;
     string bucketName=4;
     bool useAsDefaultConnection=5;
-
+    bool useCustomSerializer=6;
 }
 
 
