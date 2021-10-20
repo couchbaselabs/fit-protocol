@@ -48,6 +48,7 @@ enum HookPoint {
     BEFORE_REMOVE_STAGED_INSERT = 38;
     AFTER_REMOVE_STAGED_INSERT = 39;
     AFTER_QUERY = 40;
+    BEFORE_DOC_CHANGED_DURING_COMMIT = 41;
 
     // Injects that the transaction has expired at a certain point
     // Does not take a HookAction
