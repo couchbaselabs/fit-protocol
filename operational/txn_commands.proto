@@ -153,7 +153,9 @@ message CommandReplace {
     // What result(s) the command is allowed to return.  Anything outside this will fail the test.
     repeated ExpectedResult expectedResult = 3;
 
-    // Whether to use the result of the last get operation
+    // Whether to use the result of the last get operation.
+    // This will not be set inside a CommandBatch, due to the 'last' operation not being
+    // a valid concept during parallel ops.
     bool useStashedResult = 4;
 }
 
@@ -164,6 +166,8 @@ message CommandRemove {
     repeated ExpectedResult expectedResult = 2;
 
     // Whether to use the result of the last get operation
+    // This will not be set inside a CommandBatch, due to the 'last' operation not being
+    // a valid concept during parallel ops.
     bool useStashedResult = 3;
 }
 
@@ -185,10 +189,12 @@ message CommandSetLatch {
     string latchName = 1;
 }
 
-// Simply a batch of commands
+// A batch of commands, often to be performed in parallel.
 message CommandBatch {
     // A limited subset of commands are supported here:
-    // CommandInsert, CommandReplace, CommandRemove and CommandGet
+    // CommandInsert, CommandReplace, CommandRemove and CommandGet.
+    // And replace/remove cannot use useStashedResult, as that is not a well-defined
+    // concept in parallel operations.
     repeated TransactionCommand commands = 1;
 
     // If the commands are being performed in parallel, how many to do concurrently

@@ -167,7 +167,11 @@ enum HookAction {
 
     // Just return value in hookActionParam1
     RETURN_STRING = 22;
+
+    // Add a blocking wait.  The wait is hookActionParam1 in millis.
+    BLOCK = 23;
 }
+
 // Hooks allow injecting actions at specific points of the code.  Useful for error injection.
 message Hook {
     // At which point in the code should the hook execute

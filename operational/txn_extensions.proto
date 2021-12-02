@@ -32,4 +32,5 @@ enum PerformerCaps {
     BF_CBD_3791 = 15;
     EXT_SINGLE_QUERY = 16;
     EXT_REPLACE_BODY_WITH_XATTR = 17;
+    EXT_THREAD_SAFE = 18;
 }
