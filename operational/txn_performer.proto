@@ -204,6 +204,11 @@ message TransactionResult {
     bool cleanupRequestsValid = 9;
 
     bool unstagingComplete = 11;
+
+    // Allows the performer to flag implementation/platform-specific validation failures that cannot be handled generically.
+    // E.g. if an erroneous event is detected it can be returned here.
+    // If present, the driver will fail the test, logging this message.
+    optional string performerSpecificValidation = 12;
 }
 
 // The current transient state of the ongoing transaction
@@ -211,12 +216,17 @@ message TransactionState{
     int32 attemptNumber=1;
 }
 
+// Requests the performer creates a connection to a Couchbase cluster.
 message CreateConnectionRequest {
     string clusterHostname=1;
     string clusterUsername=2;
     string clusterPassword=3;
     string bucketName=4;
     bool useAsDefaultConnection=5;
+
+    // The performer should use a custom JsonSerializer when creating the Cluster.
+    // This custom JsonSerializer is required to have specific serialization and deserialization logic, which the driver
+    // will validate.  See the Java performer for implementation details.
     bool useCustomSerializer=6;
 }
 
