@@ -68,8 +68,13 @@ enum ExternalException {
     ParsingFailure = 12;
     IllegalStateException = 13;
     CouchbaseException = 14;
-    ServiceNotAvailableException =15;
-    RequestCanceledException =16;
+    ServiceNotAvailableException = 15;
+    RequestCanceledException = 16;
+    ConcurrentOperationsDetectedOnSameDocument = 17;
+    CommitNotPermitted = 18;
+    RollbackNotPermitted = 19;
+    TransactionAlreadyAborted = 20;
+    TransactionAlreadyCommitted = 21;
 }
 
 enum ErrorClass {
