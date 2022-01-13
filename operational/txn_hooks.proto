@@ -173,7 +173,7 @@ enum HookAction {
     // Just return value in hookActionParam1
     RETURN_STRING = 22;
 
-    // Add a blocking wait.  The wait is hookActionParam1 in millis.
+    // Add a blocking wait.  The wait is hookActionParam1, converted to an int, in millis.
     BLOCK = 23;
 }
 
