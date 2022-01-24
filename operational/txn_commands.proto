@@ -147,6 +147,7 @@ message CommandInsert {
     DocId docId = 1;
     string contentJson = 2;
 
+
     // What result(s) the command is allowed to return.  Anything outside this will fail the test.
     repeated ExpectedResult expectedResult = 3;
 }
@@ -296,6 +297,10 @@ message TransactionCommand {
         CommandQuery query = 15;
     }
 
+
     // Added for TXNJ-249: make the application (erroneously) catch and not propagate the error.
     bool doNotPropagateError = 100;
+
+    // If given, the transaction will pause for "waitMSecs" before executing the TransactionCommand
+    int32 waitMSecs = 101;
 }
