@@ -190,9 +190,15 @@ message TransactionResult {
     string atrCollection=3 [deprecated=true];
     string atrId=4 [deprecated=true];
 
+    // Any TransactionFailed error raised by the operation.
     TransactionException exception=5;
+
+    // The cause field from any TransactionFailed error.
     ExternalException exceptionCause=10;
+
+    // The implementation's in-memory log.  It's optional but helps greatly with debugging.
     repeated string log=6;
+
     string transactionId=7;
 
     // How many attempts need to be cleaned up, as a direct result of this transaction.
@@ -315,6 +321,7 @@ message TransactionAttemptRequest {
 message PerTransactionConfig {
 }
 
+// Runs a single query transaction (tximplicit).
 message TransactionSingleQueryRequest {
     // A reference to a previously constructed Transactions object (e.g. factory).
     string transactionsFactoryRef = 1;
@@ -331,8 +338,32 @@ message TransactionSingleQueryRequest {
 
     // Overriding the Transactions expiration time.
     google.protobuf.Int64Value expirationMillis = 5;
+
+    // The API to use for this transaction.  See the comments for `API`.
+    API api = 8;
 }
 
 message TransactionSingleQueryResponse {
-    TransactionResult result = 1;
+    // Deprecated as this was from the initial version of ExtSingleQuery, pre SDK-integration.
+    // The replacement fields below are compatible with the SDK integration, when only a QueryResult (or
+    // TransactionFailed-derived error) is going to be returned to the user.
+    // If `result` is returned then FIT will validate that, else it will use the replacement fields.
+    TransactionResult result = 1 [deprecated=true];
+
+    // The fields below replace the deprecated `result`, which will ultimately be removed.
+
+    // Any TransactionFailed error raised by the operation.
+    TransactionException exception = 2;
+
+    // The cause field from any TransactionFailed error.
+    ExternalException exceptionCause = 3;
+
+    // The implementation's in-memory log.  It's optional (and not possible to return when the SDK integrated cluster.query()
+    // succeeds), but helps greatly with debugging on failures.
+    repeated string log = 4;
+
+    // Allows the performer to flag implementation/platform-specific validation failures that cannot be handled generically.
+    // E.g. if an erroneous event is detected it can be returned here.
+    // If present, the driver will fail the test, logging this message.
+    optional string performerSpecificValidation = 5;
 }
