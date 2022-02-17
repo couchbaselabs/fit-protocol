@@ -352,18 +352,24 @@ message TransactionSingleQueryResponse {
 
     // The fields below replace the deprecated `result`, which will ultimately be removed.
 
-    // Any TransactionFailed error raised by the operation.
+    // Any TransactionFailed error raised by the operation, at the point of performing the cluster.query()/transactions.query()
     TransactionException exception = 2;
 
-    // The cause field from any TransactionFailed error.
+    // The cause field in `exception`.
     ExternalException exceptionCause = 3;
+
+    // Any TransactionFailed error raised by the operation, at the point of streaming the rows.
+    TransactionException exceptionDuringStreaming = 4;
+
+    // The cause field in `exceptionDuringStreaming`.
+    ExternalException exceptionCauseDuringStreaming = 5;
 
     // The implementation's in-memory log.  It's optional (and not possible to return when the SDK integrated cluster.query()
     // succeeds), but helps greatly with debugging on failures.
-    repeated string log = 4;
+    repeated string log = 6;
 
     // Allows the performer to flag implementation/platform-specific validation failures that cannot be handled generically.
     // E.g. if an erroneous event is detected it can be returned here.
     // If present, the driver will fail the test, logging this message.
-    optional string performerSpecificValidation = 5;
+    optional string performerSpecificValidation = 7;
 }
