@@ -12,12 +12,17 @@ import "txn_hooks.proto";
 
 message ClientRecordProcessRequest {
     string clientUUID = 1;
+
+    // The collection where the client record should exist (this message was created before Collection existed)
     string bucketName = 2;
     string scopeName = 3;
     string collectionName = 4;
+
     // Any hooks can only use HookPoints in the CLIENT_RECORD_* range
     repeated Hook hook = 5;
-    string clusterConnectionId=6;
+
+    // This is only needed for KV operations, so the driver will usually send the default cluster connection.
+    string clusterConnectionId = 6;
 }
 
 message ClientRecordProcessResponse {
@@ -32,16 +37,4 @@ message ClientRecordProcessResponse {
     int64 casNowNanos = 10;
     string clientUUID = 11;
     bool success = 12;
-}
-
-message ClientRecordRemoveRequest {
-    string clientUUID = 1;
-    // Any hooks can only use HookPoints in the CLIENT_RECORD_* range
-    repeated Hook hook = 2;
-
-    string clusterConnectionId=8;
-}
-
-message ClientRecordRemoveResponse {
-    bool success = 1;
 }

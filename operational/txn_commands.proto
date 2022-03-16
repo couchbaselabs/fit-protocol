@@ -8,6 +8,9 @@ option go_package = "github.com/couchbaselabs/transactions-fit-performer/protoco
 option java_multiple_files = true;
 
 import "txn_basic.proto";
+import "txn_hooks.proto";
+import "txn_config.proto";
+import "txn_legacy.proto";
 
 enum EventType {
     EventCleanupFailedEvent = 0;
@@ -42,9 +45,11 @@ message ExpectedCause {
     }
 }
 
-// This maps to the Error defined in the design doc
+// This maps to the TransactionOperationFailed defined in the design doc
 message ErrorWrapper {
-    ErrorClass errorClass = 1;
+    // This is now deprecated and the performer can feel free to disable validation of this.  Once all performers
+    // have removed validation, it will be removed.
+    ErrorClass errorClass = 1 [deprecated = true];
     bool autoRollbackAttempt = 2;
     bool retryTransaction = 3;
     TransactionException toRaise = 4;
@@ -133,9 +138,14 @@ message CommandGet {
     string expectedContentJson = 3;
 
     // If not DO_NOT_CHECK, the performer will check the fetched document status equals this.
-    DocStatus expectedStatus = 4;
+    // Fully deprecated as of ExtSDKIntegration.  The driver will only specify DO_NOT_CHECK now.
+    DocStatus expectedStatus = 4 [deprecated = true];
 }
 
+// There are two ways the implementation can implement getOptional:
+// 1. An explicit ctx.getOptional() API.
+// 2. ctx.get() throwing a catchable DocumentNotFoundException.
+// Either is allowed.
 message CommandGetOptional {
     CommandGet get = 1;
 
@@ -177,11 +187,15 @@ message CommandRemove {
     bool useStashedResult = 3;
 }
 
+// ExtSDKIntegration performers should ignore.
+// Otherwise, perform an explicit ctx.commit()
 message CommandCommit {
     // What result(s) the command is allowed to return.  Anything outside this will fail the test.
     repeated ExpectedResult expectedResult = 1;
 }
 
+// ExtSDKIntegration performers: throw an exception (or raise an error) to cause an auto-rollback.
+// Otherwise, perform an explicit ctx.rollback()
 message CommandRollback {
     // What result(s) the command is allowed to return.  Anything outside this will fail the test.
     repeated ExpectedResult expectedResult = 1;
@@ -249,22 +263,18 @@ message CommandQuery {
     // How many mutations the query should create
     int32 expectedMutations = 9;
 
-    CommandQueryParameters queryParameters =10;
+    // Deprecated as of ExtSDKIntegration, replaced by queryOptions, which allows optional.
+    // FIT will send both for now, performers should remove support for queryParameters.
+    CommandQueryParameters queryParameters = 10 [deprecated=true];
+
+    optional TransactionQueryOptions queryOptions = 12;
 
     Scope scope = 11;
 }
 
-
-// Parameters for the Query Statement
-message CommandQueryParameters {
-    int32 timeout=10;
-
-    ScanConsistency scanConsistency =11;
-}
-
-enum ScanConsistency {
-    REQUEST_PLUS=0;
-    NOT_BOUNDED=1;
+// If the performer executes this command, it should report a failure.  This is usually used to check an earlier
+// operation definitely failed the transaction.
+message CommandTestFail {
 }
 
 // Simulates the application throwing an exception inside the lambda.  Could be used to simulate an application bug,
@@ -295,6 +305,7 @@ message TransactionCommand {
         CommandThrowException throwException = 14;
 
         CommandQuery query = 15;
+        CommandTestFail testFail = 16;
     }
 
 

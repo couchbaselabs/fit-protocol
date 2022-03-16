@@ -1,0 +1,152 @@
+// All options and config blocks
+syntax = "proto3";
+
+// See README.md in this directory for a description of these.
+package protocol;
+option csharp_namespace = "Couchbase.Grpc.Protocol";
+option java_package = "com.couchbase.grpc.protocol";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
+option java_multiple_files = true;
+
+import "txn_basic.proto";
+import "txn_hooks.proto";
+
+enum UnstagingMode {
+  TIME_OPTIMIZED = 0;
+  MEMORY_OPTIMIZED = 1;
+}
+
+enum Durability {
+  NONE = 0;
+  MAJORITY = 1;
+  MAJORITY_AND_PERSIST_TO_ACTIVE = 2;
+  PERSIST_TO_MAJORITY = 3;
+}
+
+// When an implementation supports multiple APIs, this enum allows sending which is preferred to be used for a given test.
+// This is an abstraction that allows us to test e.g. Java's blocking vs reactive APIs.
+//
+// Declaration in supportedApis:
+//  For implementations with just one API: Only declare DEFAULT.
+//  For implementations with separate blocking & async APIs: declare both.
+//
+// When the performer receives a preferred API:
+//  For implementations with just one API: ignore it.
+//  For implementations with separate blocking & async APIs: use the appropriate one.
+enum API {
+  DEFAULT = 0;
+  ASYNC = 1;
+}
+
+enum ScanConsistency {
+  REQUEST_PLUS = 0;
+  NOT_BOUNDED = 1;
+}
+
+message QueryOptions {
+  optional ScanConsistency scanConsistency = 1;
+  map<string, string> raw = 2;
+  optional bool adhoc = 3;
+  // "off", "phases", or "timings"
+  optional string profile = 4;
+  optional bool readonly = 5;
+  repeated string parametersPositional = 6;
+  map<string, string> parametersNamed = 7;
+  optional bool flexIndex = 8;
+  optional int32 pipelineCap = 9;
+  optional int32 pipelineBatch = 10;
+  optional int32 scanCap = 11;
+  optional int32 scanWaitMillis = 12;
+  optional int64 timeoutMillis = 13;
+  optional int32 maxParallelism = 14;
+  optional bool metrics = 15;
+  optional SingleQueryTransactionOptions singleQueryTransactionOptions = 16;
+}
+
+message SingleQueryTransactionOptions {
+  // Override the durability level.
+  optional Durability durability = 1;
+
+  repeated Hook hook = 2;
+}
+
+message TransactionQueryOptions {
+  optional ScanConsistency scanConsistency = 1;
+  map<string, string> raw = 2;
+  optional bool adhoc = 3;
+  // "off", "phases", or "timings"
+  optional string profile = 4;
+  optional bool readonly = 5;
+  repeated string parametersPositional = 6;
+  map<string, string> parametersNamed = 7;
+  optional bool flexIndex = 8;
+  optional int32 pipelineCap = 9;
+  optional int32 pipelineBatch = 10;
+  optional int32 scanCap = 11;
+  optional int32 scanWaitMillis = 12;
+}
+
+// Options that can be overridden at the individual transaction level.
+// Note that pre-ExtSDKIntegration, this struct was empty.  Not in the implementation, where PerTransactionConfig existed,
+// but here at the FIT level.  So, it will only be populated for ExtSDKIntegration performers.
+message TransactionOptions {
+  // Durability to use for all mutating KV operations in this transaction.
+  optional Durability durability = 1;
+
+  // Timeout (nee expirationTime) for this transaction.
+  optional int64 timeoutMillis = 2;
+
+  // Any hooks can only use HookPoints before the CLEANUP_* range.
+  repeated Hook hook = 3;
+
+  // Will only be sent to ExtSDKIntegration-enabled performers.
+  optional Collection metadataCollection = 4;
+
+  // Note that PerTransactionQueryConfig is not sent, as it is removed in ExtSDKIntegration.
+}
+
+// Options that can be overridden at the individual transaction level.
+// Note that pre-ExtSDKIntegration, this struct was empty.  Not in the implementation, where PerTransactionConfig existed,
+// but here at the FIT level.  So, it will only be populated for ExtSDKIntegration performers.
+message TransactionsConfig {
+  // Durability to use for all mutating KV operations, both in cleanup and all transactions initiated.
+  optional Durability durability = 1;
+
+  // Timeout (nee expirationTime) for all transactions.
+  optional int64 timeoutMillis = 2;
+
+  repeated Hook hook = 3;
+
+  optional Collection metadataCollection = 4;
+
+  optional TransactionsCleanupConfig cleanupConfig = 5;
+
+  optional TransactionsConfigQuery queryConfig = 6;
+}
+
+message TransactionsCleanupConfig {
+  // Whether to run the lost cleanup thread(s).
+  optional bool cleanupLostAttempts = 1;
+
+  // Whether to run the cleanup thread cleaning up attempts from this client.
+  optional bool cleanupClientAttempts = 2;
+
+  // Length of the lost cleanup window, in millis.
+  optional int64 cleanupWindowMillis = 3;
+
+  // Additional collections to add to the cleanup set.
+  repeated Collection cleanupCollection = 4;
+}
+
+message TransactionsConfigQuery {
+  optional ScanConsistency scanConsistency = 1;
+}
+
+message ClusterConfig {
+  optional TransactionsConfig transactionsConfig = 1;
+
+  // The performer should use a custom JsonSerializer when creating the Cluster.
+  // This custom JsonSerializer is required to have specific serialization and deserialization logic, which the driver
+  // will validate.  See the Java performer for implementation details.
+  bool useCustomSerializer = 2;
+}

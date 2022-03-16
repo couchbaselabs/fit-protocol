@@ -17,11 +17,6 @@ enum AttemptStates {
     UNKNOWN=6;
 }
 
-enum UnstagingMode {
-    TIME_OPTIMIZED = 0;
-    MEMORY_OPTIMIZED = 1;
-}
-
 message Collection {
     string bucketName = 1;
     string scopeName = 2;

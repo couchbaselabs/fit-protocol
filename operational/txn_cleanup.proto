@@ -11,25 +11,21 @@ option java_multiple_files = true;
 import "txn_basic.proto";
 import "txn_hooks.proto";
 
-message TransactionProcessCleanupQueueRequest {
-    string transactionsFactoryRef = 1;
-}
-
 message TransactionCleanupRequest {
     DocId atr = 5;
-    // TODO for backwards-compatibility with performers that don't support `atr` yet - aiming to remove eventually
+    // For backwards-compatibility with performers that don't support `atr` yet - will be removed eventually
     string atrId = 1 [deprecated=true];   // Field `atr` should be used instead.
     string attemptId = 2;
     string transactionId = 3;
     // Any hooks can only use HookPoints in the CLEANUP_* range
     repeated Hook hook = 4;
 
-    // TODO move this to Transaction Object: SDKQE-2148
-    string clusterConnectionId=6;
+    // This is only needed for KV operations, so the driver will usually send the default cluster connection.
+    string clusterConnectionId = 6;
 }
 
 message TransactionCleanupATRRequest {
-    // TODO for backwards-compatibility with performers that don't support `atr` yet - aiming to remove eventually
+    // For backwards-compatibility with performers that don't support `atr` yet - will be removed eventually
     string atrId = 1 [deprecated=true];   // Field `atr` should be used instead.
     DocId atr = 3;
     // Any hooks can only use HookPoints in the CLEANUP_* range
@@ -74,7 +70,15 @@ message TransactionCleanupATRResult {
     int32 numExpiredEntries = 3;
 }
 
-message TransactionCleanupQueueResult {
-    repeated TransactionCleanupAttempt attempts = 1;
+// The set of collections currently being cleaned up.
+message CleanupSet {
+    repeated Collection cleanupSet = 1;
 }
 
+message CleanupSetFetchRequest {
+    string clusterConnectionId = 1;
+}
+
+message CleanupSetFetchResponse {
+    CleanupSet cleanupSet = 1;
+}
