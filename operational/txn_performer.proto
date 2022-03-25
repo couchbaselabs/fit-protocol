@@ -366,14 +366,16 @@ message TransactionSingleQueryResponse {
     // Any TransactionFailed error raised by the operation, at the point of performing the cluster.query()/transactions.query()
     TransactionException exception = 2;
 
-    // The cause field in `exception`.
+    // If `exception` is NO_EXCEPTION_THROWN, then this is the exception raised at the point of performing the cluster.query()/transactions.query().
+    //    e.g. this is how non-TransactionFailed errors are indicated.
+    // Otherwise, it's the cause field of the TransactionFailed.
     ExternalException exceptionCause = 3;
 
     // Any TransactionFailed error raised by the operation, at the point of streaming the rows.
     TransactionException exceptionDuringStreaming = 4;
 
     // If `exceptionDuringStreaming` is NO_EXCEPTION_THROWN, then this is the exception raised while streaming the rows.
-    //    e.g. this is how non-TransactionFailed errors are indiciated.
+    //    e.g. this is how non-TransactionFailed errors are indicated.
     // Otherwise, it's the cause field of the TransactionFailed.
     ExternalException exceptionCauseDuringStreaming = 5;
 
