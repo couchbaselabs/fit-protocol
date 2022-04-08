@@ -54,6 +54,8 @@ enum HookPoint {
     BEFORE_UNLOCK_REPLACE = 44;
     BEFORE_UNLOCK_REMOVE = 45;
     BEFORE_UNLOCK_QUERY = 46;
+    BEFORE_DOC_CHANGED_DURING_ROLLBACK = 47;
+    BEFORE_DOC_CHANGED_DURING_STAGING = 48;
 
     // Injects that the transaction has expired at a certain point
     // Does not take a HookAction

@@ -35,4 +35,6 @@ enum PerformerCaps {
     EXT_THREAD_SAFE = 18;
     EXT_SERIALIZATION = 19;
     EXT_SDK_INTEGRATION = 20;
+    EXT_MOBILE_INTEROP = 21;
+    // Remember to add a test to ForwardCompatibilityTest for each extension
 }

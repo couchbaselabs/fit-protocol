@@ -95,6 +95,10 @@ enum ErrorClass {
     EC_FAIL_WRITE_WRITE_CONFLICT = 8;
     EC_FAIL_ATR_FULL = 9;
     EC_FAIL_EXPIRY = 11;
+    // Any ErrorClass is permitted - including the TransactionOperationFailed not having one
+    // Note that ErrorClass validation is now deprecated and performers should remove their
+    // validation logic.
+    EC_ANYTHING = 12;
 }
 
 message ExpectedResult {
@@ -140,6 +144,16 @@ message CommandGet {
     // If not DO_NOT_CHECK, the performer will check the fetched document status equals this.
     // Fully deprecated as of ExtSDKIntegration.  The driver will only specify DO_NOT_CHECK now.
     DocStatus expectedStatus = 4 [deprecated = true];
+
+    // Since day one the performer must have supported stashing a single document.  Whenever a CommandGet or
+    // CommandGetOptional is executed, the result is automatically stashed.
+    // ExtMobileInterop adds the concept of stashing multiple documents.  This allows some more sophisticated tests
+    // particularly around CAS mismatches.
+    // If this `stashInSlot` is set, the performer
+    // needs to update or create a map of StashSlot (Int) -> TransactionGetResult.  This is stored per-transaction and
+    // should be deleted at the end of the transaction.  Subsequent CommandReplace and CommandReplace operations may
+    // may reference to one of these stashed results.
+    optional int32 stashInSlot = 5;
 }
 
 // There are two ways the implementation can implement getOptional:
@@ -173,6 +187,10 @@ message CommandReplace {
     // This will not be set inside a CommandBatch, due to the 'last' operation not being
     // a valid concept during parallel ops.
     bool useStashedResult = 4;
+
+    // Refer to `stashInSlot` in CommandGet for details.
+    // `useStashedResult` and `useStashedSlot` will not be sent together.
+    optional int32 useStashedSlot = 5;
 }
 
 message CommandRemove {
@@ -185,6 +203,10 @@ message CommandRemove {
     // This will not be set inside a CommandBatch, due to the 'last' operation not being
     // a valid concept during parallel ops.
     bool useStashedResult = 3;
+
+    // Refer to `stashInSlot` in CommandGet for details.
+    // `useStashedResult` and `useStashedSlot` will not be sent together.
+    optional int32 useStashedSlot = 4;
 }
 
 // ExtSDKIntegration performers should ignore.
@@ -210,6 +232,8 @@ message CommandSetLatch {
 }
 
 // A batch of commands, often to be performed in parallel.
+// But not always, sometimes it's used so multiple threads can each run a series of commands in serial.
+// (E.g. nested CommandBatches).  So it's crucial that the performer respect the `parallelism` setting.
 message CommandBatch {
     // A limited subset of commands are supported here:
     // CommandInsert, CommandReplace, CommandRemove and CommandGet.
@@ -217,7 +241,13 @@ message CommandBatch {
     // concept in parallel operations.
     repeated TransactionCommand commands = 1;
 
-    // If the commands are being performed in parallel, how many to do concurrently
+    // If the commands are being performed in parallel, how many to do concurrently.
+    // The performer is required to have this many operations in flight at once.  E.g. say this value
+    // is 3, and 10 operations are specified in `commands`.  The performer should start the first 3
+    // operations in `commands` in parallel.  Once an operation finishes successfully the performer should
+    // immediately start the next operation in `commands`, in parallel with the still-running other 2.
+    // It should not 'batch' the operations and wait for them all to succeed before progressing with
+    // the next batch.
     int32 parallelism = 2;
 }
 

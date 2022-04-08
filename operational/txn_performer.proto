@@ -299,10 +299,20 @@ message TransactionCreateRequest {
     // Just for debugging, name the test
     string name = 5;
 
-    // Instead of the performer returning any raised events, the driver specifies which are expected.
+    // Instead of the performer returning any raised events, the driver specifies which are expected, or explicitly
+    // not expected.
     // Event buses can be asynchronous so this prevents the performer having to wait for an unknown amount of
     // time on each test.
+    // Also, each implementation handles events differently - some use an event bus, some simply log.  So this allows
+    // the performer to also check as appropriate.
+    // For expectedAbsenceOfEvents, the performer should pick an appropriate amount of time to wait for events before
+    // deciding an event will definitely not arrive.
     repeated Event expectedEvents = 6;
+    repeated Event expectedAbsenceOfEvents = 9;
+
+    // Instead of the performer returning any raised events, the driver specifies which are explicitly not expected.
+    // Event buses can be asynchronous so this prevents the performer having to wait for an unknown amount of
+    // time on each test.
 
     // Used for ExtSDKIntegration to create the transaction, and both in that and in non-ExtSDKIntegration to access
     // collections for KV operations.
