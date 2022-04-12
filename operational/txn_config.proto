@@ -149,4 +149,7 @@ message ClusterConfig {
   // This custom JsonSerializer is required to have specific serialization and deserialization logic, which the driver
   // will validate.  See the Java performer for implementation details.
   bool useCustomSerializer = 2;
+
+  // Used for TLS enabled clusters such as Capella clusters
+  optional string certPath = 3;
 }
