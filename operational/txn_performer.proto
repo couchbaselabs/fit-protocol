@@ -374,9 +374,10 @@ message TransactionSingleQueryResponse {
     // The fields below replace the deprecated `result`, which will ultimately be removed.
 
     // Any TransactionFailed error raised by the operation, at the point of performing the cluster.query()/transactions.query()
+    // If it threw a non-TransactionFailed exception, return EXCEPTION_UNKNOWN
     TransactionException exception = 2;
 
-    // If `exception` is NO_EXCEPTION_THROWN, then this is the exception raised at the point of performing the cluster.query()/transactions.query().
+    // If `exception` is EXCEPTION_UNKNOWN, then this is the exception raised at the point of performing the cluster.query()/transactions.query().
     //    e.g. this is how non-TransactionFailed errors are indicated.
     // Otherwise, it's the cause field of the TransactionFailed.
     ExternalException exceptionCause = 3;

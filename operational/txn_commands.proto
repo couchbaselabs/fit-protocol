@@ -80,6 +80,8 @@ enum ExternalException {
     RollbackNotPermitted = 19;
     TransactionAlreadyAborted = 20;
     TransactionAlreadyCommitted = 21;
+    UnambiguousTimeoutException = 22;
+    AmbiguousTimeoutException = 23;
 }
 
 enum ErrorClass {
