@@ -82,6 +82,7 @@ enum ExternalException {
     TransactionAlreadyCommitted = 21;
     UnambiguousTimeoutException = 22;
     AmbiguousTimeoutException = 23;
+    AuthenticationFailureException=24;
 }
 
 enum ErrorClass {
