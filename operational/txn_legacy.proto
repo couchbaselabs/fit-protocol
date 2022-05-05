@@ -58,7 +58,8 @@ message CreateConnectionRequest {
   bool useCustomSerializer=6;
 
   // Used for TLS enabled clusters such as Capella clusters
-  optional string certPath = 7;
+  bool useTls = 7;
+  optional string certPath = 8;
 }
 
 // Returns the capabilities of the performer (or more specifically, the transactions-implementation-under-test by that

@@ -151,5 +151,6 @@ message ClusterConfig {
   bool useCustomSerializer = 2;
 
   // Used for TLS enabled clusters such as Capella clusters
-  optional string certPath = 3;
+  bool useTls = 3;
+  optional string certPath = 4;
 }
