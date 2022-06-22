@@ -115,7 +115,7 @@ message ExpectedResult {
         bool anythingAllowed = 2;
 
         // The operation throws an ErrorWrapper/TransactionOperationFailed, the only exception an operation may throw.
-        // Update: as of EXT_QUERY, that is no longer the case, some operations can throw some other exceptions.
+        // Update: as of EXT_QUERY, EXT_SDK_INTEGRATION and EXT_INSERTS_EXISTING, that is no longer the case, some operations can throw some other exceptions.
         ErrorWrapper error = 3;
 
         // Require a non-TransactionOperationFailed exception.
