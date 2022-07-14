@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+// See README.md in this directory for a description of these.
+package protocol;
+option csharp_namespace = "Couchbase.Grpc.Protocol";
+option java_package = "com.couchbase.client.performer.grpc";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
+option java_multiple_files = true;
+
+import "collection.proto";
+
+// The performer will access the document in this exact location
+message DocLocationSpecific {
+  Collection collection = 1;
+  string id = 2;
+}
+
+// The performer will generate a random UUID for the document id
+message DocLocationUuid {
+  Collection collection = 1;
+}
+
+enum RandomDistribution {
+  RANDOM_DISTRIBUTION_UNIFORM = 0;
+}
+
+// Generate a random id in [0-poolSize).
+message PoolSelectionStategyRandom {
+  RandomDistribution distribution = 1;
+}
+
+// Use a counter shared between all threads to monotonically select the next document in the pool, starting at 0.
+// The performer should create a separate counter for each PerfRunRequest.
+// The performer should modulo `poolSize`.  E.g. `realCounterResult = currentCounterValue % poolSize`.
+message PoolSelectionStrategyCounter {}
+
+// The performer will pick a document from a pool.
+// The performer should generate an integer in [0-poolSize) following selectionStrategy.  Then append that to `idPreface`
+// e.g. "${idPreface}${selectedInt}" to get the document id.
+message DocLocationPool {
+  Collection collection = 1;
+
+  // All documents in the pool start with this.
+  string idPreface = 2;
+
+  // How many documents are in the pool.
+  int64 poolSize = 3;
+
+  oneof poolSelectionStrategy {
+    PoolSelectionStategyRandom uniform = 4;
+    PoolSelectionStrategyCounter counter = 5;
+  }
+}
+
+message DocLocation {
+  oneof location {
+    DocLocationSpecific specific = 1;
+    DocLocationUuid uuid = 2;
+    DocLocationPool pool = 3;
+  }
+}

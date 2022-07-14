@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+// See README.md in this directory for a description of these.
+package protocol;
+option csharp_namespace = "Couchbase.Grpc.Protocol";
+option java_package = "com.couchbase.client.performer.grpc";
+option go_package = "github.com/couchbaselabs/perf-sdk/protocol";
+option java_multiple_files = true;
+
+import "shared_config.proto";
+
+enum PersistTo {
+  PERSIST_TO_NONE = 0;
+  PERSIST_TO_ACTIVE = 1;
+  PERSIST_TO_ONE = 2;
+  PERSIST_TO_TWO = 3;
+  PERSIST_TO_THREE = 4;
+  PERSIST_TO_FOUR = 5;
+}
+
+enum ReplicateTo {
+  REPLICATE_TO_NONE = 0;
+  REPLICATE_TO_ONE = 1;
+  REPLICATE_TO_TWO = 2;
+  REPLICATE_TO_THREE = 3;
+}
+
+message Expiry {
+  oneof expiryType {
+    // The document will expire after the given duration.
+    int64 relativeSecs = 1;
+    // The document will expire at a specific time.  Given in epoch time.
+    int64 absoluteEpochSecs = 2;
+  }
+}
+
+message ObserveBased {
+  PersistTo persistTo = 1;
+  ReplicateTo replicateTo = 2;
+}
+
+// Awkward name as Durability already taken
+message DurabilityType {
+  oneof durability {
+    Durability durabilityLevel = 1;
+    ObserveBased observe = 2;
+  }
+}
+
+message InsertOptions {
+  optional int32 timeoutMsecs = 1;
+  optional DurabilityType durability = 2;
+  optional Expiry expiry = 3;
+}
+
+message ReplaceOptions {
+  optional int32 timeoutMsecs = 1;
+  optional DurabilityType durability = 2;
+  optional Expiry expiry = 3;
+  optional bool preserveExpiry = 4;
+  optional int64 cas = 5;
+}
+
+message UpsertOptions {
+  optional int32 timeoutMsecs = 1;
+  optional DurabilityType durability = 2;
+  optional Expiry expiry = 3;
+  optional bool preserveExpiry = 4;
+}
+
+message RemoveOptions {
+  optional int32 timeoutMsecs = 1;
+  optional DurabilityType durability = 2;
+  optional int64 cas = 3;
+}
+
+message GetOptions {
+  optional int32 timeoutMsecs = 1;
+  optional bool withExpiry = 2;
+  // It's not possible to have 'optional repeated' in GRPC.  If this is empty, don't set the projected option.
+  repeated string projection = 3;
+}

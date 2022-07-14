@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package protocol;
+option csharp_namespace = "Couchbase.Grpc.Protocol";
+option java_package = "com.couchbase.client.performer.grpc";
+option go_package = "github.com/couchbaselabs/perf-sdk/protocol";
+option java_multiple_files = true;
+
+import "sdk_options.proto";
+import "doc_location.proto";
+import "bounds.proto";
+
+
+message SdkCommandInsert {
+  DocLocation location = 1;
+  string contentJson = 2;
+  optional InsertOptions options = 3;
+}
+
+message SdkCommandGet {
+  DocLocation location = 1;
+  optional GetOptions options = 2;
+}
+
+message SdkCommandRemove {
+  DocLocation location = 1;
+  optional RemoveOptions options = 2;
+}
+
+message SdkCommandReplace {
+  DocLocation location = 1;
+  string contentJson = 2;
+  optional ReplaceOptions options = 3;
+}
+
+message SdkCommandUpsert {
+  DocLocation location = 1;
+  string contentJson = 2;
+  optional UpsertOptions options = 3;
+}
+
+message SdkCommand {
+  oneof command {
+    SdkCommandInsert insert = 1;
+    SdkCommandGet get = 2;
+    SdkCommandRemove remove = 3;
+    SdkCommandReplace replace = 4;
+    SdkCommandUpsert upsert = 5;
+  }
+}
+
+message SdkWorkload {
+  // The commands to run.  The performer should execute these in a loop until `bounds` is completed.
+  //
+  // If there are multiple commands, each should register as separate command for the purposes of bounding, and each
+  // should send back one SdkCommandResult.
+  //
+  // For example, if the bounds specifies
+  // to run 10 commands total, and there are 3 SdkCommand specified here, the performer should execute the 3 commands
+  // 3 times, and then the first command once more.  And 10 SdkCommandResults will be sent back.
+  //
+  // If the command fails, the performer should not propagate the failure (but should still send back an SdkCommandResult).
+  repeated SdkCommand command = 1;
+
+  // Controls how the commands should be run.
+  Bounds bounds = 2;
+}
+
+enum SdkException {
+  // When we start SDK integration testing, will fill this out.
+  SDK_EXCEPTION_DUMMY = 0;
+}
+
+// The result of executing a single SdkCommand.
+message SdkCommandResult {
+  oneof result {
+    // If the small overhead of creating a full InsertResult is not required (e.g. for performance testing), can
+    // return this generic success instead.
+    bool success = 1;
+
+    // If the exception is not represented in SdkException, can return it in raw form here
+    string unknownException = 2;
+
+    // To be used in future when we start SDK integration testing.
+    SdkException knownException = 3;
+
+    // In future we will have MutationResult, GetResult, etc. for SDK integration testing.
+  }
+}
+
