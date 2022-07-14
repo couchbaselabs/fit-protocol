@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package protocol;
+option csharp_namespace = "Couchbase.Grpc.Protocol";
+option java_package = "com.couchbase.grpc.protocol";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
+option java_multiple_files = true;
+
+message Scope {
+  string bucketName = 1;
+  string scopeName = 2;
+}
+
+message Collection {
+  string bucketName = 1;
+  string scopeName = 2;
+  string collectionName = 3;
+}

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package protocol;
+option csharp_namespace = "Couchbase.Grpc.Protocol";
+option java_package = "com.couchbase.client.performer.grpc";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
+option java_multiple_files = true;
+
+// Note these latches don't work like real CountdownLatches (or equivalent).
+// Each concurrent transaction gets its own version of the latch, and they are synchronized by the driver.
+message Latch {
+    int32 initialCount = 1;
+    string name = 2;
+}
+

@@ -7,10 +7,12 @@ option java_package = "com.couchbase.grpc.protocol";
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
 option java_multiple_files = true;
 
+import "doc_location.proto";
 import "txn_basic.proto";
 import "txn_hooks.proto";
 import "txn_config.proto";
 import "txn_legacy.proto";
+import "collection.proto";
 
 enum EventType {
     EventCleanupFailedEvent = 0;
@@ -237,6 +239,7 @@ message CommandSetLatch {
 // A batch of commands, often to be performed in parallel.
 // But not always, sometimes it's used so multiple threads can each run a series of commands in serial.
 // (E.g. nested CommandBatches).  So it's crucial that the performer respect the `parallelism` setting.
+// Created long before HorizontalScaling.
 message CommandBatch {
     // A limited subset of commands are supported here:
     // CommandInsert, CommandReplace, CommandRemove and CommandGet.
@@ -255,17 +258,20 @@ message CommandBatch {
 }
 
 // Replace a document using a regular KV operation.  The command is expected to succeed.
+// Created long before SdkCommandReplace.
 message CommandReplaceRegularKV {
     DocId docId = 1;
     string contentJson = 2;
 }
 
 // Remove a document using a regular KV operation.  The command is expected to succeed.
+// Created long before SdkCommandRemove.
 message CommandRemoveRegularKV {
     DocId docId = 1;
 }
 
 // Insert a document using a regular KV operation.  The command is expected to succeed.
+// Created long before SdkCommandInsert.
 message CommandInsertRegularKV {
     DocId docId = 1;
     string contentJson = 2;

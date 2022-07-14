@@ -8,8 +8,10 @@ option java_package = "com.couchbase.grpc.protocol";
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
 option java_multiple_files = true;
 
+import "doc_location.proto";
 import "txn_basic.proto";
 import "txn_hooks.proto";
+import "collection.proto";
 
 message TransactionCleanupRequest {
     DocId atr = 5;
@@ -50,7 +52,7 @@ message TransactionCleanupAttempt {
     DocId atr = 7;
 
     // The key of the ATR document
-    // TODO for backwards-compatibility with performers that don't support `atr` yet - aiming to remove eventually
+    // For backwards-compatibility with performers that don't support `atr` yet - aiming to remove eventually.
     string atrId = 4 [deprecated=true];          // Field `atr` should be used instead.
 
     // The name of the bucket the ATR is on

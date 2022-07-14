@@ -7,6 +7,8 @@ option java_package = "com.couchbase.grpc.protocol";
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
 option java_multiple_files = true;
 
+import "doc_location.proto";
+
 enum AttemptStates {
     NOTHING_WRITTEN=0;
     PENDING=1;
@@ -17,12 +19,7 @@ enum AttemptStates {
     UNKNOWN=6;
 }
 
-message Collection {
-    string bucketName = 1;
-    string scopeName = 2;
-    string collectionName = 3;
-}
-
+// Exists for legacy reasons.  Newer messages should use DocLocation.
 message DocId {
     string bucketName = 1;
     string scopeName = 2;
@@ -30,7 +27,3 @@ message DocId {
     string docId = 4;
 }
 
-message Scope {
-    string bucketName = 1;
-    string scopeName = 2;
-}

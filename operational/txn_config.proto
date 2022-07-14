@@ -8,19 +8,15 @@ option java_package = "com.couchbase.grpc.protocol";
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
 option java_multiple_files = true;
 
+import "doc_location.proto";
 import "txn_basic.proto";
 import "txn_hooks.proto";
+import "shared_config.proto";
+import "collection.proto";
 
 enum UnstagingMode {
   TIME_OPTIMIZED = 0;
   MEMORY_OPTIMIZED = 1;
-}
-
-enum Durability {
-  NONE = 0;
-  MAJORITY = 1;
-  MAJORITY_AND_PERSIST_TO_ACTIVE = 2;
-  PERSIST_TO_MAJORITY = 3;
 }
 
 // When an implementation supports multiple APIs, this enum allows sending which is preferred to be used for a given test.
