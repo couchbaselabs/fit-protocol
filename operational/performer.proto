@@ -12,30 +12,34 @@ import "txn_commands.proto";
 import "txn_hooks.proto";
 import "txn_client_record.proto";
 import "txn_cleanup.proto";
+import "sdk_extensions.proto";
 import "txn_extensions.proto";
 import "txn_basic.proto";
 import "txn_config.proto";
 import "txn_legacy.proto";
-import "performance.proto";
 import "txn_performer.proto";
 import "collection.proto";
+import "workloads.proto";
 
 // Named 'PerformerTransactionService' for legacy reasons.  It now encapsulates SDK rpc's too.
 service PerformerTransactionService {
     // Requests the performer's capabilities.
-    // Added in ExtSDKIntegration, and should only be implemented in performers that support that.
+    // Added in ExtSDKIntegration.
     // If the performer has not implemented this, the driver will gracefully degrade to using the now-legacy
     // CreateConnectionRequest instead.
+    // Required for performers that implement RealPerformerCaps.KV_SUPPORT_1.
     rpc performerCapsFetch (PerformerCapsFetchRequest) returns (PerformerCapsFetchResponse);
 
     // Creates a Cluster connection, and optionally configures it.
-    // Added in ExtSDKIntegration, and will only be sent if the performer declares support for that extension.  Otherwise
-    // CreateConnectionRequest will be used.
+    // Added in ExtSDKIntegration, and will only be sent if the performer declares support for that extension or RealPerformerCaps.KV_SUPPORT_1.
+    // Otherwise CreateConnectionRequest will be used.
+    // Required for performers that implement RealPerformerCaps.KV_SUPPORT_1.
     rpc clusterConnectionCreate (ClusterConnectionCreateRequest) returns (ClusterConnectionCreateResponse);
 
     // Close a particular cluster connection.
-    // Added in ExtSDKIntegration, and will only be sent if the performer declares support for that extension.
+    // Added in ExtSDKIntegration, and will only be sent if the performer declares support for that extension or RealPerformerCaps.KV_SUPPORT_1.
     // There is no real analogue pre-ExtSDKIntegration, so all cluster connections will remain open.
+    // Required for performers that implement RealPerformerCaps.KV_SUPPORT_1.
     rpc clusterConnectionClose (ClusterConnectionCloseRequest) returns (ClusterConnectionCloseResponse);
 
     // Closes all cluster connections.
@@ -84,11 +88,17 @@ service PerformerTransactionService {
     // Request that the performer Echo a string to the performer logs.
     rpc echo (EchoRequest) returns (EchoResponse);
 
-    // Execute a performance run and stream back responses.
+
+    // In subsequent rpcs:
     // If the performer encounters anything in the requested workloads that it cannot process, then it should return
     // an error with a standard GRPC Status.INVALID_ARGUMENT code (https://grpc.github.io/grpc/core/md_doc_statuscodes.html)
     // so the driver can cleanly handle this.
-    rpc perfRun (PerfRunRequest) returns (stream PerfRunResult);
+
+    // Execute a workload and return back all responses.
+    // Designed to be used for both performance and integration testing.
+    rpc runWorkload (WorkloadRunRequest) returns (WorkloadRunResult);
+    rpc runWorkloadStreaming (WorkloadRunRequest) returns (stream WorkloadSingleResult);
+
 
 
     // ExtSDKIntegration: the following methods will not be sent to ExtSDKIntegration-enabled performers.
@@ -142,11 +152,15 @@ message PerformerCapsFetchRequest {
 }
 
 message PerformerCapsFetchResponse {
-    // The capabilities of the implementation-under-test.
+    // The transactions capabilities of the implementation-under-test.
     repeated PerformerCaps performerCaps = 1;
+
+    // The SDK (non-transaction) capabilities of the implementation-under-test.
+    repeated SdkImplementationCaps sdkImplementationCaps = 8;
 
     // The capabilities of this performer.
     repeated RealPerformerCaps realPerformerCaps = 7;
+
 
     // Human-readable string identifying the performer.  For example, "java".
     // ExtSDKIntegration: performers should use a new user agent to disambiguate, such as "java" and "java-sdk".

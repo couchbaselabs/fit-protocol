@@ -9,11 +9,13 @@ option java_multiple_files = true;
 import "sdk_options.proto";
 import "doc_location.proto";
 import "bounds.proto";
+import "content.proto";
+import "exceptions.proto";
 
 
 message SdkCommandInsert {
   DocLocation location = 1;
-  string contentJson = 2;
+  Content content = 2;
   optional InsertOptions options = 3;
 }
 
@@ -29,13 +31,13 @@ message SdkCommandRemove {
 
 message SdkCommandReplace {
   DocLocation location = 1;
-  string contentJson = 2;
+  Content content = 2;
   optional ReplaceOptions options = 3;
 }
 
 message SdkCommandUpsert {
   DocLocation location = 1;
-  string contentJson = 2;
+  Content content = 2;
   optional UpsertOptions options = 3;
 }
 
@@ -47,6 +49,30 @@ message SdkCommand {
     SdkCommandReplace replace = 4;
     SdkCommandUpsert upsert = 5;
   }
+
+  // Whether the returned SdkCommandResult should contain a full result or just `success`.  Used for performance tests
+  // when the result doesn't matter so the small cost of creating it can be eliminated.
+  bool returnResult = 6;
+}
+
+message SdkMutationToken {
+  // This is a short really, but GRPC doesn't have int16
+  int32 partitionId = 1;
+  int64 partitionUuid = 2;
+  int64 sequenceNumber = 3;
+  string bucketName = 4;
+}
+
+message SdkMutationResult {
+  int64 cas = 1;
+  optional SdkMutationToken mutationToken = 2;
+}
+
+message SdkGetResult {
+  int64 cas = 1;
+  bytes content = 2;
+  // Represented as the number of seconds since January 1, 1970 (e.g. what the server returns)
+  optional int64 expiryTime = 3;
 }
 
 message SdkWorkload {
@@ -66,25 +92,20 @@ message SdkWorkload {
   Bounds bounds = 2;
 }
 
-enum SdkException {
-  // When we start SDK integration testing, will fill this out.
-  SDK_EXCEPTION_DUMMY = 0;
-}
 
 // The result of executing a single SdkCommand.
 message SdkCommandResult {
   oneof result {
-    // If the small overhead of creating a full InsertResult is not required (e.g. for performance testing), can
-    // return this generic success instead.
+    // If the small overhead of creating a full *Result is not required (e.g. for performance testing), can
+    // return this generic success instead.  Controlled by SdkCommand.returnResult.
     bool success = 1;
 
-    // If the exception is not represented in SdkException, can return it in raw form here
-    string unknownException = 2;
+    // If the operation failed.
+    Exception exception = 2;
 
-    // To be used in future when we start SDK integration testing.
-    SdkException knownException = 3;
-
-    // In future we will have MutationResult, GetResult, etc. for SDK integration testing.
+    // If the operation succeeded and SdkCommand.returnResult==true, return one of these.
+    SdkGetResult getResult = 3;
+    SdkMutationResult mutationResult = 4;
   }
 }
 

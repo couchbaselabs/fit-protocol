@@ -8,6 +8,7 @@ option go_package = "github.com/couchbaselabs/perf-sdk/protocol";
 option java_multiple_files = true;
 
 import "shared_config.proto";
+import "transcoders.proto";
 
 enum PersistTo {
   PERSIST_TO_NONE = 0;
@@ -51,6 +52,7 @@ message InsertOptions {
   optional int32 timeoutMsecs = 1;
   optional DurabilityType durability = 2;
   optional Expiry expiry = 3;
+  optional Transcoder transcoder = 4;
 }
 
 message ReplaceOptions {
@@ -59,6 +61,7 @@ message ReplaceOptions {
   optional Expiry expiry = 3;
   optional bool preserveExpiry = 4;
   optional int64 cas = 5;
+  optional Transcoder transcoder = 6;
 }
 
 message UpsertOptions {
@@ -66,6 +69,7 @@ message UpsertOptions {
   optional DurabilityType durability = 2;
   optional Expiry expiry = 3;
   optional bool preserveExpiry = 4;
+  optional Transcoder transcoder = 5;
 }
 
 message RemoveOptions {
@@ -79,4 +83,5 @@ message GetOptions {
   optional bool withExpiry = 2;
   // It's not possible to have 'optional repeated' in GRPC.  If this is empty, don't set the projected option.
   repeated string projection = 3;
+  optional Transcoder transcoder = 4;
 }

@@ -8,7 +8,7 @@ option go_package = "github.com/couchbaselabs/transactions-fit-performer/protoco
 option java_multiple_files = true;
 
 // Defined https://hackmd.io/foGjnSSIQmqfks2lXwNp8w#Protocol-Extensions
-// These are really capabilities of the implementation-under-test and would have been better named ImplementationCaps.
+// These are really transactions-related capabilities of the implementation-under-test and would have been better named TransactionsImplementationCaps.
 enum PerformerCaps {
     // This is mandatory if PROTOCOL_VERSION_2_0 or higher is sent.
     EXT_TRANSACTION_ID = 0;

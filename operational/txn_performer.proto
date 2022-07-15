@@ -16,7 +16,6 @@ import "txn_extensions.proto";
 import "txn_basic.proto";
 import "txn_config.proto";
 import "txn_legacy.proto";
-import "performance.proto";
 import "latch.proto";
 import "shared_config.proto";
 import "collection.proto";

@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package protocol;
+option csharp_namespace = "Couchbase.Grpc.Protocol";
+option java_package = "com.couchbase.client.performer.grpc";
+option go_package = "github.com/couchbaselabs/perf-sdk/protocol";
+option java_multiple_files = true;
+
+message LegacyTranscoder {}
+message JsonTranscoder {}
+message RawJsonTranscoder {}
+message RawStringTranscoder {}
+message RawBinaryTranscoder {}
+
+
+// All the transcoders required by https://github.com/couchbaselabs/sdk-rfcs/blob/master/rfc/0055-serializers-transcoders.md
+message Transcoder {
+  oneof transcoder {
+    LegacyTranscoder legacy = 1;
+    JsonTranscoder json = 2;
+    RawJsonTranscoder rawJson = 3;
+    RawStringTranscoder rawString = 4;
+    RawBinaryTranscoder rawBinary = 5;
+  }
+}

@@ -30,7 +30,7 @@ message PoolSelectionStategyRandom {
 }
 
 // Use a counter shared between all threads to monotonically select the next document in the pool, starting at 0.
-// The performer should create a separate counter for each PerfRunRequest.
+// The performer should create a separate counter for each WorkloadRunRequest.
 // The performer should modulo `poolSize`.  E.g. `realCounterResult = currentCounterValue % poolSize`.
 message PoolSelectionStrategyCounter {}
 
