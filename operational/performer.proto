@@ -46,6 +46,7 @@ service PerformerTransactionService {
     // Since ExtSDKIntegrated, the driver should be cleaning up all resources it creates.  But this method remains useful
     // to send upfront before all tests, in case the previous run did not finish cleanly.
     // It can only be sent before or after all tests, to avoid destroying the default cluster connection.
+    // Required for performers that implement RealPerformerCaps.KV_SUPPORT_1.
     rpc disconnectConnections (DisconnectConnectionsRequest) returns (DisconnectConnectionsResponse);
 
     // Creates and runs a transaction and returns the result.
@@ -166,7 +167,7 @@ message PerformerCapsFetchResponse {
     // ExtSDKIntegration: performers should use a new user agent to disambiguate, such as "java" and "java-sdk".
     string performerUserAgent = 2;
 
-    // Identifies the version of the library under test.  For example, "1.1.2".
+    // Identifies the version of the transactions library under test.  For example, "1.1.2".
     string performerLibraryVersion = 4;
 
     // Defined https://hackmd.io/foGjnSSIQmqfks2lXwNp8w#Protocol-Versions

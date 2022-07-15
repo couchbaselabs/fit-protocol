@@ -89,7 +89,8 @@ message SdkWorkload {
   repeated SdkCommand command = 1;
 
   // Controls how the commands should be run.
-  Bounds bounds = 2;
+  // If it's not present, just run the commands through once.
+  optional Bounds bounds = 2;
 }
 
 
