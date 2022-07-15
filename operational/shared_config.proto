@@ -4,7 +4,7 @@ syntax = "proto3";
 package protocol;
 option csharp_namespace = "Couchbase.Grpc.Protocol";
 option java_package = "com.couchbase.grpc.protocol";
-option go_package = "github.com/couchbaselabs/perf-sdk/protocol";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
 option java_multiple_files = true;
 
 enum Durability {
