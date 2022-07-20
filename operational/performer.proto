@@ -87,6 +87,7 @@ service PerformerTransactionService {
     rpc transactionSingleQuery (TransactionSingleQueryRequest) returns (TransactionSingleQueryResponse);
 
     // Request that the performer Echo a string to the performer logs.
+    // Required for performers that implement RealPerformerCaps.KV_SUPPORT_1.
     rpc echo (EchoRequest) returns (EchoResponse);
 
 

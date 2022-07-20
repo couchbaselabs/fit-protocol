@@ -8,6 +8,7 @@ option go_package = "github.com/couchbaselabs/transactions-fit-performer/protoco
 option java_multiple_files = true;
 
 import "collection.proto";
+import "bounds.proto";
 
 // The performer will access the document in this exact location
 message DocLocationSpecific {
@@ -29,10 +30,12 @@ message PoolSelectionStategyRandom {
   RandomDistribution distribution = 1;
 }
 
-// Use a counter shared between all threads to monotonically select the next document in the pool, starting at 0.
-// The performer should create a separate counter for each WorkloadRunRequest.
+// Use a counter to select the next document in the pool, starting at 0.
+// The performer should increment the counter each time it uses it.
 // The performer should modulo `poolSize`.  E.g. `realCounterResult = currentCounterValue % poolSize`.
-message PoolSelectionStrategyCounter {}
+message PoolSelectionStrategyCounter {
+  Counter counter = 1;
+}
 
 // The performer will pick a document from a pool.
 // The performer should generate an integer in [0-poolSize) following selectionStrategy.  Then append that to `idPreface`
@@ -47,7 +50,7 @@ message DocLocationPool {
   int64 poolSize = 3;
 
   oneof poolSelectionStrategy {
-    PoolSelectionStategyRandom uniform = 4;
+    PoolSelectionStategyRandom random = 4;
     PoolSelectionStrategyCounter counter = 5;
   }
 }
