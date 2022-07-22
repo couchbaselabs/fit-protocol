@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-// See README.md in this directory for a description of these.
-package protocol;
-option csharp_namespace = "Couchbase.Grpc.Protocol";
-option java_package = "com.couchbase.grpc.protocol";
-option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
+// hooks.transactions rather than transactions.hooks, to avoid Go circular imports on SingleQueryTransactionOptions
+package protocol.hooks.transactions;
+option csharp_namespace = "Couchbase.Grpc.Protocol.Hooks.Transactions";
+option java_package = "com.couchbase.client.protocol.hooks.transactions";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/hooks/transactions";
 option java_multiple_files = true;
 
 // Generally the BEFORE_ hook is used to inject an error, e.g. as if the server had returned a failure

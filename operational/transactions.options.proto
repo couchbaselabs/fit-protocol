@@ -1,0 +1,54 @@
+// All options and config blocks
+syntax = "proto3";
+
+package protocol.transactions;
+option csharp_namespace = "Couchbase.Grpc.Protocol.Transactions";
+option java_package = "com.couchbase.client.protocol.transactions";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/transactions";
+option java_multiple_files = true;
+
+import "hooks.transactions.proto";
+import "shared.collection.proto";
+import "shared.basic.proto";
+
+enum UnstagingMode {
+  TIME_OPTIMIZED = 0;
+  MEMORY_OPTIMIZED = 1;
+}
+
+message TransactionQueryOptions {
+  optional shared.ScanConsistency scanConsistency = 1;
+  map<string, string> raw = 2;
+  optional bool adhoc = 3;
+  // "off", "phases", or "timings"
+  optional string profile = 4;
+  optional bool readonly = 5;
+  repeated string parametersPositional = 6;
+  map<string, string> parametersNamed = 7;
+  optional bool flexIndex = 8;
+  optional int32 pipelineCap = 9;
+  optional int32 pipelineBatch = 10;
+  optional int32 scanCap = 11;
+  optional int32 scanWaitMillis = 12;
+}
+
+// Options that can be overridden at the individual transaction level.
+// Note that pre-ExtSDKIntegration, this struct was empty.  Not in the implementation, where PerTransactionConfig existed,
+// but here at the FIT level.  So, it will only be populated for ExtSDKIntegration performers.
+message TransactionOptions {
+  // Durability to use for all mutating KV operations in this transaction.
+  optional shared.Durability durability = 1;
+
+  // Timeout (nee expirationTime) for this transaction.
+  optional int64 timeoutMillis = 2;
+
+  // Any hooks can only use HookPoints before the CLEANUP_* range.
+  repeated hooks.transactions.Hook hook = 3;
+
+  // Will only be sent to ExtSDKIntegration-enabled performers.
+  optional shared.Collection metadataCollection = 4;
+
+  // Note that PerTransactionQueryConfig is not sent, as it is removed in ExtSDKIntegration.
+}
+
+

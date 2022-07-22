@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package protocol.sdk.query;
+option csharp_namespace = "Couchbase.Grpc.Protocol.Sdk.Query";
+option java_package = "com.couchbase.client.protocol.sdk.query";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/sdk/query";
+option java_multiple_files = true;
+
+import "shared.basic.proto";
+import "hooks.transactions.proto";
+
+message QueryOptions {
+  optional shared.ScanConsistency scanConsistency = 1;
+  map<string, string> raw = 2;
+  optional bool adhoc = 3;
+  // "off", "phases", or "timings"
+  optional string profile = 4;
+  optional bool readonly = 5;
+  repeated string parametersPositional = 6;
+  map<string, string> parametersNamed = 7;
+  optional bool flexIndex = 8;
+  optional int32 pipelineCap = 9;
+  optional int32 pipelineBatch = 10;
+  optional int32 scanCap = 11;
+  optional int32 scanWaitMillis = 12;
+  optional int64 timeoutMillis = 13;
+  optional int32 maxParallelism = 14;
+  optional bool metrics = 15;
+  optional SingleQueryTransactionOptions singleQueryTransactionOptions = 16;
+}
+
+// Ideally this would be in the transactions package, but that would introduce a Go package import cycle
+message SingleQueryTransactionOptions {
+  // Override the durability level.
+  optional shared.Durability durability = 1;
+
+  repeated hooks.transactions.Hook hook = 2;
+}

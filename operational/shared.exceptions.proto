@@ -1,14 +1,16 @@
 syntax = "proto3";
 
-package protocol;
-option csharp_namespace = "Couchbase.Grpc.Protocol";
-option java_package = "com.couchbase.client.performer.grpc";
-option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
+package protocol.shared;
+option csharp_namespace = "Couchbase.Grpc.Protocol.Shared";
+option java_package = "com.couchbase.client.protocol.shared";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/shared";
 option java_multiple_files = true;
 
-// The performer should return the most specific error possible.  E.g. not SDK_COUCHBASE_EXCEPTION.
+// All errors derived from CouchbaseException.
+// The performer should return the most specific error possible.  E.g. not SDK_COUCHBASE_EXCEPTION, unless a raw CouchbaseException
+// is what the SDK raised.
 // From https://github.com/couchbaselabs/sdk-rfcs/blob/master/rfc/0058-error-handling.md
-enum SdkExceptionType {
+enum CouchbaseExceptionType {
   SDK_COUCHBASE_EXCEPTION = 0;
   SDK_TIMEOUT_EXCEPTION = 1;
   SDK_REQUEST_CANCELLED_EXCEPTION = 2;
@@ -90,21 +92,18 @@ enum SdkExceptionType {
   SDK_BUCKET_NOT_FLUSHABLE_EXCEPTION = 607;
 }
 
-message SdkException {
+// An exception derived from CouchbaseException
+// "Ex" naming as transactions already has CouchbaseException in an enum.
+message CouchbaseExceptionEx {
   // The simple name e.g. "DocumentNotFoundException"
   string name = 1;
 
-  SdkExceptionType type = 2;
+  CouchbaseExceptionType type = 2;
   optional Exception cause = 3;
 
   // Broadly this is the result of outputting the exception.  E.g. for Java `ex.toString()`.
   // Per the RFC it's expected to contain the serialized error context.
   string serialized = 4;
-}
-
-message SdkErrorContextGeneric {
-  // The error context's content serialised into JSON
-  bytes contentJson = 1;
 }
 
 // If the exception is not represented in SdkException, can return it in raw form here
@@ -118,8 +117,7 @@ message ExceptionOther {
 
 message Exception {
   oneof exception {
-    // An exception derived from CouchbaseException
-    SdkException sdk = 1;
+    CouchbaseExceptionEx couchbase = 1;
 
     ExceptionOther other = 2;
   }

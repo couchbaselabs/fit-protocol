@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package protocol;
-option csharp_namespace = "Couchbase.Grpc.Protocol";
-option java_package = "com.couchbase.client.performer.grpc";
+package protocol.shared;
+option csharp_namespace = "Couchbase.Grpc.Protocol.Shared";
+option java_package = "com.couchbase.client.protocol.shared";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/shared";
 option java_multiple_files = true;
-option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
 
 // We may need the flexibility to do various forms of counter, e.g.:
 // 1. Aim to do 1m operations across all threads.

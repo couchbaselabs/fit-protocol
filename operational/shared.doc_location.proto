@@ -1,14 +1,13 @@
 syntax = "proto3";
 
-// See README.md in this directory for a description of these.
-package protocol;
-option csharp_namespace = "Couchbase.Grpc.Protocol";
-option java_package = "com.couchbase.client.performer.grpc";
-option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
+package protocol.shared;
+option csharp_namespace = "Couchbase.Grpc.Protocol.Shared";
+option java_package = "com.couchbase.client.protocol.shared";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/shared";
 option java_multiple_files = true;
 
-import "collection.proto";
-import "bounds.proto";
+import "shared.collection.proto";
+import "shared.bounds.proto";
 
 // The performer will access the document in this exact location
 message DocLocationSpecific {

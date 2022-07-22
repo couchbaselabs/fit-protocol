@@ -1,17 +1,15 @@
-// Everything to do with cleanup testing
+// Everything to do with transactions cleanup testing
 syntax = "proto3";
 
-// See README.md in this directory for a description of these.
-package protocol;
-option csharp_namespace = "Couchbase.Grpc.Protocol";
-option java_package = "com.couchbase.grpc.protocol";
-option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
+package protocol.transactions;
+option csharp_namespace = "Couchbase.Grpc.Protocol.Transactions";
+option java_package = "com.couchbase.client.protocol.transactions";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/transactions";
 option java_multiple_files = true;
 
-import "doc_location.proto";
-import "txn_basic.proto";
-import "txn_hooks.proto";
-import "collection.proto";
+import "transactions.basic.proto";
+import "hooks.transactions.proto";
+import "shared.collection.proto";
 
 message TransactionCleanupRequest {
     DocId atr = 5;
@@ -20,7 +18,7 @@ message TransactionCleanupRequest {
     string attemptId = 2;
     string transactionId = 3;
     // Any hooks can only use HookPoints in the CLEANUP_* range
-    repeated Hook hook = 4;
+    repeated hooks.transactions.Hook hook = 4;
 
     // This is only needed for KV operations, so the driver will usually send the default cluster connection.
     string clusterConnectionId = 6;
@@ -31,7 +29,7 @@ message TransactionCleanupATRRequest {
     string atrId = 1 [deprecated=true];   // Field `atr` should be used instead.
     DocId atr = 3;
     // Any hooks can only use HookPoints in the CLEANUP_* range
-    repeated Hook hook = 2;
+    repeated hooks.transactions.Hook hook = 2;
 
     string clusterConnectionId=4;
 }
@@ -74,7 +72,7 @@ message TransactionCleanupATRResult {
 
 // The set of collections currently being cleaned up.
 message CleanupSet {
-    repeated Collection cleanupSet = 1;
+    repeated shared.Collection cleanupSet = 1;
 }
 
 message CleanupSetFetchRequest {

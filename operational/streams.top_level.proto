@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package protocol.streams;
+option csharp_namespace = "Couchbase.Grpc.Protocol.Streams";
+option java_package = "com.couchbase.client.protocol.streams";
+option java_multiple_files = true;
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/streams";
+
+enum Type {
+  STREAM_KV_RANGE_SCAN = 0;
+}
+
+// Some operations (e.g. KV range scans, SQL++ queries) can stream back results.  The performer needs to track these
+// streams to allow testing their cancellation.
+message Stream {
+  Type type = 1;
+  string streamId = 2;
+}
+
+// A request for the performer to cancel a stream.  Exactly what this entails is context and SDK dependent.  If the
+// SDK's stream has the concept of user-cancellation, this should be invoked.  At minimum, the performer should stop
+// streaming responses from that stream to the driver.
+message CancelRequest {
+  Stream stream = 1;
+}
+
+// The performer has successfully cancelled the stream.  Due to the asynchronous nature of streaming and cancelling, a
+// few items may still be streamed back to the driver after this is sent.
+message CancelResponse {
+  // Currently empty, but included per GRPC best practices.
+}
+
+// The driver (pretending to be the user) is requesting more items.  For each item requested, the performer should fetch
+// one from the stream, and stream back an appropriate response.
+message RequestItemsRequest {
+  int32 numItems = 1;
+}
+
+message RequestItemsResponse {
+  // Currently empty, but included per GRPC best practices.
+}
+
+// The performer has created a stream and is notifying the driver of it.
+message Created {
+  Stream stream = 1;
+}
+
+// The performer should stream back responses as fast as it can.
+message Automatically {}
+
+// The performer must wait for the driver to request rows before streaming them.
+message OnDemand {}
+
+message Config {
+  // When the performer should stream back results.
+  oneof streamWhen {
+    Automatically automatically = 1;
+    OnDemand onDemand = 2;
+  }
+}
+
+// todo: Stream lifetimes. Are streams implicitly bound to the GRPC `rpc` that created them? Can they live independently of that?
+//       Should the performer automatically cancel any streams still active when that GRPC ends?  Should the driver not allow
+//       that to happen, e.g. it always cancels a stream or waits for it to finish.

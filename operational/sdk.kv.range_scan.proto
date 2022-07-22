@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package protocol.sdk.kv;
+option csharp_namespace = "Couchbase.Grpc.Protocol.Sdk.Kv";
+option java_package = "com.couchbase.client.protocol.sdk.kv";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/sdk/kv";
+option java_multiple_files = true;
+
+import "shared.basic.proto";
+import "shared.transcoders.proto";
+import "streams.top_level.proto";
+
+message RangeScanTerm {
+  string term = 1;
+  bool exclusive = 2;
+}
+
+// todo this naming is slightly awkard
+message TypeRangeScan {
+  RangeScanTerm from = 1;
+  RangeScanTerm to = 2;
+}
+
+message TypeSamplingScan {
+  int64 limit = 1;
+  int64 seed = 2;
+}
+
+message RangeScanType {
+  oneof type {
+    TypeRangeScan range = 1;
+    TypeSamplingScan sampling = 2;
+  }
+}
+
+enum RangeScanSort {
+  SCAN_SORT_NONE = 0;
+  SCAN_SORT_ASCENDING = 1;
+}
+
+message RangeScanOptions {
+  bool withContent = 1;
+  shared.MutationState consistentWith = 2;
+  RangeScanSort sort = 3;
+  shared.Transcoder transcoder = 4;
+  optional int32 timeoutMsecs = 5;
+}
+
+message RangeScanResult {
+  string id = 1;
+  bytes content = 2;
+  int64 expiryTime = 3;
+  int64 cas = 4;
+
+  // Not part of the SDK response - identifies what stream this is from.
+  string streamId = 5;
+}
+
+// A KvCommandRangeScan will result in a stream of RangeScanResult results.
+message RangeScan {
+  RangeScanType scanType = 1;
+  RangeScanOptions options = 2;
+
+  // Not sent on to the performer - instead specifies how the performer should handle the streaming.
+  streams.Config streamConfig = 3;
+}

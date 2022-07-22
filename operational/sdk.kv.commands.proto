@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package protocol.sdk.kv;
+option csharp_namespace = "Couchbase.Grpc.Protocol.Sdk.Kv";
+option java_package = "com.couchbase.client.protocol.sdk.kv";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/sdk/kv";
+option java_multiple_files = true;
+
+import "sdk.kv.options.proto";
+import "shared.doc_location.proto";
+import "shared.content.proto";
+import "shared.basic.proto";
+
+message Insert {
+  shared.DocLocation location = 1;
+  shared.Content content = 2;
+  optional InsertOptions options = 3;
+}
+
+message Get {
+  shared.DocLocation location = 1;
+  optional GetOptions options = 2;
+}
+
+message Remove {
+  shared.DocLocation location = 1;
+  optional RemoveOptions options = 2;
+}
+
+message Replace {
+  shared.DocLocation location = 1;
+  shared.Content content = 2;
+  optional ReplaceOptions options = 3;
+}
+
+message Upsert {
+  shared.DocLocation location = 1;
+  shared.Content content = 2;
+  optional UpsertOptions options = 3;
+}
+
+message MutationResult {
+  int64 cas = 1;
+  optional shared.MutationToken mutationToken = 2;
+}
+
+message GetResult {
+  int64 cas = 1;
+  bytes content = 2;
+  // Represented as the number of seconds since January 1, 1970 (e.g. what the server returns)
+  optional int64 expiryTime = 3;
+}

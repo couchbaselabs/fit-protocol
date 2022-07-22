@@ -1,24 +1,20 @@
 syntax = "proto3";
 
-// See README.md in this directory for a description of these.
-package protocol;
-option csharp_namespace = "Couchbase.Grpc.Protocol";
-option java_package = "com.couchbase.grpc.protocol";
-option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
+package protocol.transactions;
+option csharp_namespace = "Couchbase.Grpc.Protocol.Transactions";
+option java_package = "com.couchbase.client.protocol.transactions";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/transactions";
 option java_multiple_files = true;
 
-import "doc_location.proto";
-import "txn_commands.proto";
-import "txn_hooks.proto";
-import "txn_client_record.proto";
-import "txn_cleanup.proto";
-import "txn_extensions.proto";
-import "txn_basic.proto";
-import "txn_config.proto";
-import "txn_legacy.proto";
-import "latch.proto";
-import "shared_config.proto";
-import "collection.proto";
+import "transactions.commands.proto";
+import "hooks.transactions.proto";
+import "transactions.options.proto";
+import "transactions.legacy.proto";
+import "shared.latch.proto";
+import "shared.basic.proto";
+import "shared.collection.proto";
+import "sdk.query.options.proto";
+import "shared.transaction_config.proto";
 
 
 message TransactionStartRequest {
@@ -76,7 +72,7 @@ message TransactionGenericResponse {
 message TransactionResult {
     // With CBD-3802 this is now only checked for the Java performer, other implementations should not provide this.
     // It will eventually be removed.
-    repeated MutationToken mutationTokens=1 [deprecated=true];
+    repeated shared.MutationToken mutationTokens=1 [deprecated=true];
 
     // Next three fields are all now deprecated.  They are no longer used by FIT and performers do not need to return them.
     // They will eventually be removed.
@@ -132,7 +128,7 @@ message TransactionCreateRequest {
     optional TransactionOptions options = 3;
 
     // Any latches that the transaction should create.
-    repeated Latch latches = 4;
+    repeated shared.Latch latches = 4;
 
     // Just for debugging, name the test
     string name = 5;
@@ -157,7 +153,7 @@ message TransactionCreateRequest {
     string clusterConnectionId = 7;
 
     // The API to use for this transaction.  See the comments for `API`.
-    API api = 8;
+    shared.API api = 8;
 }
 
 message TransactionAttemptRequest {
@@ -196,10 +192,10 @@ message TransactionSingleQueryRequest {
     // -- The GRPC QueryOptions.timeout() field must be applied at the SDK SingleQueryTransactionConfig level instead.
     // - SDK SingleQueryTransactionConfig is populated from GRPC QueryOptions.SingleQueryTransactionOptions.
     // - GRPC SingleQueryTransactionOptions.metadataCollection can be ignored.  That was added in ExtSDKIntegration.
-    optional QueryOptions queryOptions = 4;
+    optional sdk.query.QueryOptions queryOptions = 4;
 
     // The API to use for this transaction.  See the comments for `API`.
-    API api = 8;
+    shared.API api = 8;
 }
 
 message TransactionSingleQueryResponse {
@@ -238,31 +234,25 @@ message TransactionSingleQueryResponse {
     optional string performerSpecificValidation = 7;
 }
 
-message DisconnectConnectionsRequest {
-}
-
-message DisconnectConnectionsResponse {
-}
-
 // Creates a Transactions object, e.g. a transactions factory
 message TransactionsFactoryCreateRequest {
     // The following fields are deprecated and replaced by the `config` field (which allows optional fields)
     // They will still be sent by FIT, but performers should remove them while implementing the breaking change for
     // ExtSDKIntegration
-    Durability durability = 1 [deprecated=true];
+    shared.Durability durability = 1 [deprecated=true];
     int32 expirationMillis = 2 [deprecated=true];
     bool cleanupLostAttempts = 4 [deprecated=true];
     bool cleanupClientAttempts = 5 [deprecated=true];
     int64 cleanupWindowMillis = 6 [deprecated=true];
     UnstagingMode unstagingMode = 7 [deprecated=true];
-    Collection metadataCollection = 8 [deprecated=true];
+    shared.Collection metadataCollection = 8 [deprecated=true];
     // Any hooks can only use HookPoints before the CLEANUP_* range
-    repeated Hook hook = 3 [deprecated=true];
+    repeated hooks.transactions.Hook hook = 3 [deprecated=true];
 
     // The Cluster to use for `Transactions.create()`
     string clusterConnectionId = 9;
 
-    optional TransactionsConfig config = 10;
+    optional shared.TransactionsConfig config = 10;
 }
 
 // Shuts down a previously created Transactions (factory)

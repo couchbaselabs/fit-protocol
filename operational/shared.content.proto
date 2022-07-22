@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package protocol.shared;
+option csharp_namespace = "Couchbase.Grpc.Protocol.Shared";
+option java_package = "com.couchbase.client.protocol.shared";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/shared";
+option java_multiple_files = true;
+
+message Content {
+  oneof content {
+    // This should be passed directly into the SDK, as string type - no initial conversion into a JsonObject or similar.
+    // How this is treated by the SDK will depend on the transcoder set (if any), which is sent separately in the options.
+    string passthroughString = 1;
+
+    // The contents of this are JSON.
+    // The performer should convert to a platform-dependent representation of JSON, and then pass into the SDK.
+    // For Java, that would be the SDK's JsonObject.  For Node, the result of JSON.parse().
+    // Whatever is the most appropriate way to take a JSON blob and send it to the SDK without having to provide a
+    // transcoder, is the intent here.
+    bytes convertToJson = 2;
+
+    // In future we may want to passthrough raw byte strings, or the SDK to encode it first into various forms
+  }
+}

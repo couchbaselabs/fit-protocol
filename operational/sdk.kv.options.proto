@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package protocol.sdk.kv;
+option csharp_namespace = "Couchbase.Grpc.Protocol.Sdk.Kv";
+option java_package = "com.couchbase.client.protocol.sdk.kv";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/sdk/kv";
+option java_multiple_files = true;
+
+import "shared.transcoders.proto";
+import "shared.basic.proto";
+
+message InsertOptions {
+  optional int32 timeoutMsecs = 1;
+  optional shared.DurabilityType durability = 2;
+  optional shared.Expiry expiry = 3;
+  optional shared.Transcoder transcoder = 4;
+}
+
+message ReplaceOptions {
+  optional int32 timeoutMsecs = 1;
+  optional shared.DurabilityType durability = 2;
+  optional shared.Expiry expiry = 3;
+  optional bool preserveExpiry = 4;
+  optional int64 cas = 5;
+  optional shared.Transcoder transcoder = 6;
+}
+
+message UpsertOptions {
+  optional int32 timeoutMsecs = 1;
+  optional shared.DurabilityType durability = 2;
+  optional shared.Expiry expiry = 3;
+  optional bool preserveExpiry = 4;
+  optional shared.Transcoder transcoder = 5;
+}
+
+message RemoveOptions {
+  optional int32 timeoutMsecs = 1;
+  optional shared.DurabilityType durability = 2;
+  optional int64 cas = 3;
+}
+
+message GetOptions {
+  optional int32 timeoutMsecs = 1;
+  optional bool withExpiry = 2;
+  // It's not possible to have 'optional repeated' in GRPC.  If this is empty, don't set the projected option.
+  repeated string projection = 3;
+  optional shared.Transcoder transcoder = 4;
+}

@@ -1,14 +1,13 @@
 // Everything to do with testing of _txn:client-record
 syntax = "proto3";
 
-// See README.md in this directory for a description of these.
-package protocol;
-option csharp_namespace = "Couchbase.Grpc.Protocol";
-option java_package = "com.couchbase.grpc.protocol";
-option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
+package protocol.transactions;
+option csharp_namespace = "Couchbase.Grpc.Protocol.Transactions";
+option java_package = "com.couchbase.client.protocol.transactions";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/transactions";
 option java_multiple_files = true;
 
-import "txn_hooks.proto";
+import "hooks.transactions.proto";
 
 message ClientRecordProcessRequest {
     string clientUUID = 1;
@@ -19,7 +18,7 @@ message ClientRecordProcessRequest {
     string collectionName = 4;
 
     // Any hooks can only use HookPoints in the CLIENT_RECORD_* range
-    repeated Hook hook = 5;
+    repeated hooks.transactions.Hook hook = 5;
 
     // This is only needed for KV operations, so the driver will usually send the default cluster connection.
     string clusterConnectionId = 6;

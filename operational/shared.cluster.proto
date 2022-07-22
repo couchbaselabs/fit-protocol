@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package protocol.shared;
+option csharp_namespace = "Couchbase.Grpc.Protocol.Shared";
+option java_package = "com.couchbase.client.protocol.shared";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/shared";
+option java_multiple_files = true;
+
+import "shared.transaction_config.proto";
+
+message ClusterConfig {
+    optional TransactionsConfig transactionsConfig = 1;
+
+    // The performer should use a custom JsonSerializer when creating the Cluster.
+    // This custom JsonSerializer is required to have specific serialization and deserialization logic, which the driver
+    // will validate.  See the Java performer for implementation details.
+    bool useCustomSerializer = 2;
+
+    // Used for TLS enabled clusters such as Capella clusters
+    bool useTls = 3;
+    optional string certPath = 4;
+}
+
+// Only sent to ExtSDKIntegration-supporting performers.
+// Creates a cluster connection, with an optional cluster & transactions configuration.
+message ClusterConnectionCreateRequest {
+    // The id to use for this connection.
+    string clusterConnectionId = 1;
+
+    // Details of the cluster connection.
+    string clusterHostname = 2;
+    string clusterUsername = 3;
+    string clusterPassword = 4;
+
+    optional ClusterConfig clusterConfig = 5;
+}
+
+message ClusterConnectionCreateResponse {
+    // The number of cluster connections the performer has, after opening this one.
+    int32 clusterConnectionCount = 1;
+}
+
+message ClusterConnectionCloseRequest {
+    string clusterConnectionId = 1;
+}
+
+message ClusterConnectionCloseResponse {
+    // The number of cluster connections the performer has, after closing this one.
+    int32 clusterConnectionCount = 2;
+}
+
+message DisconnectConnectionsRequest {
+}
+
+message DisconnectConnectionsResponse {
+}
+

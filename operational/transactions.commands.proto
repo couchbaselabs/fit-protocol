@@ -1,18 +1,15 @@
 syntax = "proto3";
 
-// See README.md in this directory for a description of these.
-package protocol;
-option csharp_namespace = "Couchbase.Grpc.Protocol";
-option java_package = "com.couchbase.grpc.protocol";
-option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
+package protocol.transactions;
+option csharp_namespace = "Couchbase.Grpc.Protocol.Transactions";
+option java_package = "com.couchbase.client.protocol.transactions";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/transactions";
 option java_multiple_files = true;
 
-import "doc_location.proto";
-import "txn_basic.proto";
-import "txn_hooks.proto";
-import "txn_config.proto";
-import "txn_legacy.proto";
-import "collection.proto";
+import "transactions.basic.proto";
+import "transactions.options.proto";
+import "transactions.legacy.proto";
+import "shared.collection.proto";
 
 enum EventType {
     EventCleanupFailedEvent = 0;
@@ -133,6 +130,8 @@ enum DocStatus {
     OWN_WRITE = 3;
     AMBIGUOUS = 4;
     DO_NOT_CHECK = 5;
+
+    option deprecated = true;
 }
 
 message CommandGet {
@@ -308,7 +307,7 @@ message CommandQuery {
 
     optional TransactionQueryOptions queryOptions = 12;
 
-    Scope scope = 11;
+    shared.Scope scope = 11;
 }
 
 // If the performer executes this command, it should report a failure.  This is usually used to check an earlier

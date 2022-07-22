@@ -1,18 +1,17 @@
-// Contains legacy or deprecated messages that we want to eventually remove.  See txn_performer.proto for the reasoning.
+// Contains legacy or deprecated messages that we want to eventually remove.  See performer.proto for the reasoning.
 syntax = "proto3";
 
-// See README.md in this directory for a description of these.
-package protocol;
-option csharp_namespace = "Couchbase.Grpc.Protocol";
-option java_package = "com.couchbase.grpc.protocol";
-option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
+package protocol.transactions;
+option csharp_namespace = "Couchbase.Grpc.Protocol.Transactions";
+option java_package = "com.couchbase.client.protocol.transactions";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/transactions";
 option java_multiple_files = true;
 
-import "txn_hooks.proto";
-import "txn_extensions.proto";
-import "txn_basic.proto";
-import "txn_config.proto";
-import "txn_cleanup.proto";
+import "hooks.transactions.proto";
+import "transactions.extensions.proto";
+import "transactions.basic.proto";
+import "transactions.cleanup.proto";
+import "shared.basic.proto";
 
 
 
@@ -36,11 +35,8 @@ message TransactionAttempt {
   DocId atr = 3;   // Can be empty iff state=NOTHING_WRITTEN
 }
 
-// The result of a mutation.  Currently empty as we only check the count of these.
-message MutationToken {
-}
-
 // Requests the performer creates a connection to a Couchbase cluster, and return performer caps.
+// In the transactions package as it was part of the original transactions-only implementation, and has been replaced now.
 message CreateConnectionRequest {
   string clusterHostname=1;
   string clusterUsername=2;
@@ -60,13 +56,15 @@ message CreateConnectionRequest {
   // Used for TLS enabled clusters such as Capella clusters
   bool useTls = 7;
   optional string certPath = 8;
+
+  option deprecated = true;
 }
 
 // Returns the capabilities of the performer (or more specifically, the transactions-implementation-under-test by that
 // performer), along with a reference to the created cluster connection.
 // As of ExtSDKIntegration, this is now legacy.  Performers should implement getPerformerCaps and createClusterConnection instead.  This
 message CreateConnectionResponse {
-  repeated PerformerCaps performerCaps = 1;
+  repeated Caps performerCaps = 1;
 
   // Human-readable string identifying the performer.  For example, "java".
   string performerUserAgent = 2;
@@ -81,33 +79,43 @@ message CreateConnectionResponse {
   // The APIs this implementation supports.  This is primarily used to run tests on multiple APIs, so if an implementation
   // only supports one, it should just return one - see comments for `API` for details.
   // If the performer does not return anything, it will be assumed to support just API.DEFAULT.
-  repeated API supportedApis = 6;
+  repeated shared.API supportedApis = 6;
 
   string clusterConnectionId=5;
+
+  option deprecated = true;
 }
 
 
 message TransactionProcessCleanupQueueRequest {
   string transactionsFactoryRef = 1;
   string clusterConnectionId = 2;
+
+  option deprecated = true;
 }
 
 message TransactionCleanupQueueResult {
   repeated TransactionCleanupAttempt attempts = 1;
+
+  option deprecated = true;
 }
 
 
 message ClientRecordRemoveRequest {
   string clientUUID = 1;
   // Any hooks can only use HookPoints in the CLIENT_RECORD_* range
-  repeated Hook hook = 2;
+  repeated hooks.transactions.Hook hook = 2;
 
   // This is only needed for KV operations, so the driver will usually send the default cluster connection.
   string clusterConnectionId=8;
+
+  option deprecated = true;
 }
 
 message ClientRecordRemoveResponse {
   bool success = 1;
+
+  option deprecated = true;
 }
 
 // Parameters for the Query Statement
@@ -117,5 +125,5 @@ message CommandQueryParameters {
   // Extra deprecated as it was never possible to set timeout on TransactionQueryOptions
   int32 timeout=10 [deprecated = true];
 
-  ScanConsistency scanConsistency =11;
+  shared.ScanConsistency scanConsistency =11;
 }
