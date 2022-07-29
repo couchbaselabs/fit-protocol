@@ -26,6 +26,11 @@ message Counter {
   }
 }
 
+// The performer will run the bounded item until this much time has elapsed.
+message ForTime {
+  int32 seconds = 1;
+}
+
 // Controls how a given workload is bounded.
 // A simple bounding would be to just run X operations as fast as possible, and then stop.
 // In future we will support more advanced bounds, such as the performer maintaining a target throughput of 100 ops/sec and
@@ -33,5 +38,6 @@ message Counter {
 message Bounds {
   oneof bounds {
     Counter counter = 1;
+    ForTime forTime = 2;
   }
 }
