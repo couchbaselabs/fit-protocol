@@ -7,6 +7,7 @@ option go_package = "github.com/couchbaselabs/transactions-fit-performer/protoco
 option java_multiple_files = true;
 
 import "shared.transaction_config.proto";
+import "shared.transcoders.proto";
 
 message ClusterConfig {
     optional TransactionsConfig transactionsConfig = 1;
@@ -19,6 +20,28 @@ message ClusterConfig {
     // Used for TLS enabled clusters such as Capella clusters
     bool useTls = 3;
     optional string certPath = 4;
+
+    // Following taken from:
+    // https://github.com/couchbaselabs/sdk-rfcs/blob/master/rfc/0059-sdk3-foundation.md#configuration
+    optional int32 kvConnectTimeoutSecs = 5;
+    optional int32 kvTimeoutMillis = 6;
+    optional int32 kvDurableTimeoutMillis = 7;
+    optional int32 viewTimeoutSecs = 8;
+    optional int32 queryTimeoutSecs = 9;
+    optional int32 analyticsTimeoutSecs = 10;
+    optional int32 searchTimeoutSecs = 11;
+    optional int32 managementTimeoutSecs = 12;
+    optional Transcoder transcoder = 13;
+    optional bool enableMutationTokens = 14;
+    optional int32 tcpKeepAliveTimeMillis = 15;
+    optional bool enableTcpKeepAlives = 16;
+    optional bool forceIPV4 = 17;
+    optional int32 configPollIntervalSecs = 18;
+    optional int32 configPollFloorIntervalSecs = 19;
+    optional int32 configIdleRedialTimeoutSecs = 20;
+    optional int32 numKvConnections = 21;
+    optional int32 maxHttpConnections = 22;
+    optional int32 idleHttpConnectionTimeoutSecs = 23;
 }
 
 // Only sent to ExtSDKIntegration-supporting performers.

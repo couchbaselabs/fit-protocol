@@ -10,6 +10,8 @@ import "transactions.basic.proto";
 import "transactions.options.proto";
 import "transactions.legacy.proto";
 import "shared.collection.proto";
+import "shared.doc_location.proto";
+import "shared.content.proto";
 
 enum EventType {
     EventCleanupFailedEvent = 0;
@@ -150,7 +152,7 @@ message CommandGet {
     DocStatus expectedStatus = 4 [deprecated = true];
 
     // Since day one the performer must have supported stashing a single document.  Whenever a CommandGet or
-    // CommandGetOptional is executed, the result is automatically stashed.
+    // CommandGetOptional is executed (but not a transactions.Get), the result is automatically stashed.
     // ExtMobileInterop adds the concept of stashing multiple documents.  This allows some more sophisticated tests
     // particularly around CAS mismatches.
     // If this `stashInSlot` is set, the performer
@@ -321,6 +323,53 @@ message CommandTestFail {
 message CommandThrowException {
 }
 
+message Insert {
+    shared.DocLocation location = 1;
+    shared.Content content = 2;
+
+    // What result(s) the command is allowed to return.  Anything outside this will fail the test.
+    // The performer must perform this validation.  If this is empty, the performer skips validation.
+    repeated ExpectedResult expectedResult = 3;
+}
+
+message Get {
+    shared.DocLocation location = 1;
+
+    // What result(s) the command is allowed to return.  Anything outside this will fail the test.
+    // The performer must perform this validation.  If this is empty, the performer skips validation.
+    repeated ExpectedResult expectedResult = 2;
+
+    // If this `stashInSlot` is set, the performer
+    // needs to update or create a map of StashSlot (Int) -> TransactionGetResult.  This is stored per-transaction and
+    // should be deleted at the end of the transaction.  Subsequent operations may
+    // may reference to one of these stashed results.
+    // transactions.CommandGet and transactions.Get share the same map.
+    optional int32 stashInSlot = 3;
+}
+
+message Remove {
+    shared.DocLocation location = 1;
+
+    // What result(s) the command is allowed to return.  Anything outside this will fail the test.
+    // The performer must perform this validation.  If this is empty, the performer skips validation.
+    repeated ExpectedResult expectedResult = 2;
+
+    // Refer to `stashInSlot` in CommandGet for details.
+    optional int32 useStashedSlot = 3;
+}
+
+message Replace {
+    shared.DocLocation location = 1;
+    shared.Content content = 2;
+
+    // What result(s) the command is allowed to return.  Anything outside this will fail the test.
+    // The performer must perform this validation.  If this is empty, the performer skips validation.
+    repeated ExpectedResult expectedResult = 3;
+
+    // Refer to `stashInSlot` in CommandGet for details.
+    optional int32 useStashedSlot = 4;
+}
+
 message TransactionCommand {
     oneof command {
         CommandInsert insert = 1;
@@ -344,8 +393,15 @@ message TransactionCommand {
 
         CommandQuery query = 15;
         CommandTestFail testFail = 16;
-    }
 
+        // Why do we have transactions.CommandInsert and transactions.Insert?  The former stems from the original days of FIT
+        // that just did integration testing of transactions.  The latter is for modern FIT and supports the abstractions we
+        // need now, including for performance testing.
+        Insert insertV2 = 17;
+        Get getV2 = 18;
+        Remove removeV2 = 19;
+        Replace replaceV2 = 20;
+    }
 
     // Added for TXNJ-249: make the application (erroneously) catch and not propagate the error.
     bool doNotPropagateError = 100;

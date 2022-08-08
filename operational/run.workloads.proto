@@ -8,13 +8,14 @@ option go_package = "github.com/couchbaselabs/transactions-fit-performer/protoco
 
 import "sdk.workload.proto";
 import "meta.workload.proto";
+import "transactions.workload.proto";
 
 // A workload is generally a bunch of commands to run.
 message Workload {
   oneof workload {
     sdk.Workload sdk = 1;
     meta.Workload grpc = 2;
-    // transaction.Workload will follow
+    transactions.Workload transaction = 3;
   }
 }
 
@@ -33,6 +34,7 @@ message HorizontalScaling {
 // Allows running multiple Workloads concurrently.
 message Workloads {
   // The previously established cluster connection to use, for all operations instigated under this task.
+  // Those operations can override this of they specify their own cluster connection, e.g. TransactionCreateRequest.
   string clusterConnectionId = 1;
 
   // See HorizontalScaling for a discussion of this.  Broadly, it's the number of concurrent operations

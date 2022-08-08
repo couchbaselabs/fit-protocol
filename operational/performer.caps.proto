@@ -21,6 +21,14 @@ enum Caps {
 
     // Whether this performer has level 1 transactions support, e.g. it has implemented protocol 1.0+.
     TRANSACTIONS_SUPPORT_1 = 2;
+
+    // The performer supports all parameters in ClusterConfig up to idleHttpConnectionTimeoutSecs, 23.
+    CLUSTER_CONFIG_1 = 3;
+
+    // Whether this performer supports transactions.Workload, allowing it to do performance testing of transactions.
+    // The performer also needs to support the new commands: transactions.Insert,Replace,Remove,Get.
+    // CLUSTER_CONFIG_1 must be supported.
+    TRANSACTIONS_WORKLOAD_1 = 4;
 }
 
 message PerformerCapsFetchRequest {
