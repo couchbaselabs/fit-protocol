@@ -10,6 +10,7 @@ import "shared.transaction_config.proto";
 import "shared.transcoders.proto";
 
 message ClusterConfig {
+    // Will only be sent to ExtSDKIntegration-enabled performers.
     optional TransactionsConfig transactionsConfig = 1;
 
     // The performer should use a custom JsonSerializer when creating the Cluster.

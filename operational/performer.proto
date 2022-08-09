@@ -23,18 +23,24 @@ service PerformerService {
   // If the performer has not implemented this, the driver will gracefully degrade to using the now-legacy
   // CreateConnectionRequest instead.
   // Required for performers that implement RealPerformerCaps.KV_SUPPORT_1.
+  // If any of performerCapsFetch, clusterConnectionCreate and clusterConnectionClose is implemented, they must all
+  // be implemented.
   rpc performerCapsFetch (performer.PerformerCapsFetchRequest) returns (performer.PerformerCapsFetchResponse);
 
   // Creates a Cluster connection, and optionally configures it.
   // Added in ExtSDKIntegration, and will only be sent if the performer declares support for that extension or RealPerformerCaps.KV_SUPPORT_1.
   // Otherwise CreateConnectionRequest will be used.
   // Required for performers that implement RealPerformerCaps.KV_SUPPORT_1.
+  // If any of performerCapsFetch, clusterConnectionCreate and clusterConnectionClose is implemented, they must all
+  // be implemented.
   rpc clusterConnectionCreate (shared.ClusterConnectionCreateRequest) returns (shared.ClusterConnectionCreateResponse);
 
   // Close a particular cluster connection.
   // Added in ExtSDKIntegration, and will only be sent if the performer declares support for that extension or RealPerformerCaps.KV_SUPPORT_1.
   // There is no real analogue pre-ExtSDKIntegration, so all cluster connections will remain open.
   // Required for performers that implement RealPerformerCaps.KV_SUPPORT_1.
+  // If any of performerCapsFetch, clusterConnectionCreate and clusterConnectionClose is implemented, they must all
+  // be implemented.
   rpc clusterConnectionClose (shared.ClusterConnectionCloseRequest) returns (shared.ClusterConnectionCloseResponse);
 
   // Closes all cluster connections.
@@ -120,8 +126,9 @@ service PerformerService {
   // The following can all be removed earlier, as soon as performers no longer use them.
 
   // Creates a clusterConnection between performer and Couchbase Server, and returns the performer caps.
-  // Removed as ClusterConnectionCreateRequest does the job better, and has a proper close method.
-  // Performers can implement clusterConnectionCreate and remove support for this, including if they don't support ExtSDKIntegration yet.
+  // Deprecated as ClusterConnectionCreateRequest does the job better, and has a proper close method.
+  // Performers can (and are recommended to) implement clusterConnectionCreate and remove support for this, including
+  // if they don't support ExtSDKIntegration yet.
   rpc createConnection (transactions.CreateConnectionRequest) returns (transactions.CreateConnectionResponse) {
     option deprecated = true;
   };
