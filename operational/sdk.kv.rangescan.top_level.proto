@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package protocol.sdk.kv.rangescan;
+option csharp_namespace = "Couchbase.Grpc.Protocol.Sdk.Kv.RangeScan";
+option java_package = "com.couchbase.client.protocol.sdk.kv.rangescan";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/sdk/kv/rangescan";
+option java_multiple_files = true;
+
+import "shared.basic.proto";
+import "shared.collection.proto";
+import "shared.transcoders.proto";
+import "streams.top_level.proto";
+
+message ScanTerm {
+  string term = 1;
+  optional bool exclusive = 2;
+}
+
+message RangeScan {
+  ScanTerm from = 1;
+  ScanTerm to = 2;
+}
+
+message SamplingScan {
+  int64 limit = 1;
+  optional int64 seed = 2;
+}
+
+message ScanType {
+  oneof type {
+    RangeScan range = 1;
+    SamplingScan sampling = 2;
+  }
+}
+
+enum ScanSort {
+  KV_RANGE_SCAN_SORT_NONE = 0;
+  KV_RANGE_SCAN_SORT_ASCENDING = 1;
+}
+
+message ScanOptions {
+  optional bool withoutContent = 1;
+  optional shared.MutationState consistentWith = 2;
+  optional ScanSort sort = 3;
+  optional shared.Transcoder transcoder = 4;
+  optional int32 timeoutMsecs = 5;
+}
+
+message ScanResult {
+  string id = 1;
+
+  // Following three fields won't be present if withoutContent was set
+  optional bytes content = 2;
+  int64 expiryTime = 3;
+  int64 cas = 4;
+
+  // Not part of the SDK response - identifies what stream this is from.
+  string streamId = 5;
+}
+
+// A Scan will result in the performer sending back a stream of (in the golden path):
+// (1) A stream.Created result with type STREAM_KV_RANGE_SCAN, followed by
+// (2) Zero or more ScanResult results, followed by
+// (1) A stream.Complete result.
+message Scan {
+  shared.Collection collection = 1;
+  ScanType scanType = 2;
+  optional ScanOptions options = 3;
+
+  // Not sent on to the performer - instead specifies how the performer should handle the streaming.
+  streams.Config streamConfig = 4;
+}

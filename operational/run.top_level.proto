@@ -38,12 +38,11 @@ message Result {
     // For optimal streaming performance, batches of results can be returned.
     BatchedResult batched = 6;
 
-    // The performer has created a stream and is notifying the driver of it.  This handle allows the driver to fetch
-    // more rows, cancel the stream etc.
-    // The actual streamed results will be returned elsewhere (usually as sdk.Results).
-    streams.Created stream = 7;
+    // Something significant has happened on a stream (such as creation or completion).
+    // The actual streamed results will be returned elsewhere (usually as Results).
+    streams.Signal stream = 7;
 
-    // Not used now, but will be supported later
+    // Result of a single transaction.
     transactions.TransactionResult transaction = 8;
   }
 

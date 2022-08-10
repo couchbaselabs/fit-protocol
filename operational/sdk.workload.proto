@@ -8,7 +8,7 @@ option java_multiple_files = true;
 
 import "shared.bounds.proto";
 import "shared.exceptions.proto";
-import "sdk.kv.range_scan.proto";
+import "sdk.kv.rangescan.top_level.proto";
 import "sdk.kv.commands.proto";
 import "shared.basic.proto";
 
@@ -19,7 +19,7 @@ message Command {
     kv.Remove remove = 3;
     kv.Replace replace = 4;
     kv.Upsert upsert = 5;
-    kv.RangeScan rangeScan = 7;
+    kv.rangescan.Scan rangeScan = 7;
   }
 
   // Whether the returned CommandResult should contain a full result or just `success`.  Used for performance tests
@@ -43,7 +43,7 @@ message Result {
     // If the operation succeeded and sdk.Command.returnResult==true, return one of these.
     kv.GetResult getResult = 3;
     kv.MutationResult mutationResult = 4;
-    kv.RangeScanResult rangeScanResult = 5;
+    kv.rangescan.ScanResult rangeScanResult = 5;
   }
 }
 

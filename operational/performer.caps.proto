@@ -26,9 +26,15 @@ enum Caps {
     CLUSTER_CONFIG_1 = 3;
 
     // Whether this performer supports transactions.Workload, allowing it to do performance testing of transactions.
+    // All GRPC messages transitively required by this workload must also be supported.
+    // The exception here is TransactionOptions.hooks: these can be significant work for an implementation, and are
+    // not (initially at least) required for transactions performance testing.
     // The performer also needs to support the new commands: transactions.Insert,Replace,Remove,Get.
     // CLUSTER_CONFIG_1 must be supported.
     TRANSACTIONS_WORKLOAD_1 = 4;
+
+    // KV range scan support.
+    KV_RANGE_SCAN_1 = 5;
 }
 
 message PerformerCapsFetchRequest {

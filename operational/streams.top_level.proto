@@ -6,22 +6,43 @@ option java_package = "com.couchbase.client.protocol.streams";
 option java_multiple_files = true;
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/streams";
 
+import "shared.exceptions.proto";
+
 enum Type {
   STREAM_KV_RANGE_SCAN = 0;
 }
 
+// Streams.
 // Some operations (e.g. KV range scans, SQL++ queries) can stream back results.  The performer needs to track these
-// streams to allow testing their cancellation.
-message Stream {
-  Type type = 1;
-  string streamId = 2;
-}
+// streams to allow testing their cancellation, backpressure, etc.  This GRPC attempts to abstract over all forms of
+// language-specific streams.
+//
+// Stream lifetimes:
+// The performer must wait for all streams to complete or error, before completing or erroring the grpc that spawned those streams (as
+// otherwise there is nothing to stream back on).
+// There are top-level RPCs that allow cancelling and requesting more items on a stream.
+// The corollary of these two is that the performer needs to track all streams globally, and associate each with a
+// given `run` RPC - for example, by giving each run a unique runId.
+//
+// Stream lifecycles:
+// In general, a golden path stream will return one streams.Created, zero or more run.Results corresponding to the actual
+// rows/items on the stream, and then one streams.Complete.
+// If the driver requests a stream be cancelled, it will raise a streams.Cancelled instead of the streams.Complete,
+// and potentially instead of some of the run.Results.  The driver will only cancel a stream that has returned streams.Created.
+// If the performer hits any error while processing the stream, it should raise a streams.Error instead of the streams.Complete,
+// and potentially instead of some of the run.Results.  It must have sent a streams.Created first.
+// To simplify the performer logic, the performer can assume it's a bug if the driver requests anything on a stream that has
+// sent back a Complete, Error or Cancelled signal.
 
 // A request for the performer to cancel a stream.  Exactly what this entails is context and SDK dependent.  If the
 // SDK's stream has the concept of user-cancellation, this should be invoked.  At minimum, the performer should stop
 // streaming responses from that stream to the driver.
+// The performer can assume that if the driver tries to cancel a stream that doesn't exist (e.g. has stop streaming),
+// this is a driver bug.
+// On cancellation the performer should not proceed to the next stage of streaming.  E.g. it should not return a
+// streams.Complete.  But instead return a streams.Cancelled, after it has finished cancelling.
 message CancelRequest {
-  Stream stream = 1;
+  string streamId = 1;
 }
 
 // The performer has successfully cancelled the stream.  Due to the asynchronous nature of streaming and cancelling, a
@@ -32,8 +53,22 @@ message CancelResponse {
 
 // The driver (pretending to be the user) is requesting more items.  For each item requested, the performer should fetch
 // one from the stream, and stream back an appropriate response.
+//
+// Once all items in the stream have been streamed, the performer should automatically proceed to the next stage of
+// streaming (usually to return a streams.Complete).
+//
+// To simplify the performer logic, the performer can assume that if the driver does any of these, it is a driver bug.
+// It should raise a standard GRPC UNKNOWN error code:
+// 1. If the driver tries to do this with a stream that doesn't exist (e.g. has stop streaming),
+// 2. If the driver requests more items before the performer has finished streaming back the previously requested items.
+//
+// If the driver requests more items than are currently in the stream, this is not an error, the performer should
+// stream back as many as it can, and then wait for more items so it can satisfy the request.
+// If the performer knows the stream has finished and the driver has still requested too many items, this is also not
+// a bug.  The performer should continue to the next stage of streaming (usually to return a streams.Complete).
 message RequestItemsRequest {
-  int32 numItems = 1;
+  string streamId = 1;
+  int32 numItems = 2;
 }
 
 message RequestItemsResponse {
@@ -42,7 +77,33 @@ message RequestItemsResponse {
 
 // The performer has created a stream and is notifying the driver of it.
 message Created {
-  Stream stream = 1;
+  string streamId = 1;
+  Type type = 2;
+}
+
+// A stream has finished sending back all results.
+message Complete {
+  string streamId = 1;
+}
+
+// A stream raised an error.
+message Error {
+  string streamId = 1;
+  shared.Exception exception = 2;
+}
+
+// A stream has finished being cancelled.
+message Cancelled {
+  string streamId = 1;
+}
+
+message Signal {
+  oneof signal {
+    Created created = 1;
+    Complete complete = 2;
+    Error error = 3;
+    Cancelled cancelled = 4;
+  }
 }
 
 // The performer should stream back responses as fast as it can.
@@ -52,13 +113,14 @@ message Automatically {}
 message OnDemand {}
 
 message Config {
+  // The performer must use this as the subsequent stream id.
+  // (Having stream ids generated driver-side will make it much easier for the driver to handle concurrent tests in future.)
+  string streamId = 1;
+
   // When the performer should stream back results.
   oneof streamWhen {
-    Automatically automatically = 1;
-    OnDemand onDemand = 2;
+    Automatically automatically = 2;
+    OnDemand onDemand = 3;
   }
 }
 
-// todo: Stream lifetimes. Are streams implicitly bound to the GRPC `rpc` that created them? Can they live independently of that?
-//       Should the performer automatically cancel any streams still active when that GRPC ends?  Should the driver not allow
-//       that to happen, e.g. it always cancels a stream or waits for it to finish.
