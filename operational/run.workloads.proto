@@ -34,7 +34,8 @@ message HorizontalScaling {
 // Allows running multiple Workloads concurrently.
 message Workloads {
   // The previously established cluster connection to use, for all operations instigated under this task.
-  // Those operations can override this of they specify their own cluster connection, e.g. TransactionCreateRequest.
+  // Operations below this that have their own clusterConnectionId (like TransactionCreateRequest) do _not_ override
+  // this value - any future exceptions to that rule will be explicitly documented here.
   string clusterConnectionId = 1;
 
   // See HorizontalScaling for a discussion of this.  Broadly, it's the number of concurrent operations
