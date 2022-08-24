@@ -49,6 +49,10 @@ message TransactionOptions {
   optional shared.Collection metadataCollection = 4;
 
   // Note that PerTransactionQueryConfig is not sent, as it is removed in ExtSDKIntegration.
+
+  // Identifies a tracing span to use as the parent for this transaction.
+  // Only sent to performers that declare support for Caps.OBSERVABILITY_1.
+  optional string parentSpanId = 5;
 }
 
 

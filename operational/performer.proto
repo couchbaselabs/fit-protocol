@@ -15,6 +15,8 @@ import "run.top_level.proto";
 import "shared.cluster.proto";
 import "streams.top_level.proto";
 import "shared.echo.proto";
+import "observability.config.proto";
+import "observability.top.proto";
 
 // All rpcs related to transactions and SDK performance and integration testing.
 service PerformerService {
@@ -113,6 +115,9 @@ service PerformerService {
   rpc streamCancel (streams.CancelRequest) returns (streams.CancelResponse);
   rpc streamRequestItems (streams.RequestItemsRequest) returns (streams.RequestItemsResponse);
 
+  // Observability-related requests.
+  rpc spanCreate(observability.SpanCreateRequest) returns (observability.SpanCreateResponse);
+  rpc spanFinish(observability.SpanFinishRequest) returns (observability.SpanFinishResponse);
 
   // ExtSDKIntegration: the following methods will not be sent to ExtSDKIntegration-enabled performers.
   // Once we eventually end support for non-ExtSDKIntegration implementations, they will be removed.

@@ -36,5 +36,6 @@ enum Caps {
     EXT_SDK_INTEGRATION = 20;
     EXT_MOBILE_INTEROP = 21;
     EXT_INSERT_EXISTING = 22;
+    EXT_OBSERVABILITY = 23;
     // Remember to add a test to ForwardCompatibilityTest for each extension
 }

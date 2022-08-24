@@ -41,6 +41,7 @@ message TransactionsCleanupConfig {
     optional int64 cleanupWindowMillis = 3;
 
     // Additional collections to add to the cleanup set.
+    // Can be ignored if not ExtSDKIntegration.
     repeated shared.Collection cleanupCollection = 4;
 }
 

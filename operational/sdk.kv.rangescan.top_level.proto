@@ -44,6 +44,7 @@ message ScanOptions {
   optional ScanSort sort = 3;
   optional shared.Transcoder transcoder = 4;
   optional int32 timeoutMsecs = 5;
+  optional string parentSpanId = 6;
 }
 
 message ScanResult {

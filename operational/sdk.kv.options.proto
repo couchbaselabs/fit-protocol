@@ -14,6 +14,7 @@ message InsertOptions {
   optional shared.DurabilityType durability = 2;
   optional shared.Expiry expiry = 3;
   optional shared.Transcoder transcoder = 4;
+  optional string parentSpanId = 5;
 }
 
 message ReplaceOptions {
@@ -23,6 +24,7 @@ message ReplaceOptions {
   optional bool preserveExpiry = 4;
   optional int64 cas = 5;
   optional shared.Transcoder transcoder = 6;
+  optional string parentSpanId = 7;
 }
 
 message UpsertOptions {
@@ -31,12 +33,14 @@ message UpsertOptions {
   optional shared.Expiry expiry = 3;
   optional bool preserveExpiry = 4;
   optional shared.Transcoder transcoder = 5;
+  optional string parentSpanId = 6;
 }
 
 message RemoveOptions {
   optional int32 timeoutMsecs = 1;
   optional shared.DurabilityType durability = 2;
   optional int64 cas = 3;
+  optional string parentSpanId = 4;
 }
 
 message GetOptions {
@@ -45,4 +49,5 @@ message GetOptions {
   // It's not possible to have 'optional repeated' in GRPC.  If this is empty, don't set the projected option.
   repeated string projection = 3;
   optional shared.Transcoder transcoder = 4;
+  optional string parentSpanId = 5;
 }

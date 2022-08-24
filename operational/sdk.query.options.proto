@@ -27,6 +27,7 @@ message QueryOptions {
   optional int32 maxParallelism = 14;
   optional bool metrics = 15;
   optional SingleQueryTransactionOptions singleQueryTransactionOptions = 16;
+  optional string parentSpanId = 17;
 }
 
 // Ideally this would be in the transactions package, but that would introduce a Go package import cycle

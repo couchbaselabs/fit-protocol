@@ -35,6 +35,19 @@ enum Caps {
 
     // KV range scan support.
     KV_RANGE_SCAN_1 = 5;
+
+    // Support for requesting the performer output observability (OpenTelemetry) data.
+    // The performer must support:
+    // * ClusterConfig.observabilityConfig and everything under it.
+    // * SpanCreateRequest and SpanFinishRequest, and everywhere they are used.
+    // * parentSpanId on all messages the performer also supports.  This is a UUID corresponding to a previous SpanCreateRequest.
+    //   The performer can assume it is a bug if it does not know about this span or it has been previously finished, and
+    //   throw an error.
+    // * spanCreate and spanFinish RPCs.
+    // The SDK must support everything in the observability SDK-RFC revision #24, including:
+    // * RequestSpan.recordException
+    // * Counter support
+    OBSERVABILITY_1 = 6;
 }
 
 message PerformerCapsFetchRequest {

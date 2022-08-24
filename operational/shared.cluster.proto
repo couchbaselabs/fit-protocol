@@ -8,6 +8,7 @@ option java_multiple_files = true;
 
 import "shared.transaction_config.proto";
 import "shared.transcoders.proto";
+import "observability.config.proto";
 
 message ClusterConfig {
     // Will only be sent to ExtSDKIntegration-enabled performers.
@@ -43,6 +44,14 @@ message ClusterConfig {
     optional int32 numKvConnections = 21;
     optional int32 maxHttpConnections = 22;
     optional int32 idleHttpConnectionTimeoutSecs = 23;
+
+    // Whether some sort of observability (e.g. OpenTelemetry) output should be configured.  The performer should pass this in to the cluster
+    // config's `requestTracer` and/or `meter` settings (depending on whether tracing and/or metrics is enabled).
+    //
+    // These will generally create OpenTelemetry SDK objects, e.g. SdkTracerProvider and SdkMeterProvider.
+    // These must be closed at the same time as this cluster connection is closed.  Otherwise the SdkMeterProvider will
+    // continue outputting metrics until the application ends.
+    optional observability.Config observabilityConfig = 24;
 }
 
 // Only sent to ExtSDKIntegration-supporting performers.
@@ -55,7 +64,6 @@ message ClusterConnectionCreateRequest {
     string clusterHostname = 2;
     string clusterUsername = 3;
     string clusterPassword = 4;
-
     optional ClusterConfig clusterConfig = 5;
 }
 
