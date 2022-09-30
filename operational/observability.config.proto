@@ -53,8 +53,9 @@ message ThresholdLoggingTracerConfig {
     optional int32 viewsThresholdMillis = 4;
     optional int32 searchThresholdMillis = 5;
     optional int32 analyticsThresholdMillis = 6;
-    optional int32 sampleSize = 7;
-    optional bool enabled = 8;
+    optional int32 transactionsThresholdMillis = 7;
+    optional int32 sampleSize = 8;
+    optional bool enabled = 9;
 }
 
 message LoggingMeterConfig {
