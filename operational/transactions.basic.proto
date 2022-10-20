@@ -19,9 +19,9 @@ enum AttemptStates {
 
 // Exists for legacy reasons.  Newer messages should use DocLocation.
 message DocId {
-    string bucketName = 1;
-    string scopeName = 2;
-    string collectionName = 3;
-    string docId = 4;
+    string bucket_name = 1;
+    string scope_name = 2;
+    string collection_name = 3;
+    string doc_id = 4;
 }
 

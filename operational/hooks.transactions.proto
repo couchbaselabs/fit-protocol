@@ -182,20 +182,20 @@ enum HookAction {
 // Hooks allow injecting actions at specific points of the code.  Useful for error injection.
 message Hook {
     // At which point in the code should the hook execute
-    HookPoint hookPoint = 1;
+    HookPoint hook_point = 1;
 
     // What conditions activate the hook
-    HookCondition hookCondition = 2;
-    int32 hookConditionParam1 = 3;
-    string hookConditionParam2 = 4;
+    HookCondition hook_condition = 2;
+    int32 hook_condition_param1 = 3;
+    string hook_condition_param2 = 4;
     // Only used for EQUALS_BOTH
-    string hookConditionParam3 = 5;
+    string hook_condition_param3 = 5;
 
     // What should the hook do
-    HookAction hookAction = 6;
+    HookAction hook_action = 6;
 
     // Parameterise the hook's action - see HookAction for how these apply
-    string hookActionParam1 = 7;
-    string hookActionParam2 = 8;
+    string hook_action_param1 = 7;
+    string hook_action_param2 = 8;
 }
 

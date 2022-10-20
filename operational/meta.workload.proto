@@ -33,6 +33,6 @@ message PingResult {
 
 message Result {
   oneof result {
-    PingResult pingResult = 1;
+      PingResult ping_result = 1;
   }
 }

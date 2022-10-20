@@ -18,8 +18,8 @@ message Transcoder {
   oneof transcoder {
     LegacyTranscoder legacy = 1;
     JsonTranscoder json = 2;
-    RawJsonTranscoder rawJson = 3;
-    RawStringTranscoder rawString = 4;
-    RawBinaryTranscoder rawBinary = 5;
+    RawJsonTranscoder raw_json = 3;
+    RawStringTranscoder raw_string = 4;
+    RawBinaryTranscoder raw_binary = 5;
   }
 }

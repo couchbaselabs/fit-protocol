@@ -14,24 +14,24 @@ import "shared.collection.proto";
 message TransactionCleanupRequest {
     DocId atr = 5;
     // For backwards-compatibility with performers that don't support `atr` yet - will be removed eventually
-    string atrId = 1 [deprecated=true];   // Field `atr` should be used instead.
-    string attemptId = 2;
-    string transactionId = 3;
+    string atr_id = 1 [ deprecated = true ]; // Field `atr` should be used instead.
+    string attempt_id = 2;
+    string transaction_id = 3;
     // Any hooks can only use HookPoints in the CLEANUP_* range
     repeated hooks.transactions.Hook hook = 4;
 
     // This is only needed for KV operations, so the driver will usually send the default cluster connection.
-    string clusterConnectionId = 6;
+    string cluster_connection_id = 6;
 }
 
 message TransactionCleanupATRRequest {
     // For backwards-compatibility with performers that don't support `atr` yet - will be removed eventually
-    string atrId = 1 [deprecated=true];   // Field `atr` should be used instead.
+    string atr_id = 1 [ deprecated = true ]; // Field `atr` should be used instead.
     DocId atr = 3;
     // Any hooks can only use HookPoints in the CLEANUP_* range
     repeated hooks.transactions.Hook hook = 2;
 
-    string clusterConnectionId=4;
+    string cluster_connection_id = 4;
 }
 
 // The result of attempting to cleanup a single attempt entry in an ATR
@@ -51,34 +51,34 @@ message TransactionCleanupAttempt {
 
     // The key of the ATR document
     // For backwards-compatibility with performers that don't support `atr` yet - aiming to remove eventually.
-    string atrId = 4 [deprecated=true];          // Field `atr` should be used instead.
+    string atr_id = 4 [ deprecated = true ]; // Field `atr` should be used instead.
 
     // The name of the bucket the ATR is on
-    string atrBucketName = 5 [deprecated=true];  // Field `atr` should be used instead.
+    string atr_bucket_name = 5 [ deprecated = true ]; // Field `atr` should be used instead.
 
     // The ID of the transaction attempt that was being cleaned up
-    string attemptId = 6;
+    string attempt_id = 6;
 }
 
 message TransactionCleanupATRResult {
     repeated TransactionCleanupAttempt result = 1;
 
     // Total number of entries found in the ATR
-    int32 numEntries = 2;
+    int32 num_entries = 2;
 
     // Total number of expired entries found in the ATR
-    int32 numExpiredEntries = 3;
+    int32 num_expired_entries = 3;
 }
 
 // The set of collections currently being cleaned up.
 message CleanupSet {
-    repeated shared.Collection cleanupSet = 1;
+    repeated shared.Collection cleanup_set = 1;
 }
 
 message CleanupSetFetchRequest {
-    string clusterConnectionId = 1;
+    string cluster_connection_id = 1;
 }
 
 message CleanupSetFetchResponse {
-    CleanupSet cleanupSet = 1;
+    CleanupSet cleanup_set = 1;
 }

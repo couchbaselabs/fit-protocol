@@ -42,7 +42,7 @@ enum Type {
 // On cancellation the performer should not proceed to the next stage of streaming.  E.g. it should not return a
 // streams.Complete.  But instead return a streams.Cancelled, after it has finished cancelling.
 message CancelRequest {
-  string streamId = 1;
+    string stream_id = 1;
 }
 
 // The performer has successfully cancelled the stream.  Due to the asynchronous nature of streaming and cancelling, a
@@ -67,8 +67,8 @@ message CancelResponse {
 // If the performer knows the stream has finished and the driver has still requested too many items, this is also not
 // a bug.  The performer should continue to the next stage of streaming (usually to return a streams.Complete).
 message RequestItemsRequest {
-  string streamId = 1;
-  int32 numItems = 2;
+    string stream_id = 1;
+    int32 num_items = 2;
 }
 
 message RequestItemsResponse {
@@ -77,24 +77,24 @@ message RequestItemsResponse {
 
 // The performer has created a stream and is notifying the driver of it.
 message Created {
-  string streamId = 1;
-  Type type = 2;
+    string stream_id = 1;
+    Type type = 2;
 }
 
 // A stream has finished sending back all results.
 message Complete {
-  string streamId = 1;
+    string stream_id = 1;
 }
 
 // A stream raised an error.
 message Error {
-  string streamId = 1;
-  shared.Exception exception = 2;
+    string stream_id = 1;
+    shared.Exception exception = 2;
 }
 
 // A stream has finished being cancelled.
 message Cancelled {
-  string streamId = 1;
+    string stream_id = 1;
 }
 
 message Signal {
@@ -115,12 +115,12 @@ message OnDemand {}
 message Config {
   // The performer must use this as the subsequent stream id.
   // (Having stream ids generated driver-side will make it much easier for the driver to handle concurrent tests in future.)
-  string streamId = 1;
+  string stream_id = 1;
 
   // When the performer should stream back results.
   oneof streamWhen {
     Automatically automatically = 2;
-    OnDemand onDemand = 3;
+    OnDemand on_demand = 3;
   }
 }
 

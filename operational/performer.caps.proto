@@ -55,30 +55,30 @@ message PerformerCapsFetchRequest {
 
 message PerformerCapsFetchResponse {
     // The transactions capabilities of the implementation-under-test.
-    repeated transactions.Caps transactionImplementationsCaps = 1;
+    repeated transactions.Caps transaction_implementations_caps = 1;
 
     // The SDK (non-transaction) capabilities of the implementation-under-test.
-    repeated sdk.Caps sdkImplementationCaps = 8;
+    repeated sdk.Caps sdk_implementation_caps = 8;
 
     // The capabilities of this performer.
-    repeated Caps performerCaps = 7;
+    repeated Caps performer_caps = 7;
 
     // Human-readable string identifying the performer.  For example, "java".
     // ExtSDKIntegration: performers should use a new user agent to disambiguate, such as "java" and "java-sdk".
-    string performerUserAgent = 2;
+    string performer_user_agent = 2;
 
     // Identifies the version of the library (SDK or transactions library, as appropriate) under test.  For example, "1.1.2".
-    string libraryVersion = 4;
+    string library_version = 4;
 
     // Defined https://hackmd.io/foGjnSSIQmqfks2lXwNp8w#Protocol-Versions
     // For transactions workloads, must be "1.0", "2.0" or "2.1" any other values will cause the driver to abort.
     // For non-transactions workloads, return nothing.
-    optional string transactionsProtocolVersion = 3;
+    optional string transactions_protocol_version = 3;
 
     // The APIs this implementation supports.  This is primarily used to run tests on multiple APIs, so if an implementation
     // only supports one, it should just return one - see comments for `API` for details.
     // If the performer does not return anything, it will be assumed to support just API.DEFAULT.
-    repeated shared.API supportedApis = 6;
+    repeated shared.API supported_apis = 6;
 }
 
 

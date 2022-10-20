@@ -19,12 +19,12 @@ message Command {
     kv.Remove remove = 3;
     kv.Replace replace = 4;
     kv.Upsert upsert = 5;
-    kv.rangescan.Scan rangeScan = 7;
+    kv.rangescan.Scan range_scan = 7;
   }
 
   // Whether the returned CommandResult should contain a full result or just `success`.  Used for performance tests
   // when the result doesn't matter so the small cost of creating it can be eliminated.
-  bool returnResult = 6;
+  bool return_result = 6;
 
   // The API to use to execute this command.
   shared.API api = 8;
@@ -41,9 +41,9 @@ message Result {
     shared.Exception exception = 2;
 
     // If the operation succeeded and sdk.Command.returnResult==true, return one of these.
-    kv.GetResult getResult = 3;
-    kv.MutationResult mutationResult = 4;
-    kv.rangescan.ScanResult rangeScanResult = 5;
+    kv.GetResult get_result = 3;
+    kv.MutationResult mutation_result = 4;
+    kv.rangescan.ScanResult range_scan_result = 5;
   }
 }
 

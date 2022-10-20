@@ -11,7 +11,7 @@ option java_multiple_files = true;
 // The performer needs to hold onto this in a global Map<String, RequestSpan>, with the key being the provided `id`.
 message SpanCreateRequest {
     // The performer can assume it's a driver bug if this references a non-existent Cluster, and throw an error.
-    string clusterConnectionId = 1;
+    string cluster_connection_id = 1;
 
     // The span is created with this name.
     string name = 2;
@@ -22,7 +22,7 @@ message SpanCreateRequest {
     // References a previously created RequestSpan to supply as a parent.
     // If it's not present then don't provide a parent.
     // The performer can assume it's a driver bug if this references a non-existent span, and throw an error.
-    optional string parentSpanId = 4;
+    optional string parent_span_id = 4;
 
     // Attributes to set on the span.
     map<string, Attribute> attributes = 5;
@@ -44,8 +44,8 @@ message SpanFinishResponse {
 
 message Attribute {
     oneof value {
-        string valueString = 2;
-        int64 valueLong = 3;
-        bool valueBoolean = 4;
+        string value_string = 2;
+        int64 value_long = 3;
+        bool value_boolean = 4;
     }
 }

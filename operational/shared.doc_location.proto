@@ -43,10 +43,10 @@ message DocLocationPool {
   Collection collection = 1;
 
   // All documents in the pool start with this.
-  string idPreface = 2;
+  string id_preface = 2;
 
   // How many documents are in the pool.
-  int64 poolSize = 3;
+  int64 pool_size = 3;
 
   oneof poolSelectionStrategy {
     PoolSelectionStategyRandom random = 4;

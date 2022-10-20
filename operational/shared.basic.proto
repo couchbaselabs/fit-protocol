@@ -60,10 +60,10 @@ enum ScanConsistency {
 
 message MutationToken {
   // This is a short really, but GRPC doesn't have int16
-  int32 partitionId = 1;
-  int64 partitionUuid = 2;
-  int64 sequenceNumber = 3;
-  string bucketName = 4;
+  int32 partition_id = 1;
+  int64 partition_uuid = 2;
+  int64 sequence_number = 3;
+  string bucket_name = 4;
 }
 
 message MutationState {

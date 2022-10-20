@@ -41,7 +41,7 @@ enum TransactionException {
 message ExpectedCause {
     oneof cause {
         // Tests should specify the expected cause wherever possible
-        bool doNotCheck = 1;
+        bool do_not_check = 1;
         ExternalException exception = 2;
     }
 }
@@ -50,10 +50,10 @@ message ExpectedCause {
 message ErrorWrapper {
     // This is now deprecated and the performer can feel free to disable validation of this.  Once all performers
     // have removed validation, it will be removed.
-    ErrorClass errorClass = 1 [deprecated = true];
-    bool autoRollbackAttempt = 2;
-    bool retryTransaction = 3;
-    TransactionException toRaise = 4;
+    ErrorClass error_class = 1 [ deprecated = true ];
+    bool auto_rollback_attempt = 2;
+    bool retry_transaction = 3;
+    TransactionException to_raise = 4;
     ExpectedCause cause = 5;
 }
 
@@ -112,7 +112,7 @@ message ExpectedResult {
 
         // If the command is permitted to do anything, e.g. succeed or throw errors.  Required for some complex tests
         // where it's tricky to calculate what a given op will do.
-        bool anythingAllowed = 2;
+        bool anything_allowed = 2;
 
         // The operation throws an ErrorWrapper/TransactionOperationFailed, the only exception an operation may throw.
         // Update: as of EXT_QUERY, EXT_SDK_INTEGRATION and EXT_INSERTS_EXISTING, that is no longer the case, some operations can throw some other exceptions.
@@ -137,19 +137,19 @@ enum DocStatus {
 }
 
 message CommandGet {
-    DocId docId = 1;
+    DocId doc_id = 1;
 
     // What result(s) the command is allowed to return.  Anything outside this will fail the test.
     // Tests can generally just set one expected result.  Multiple results are allowed to support tricky situations,
     // such as an op generally failing with FAIL_TRANSIENT until it fails with FAIL_EXPIRY
-    repeated ExpectedResult expectedResult = 2;
+    repeated ExpectedResult expected_result = 2;
 
     // If not-null, the performer will check the fetched data equals this.  Useful for read-your-own-write tests.
-    string expectedContentJson = 3;
+    string expected_content_json = 3;
 
     // If not DO_NOT_CHECK, the performer will check the fetched document status equals this.
     // Fully deprecated as of ExtSDKIntegration.  The driver will only specify DO_NOT_CHECK now.
-    DocStatus expectedStatus = 4 [deprecated = true];
+    DocStatus expected_status = 4 [ deprecated = true ];
 
     // Since day one the performer must have supported stashing a single document.  Whenever a CommandGet or
     // CommandGetOptional is executed (but not a transactions.Get), the result is automatically stashed.
@@ -159,7 +159,7 @@ message CommandGet {
     // needs to update or create a map of StashSlot (Int) -> TransactionGetResult.  This is stored per-transaction and
     // should be deleted at the end of the transaction.  Subsequent CommandReplace and CommandReplace operations may
     // may reference to one of these stashed results.
-    optional int32 stashInSlot = 5;
+    optional int32 stash_in_slot = 5;
 }
 
 // There are two ways the implementation can implement getOptional:
@@ -170,71 +170,70 @@ message CommandGetOptional {
     CommandGet get = 1;
 
     // Use this instead of passing EXPECT_FAIL_DOC_NOT_FOUND or EXPECT_FAIL_DOC_ALREADY_EXISTS
-    bool expectDocPresent = 2;
+    bool expect_doc_present = 2;
 }
 
 message CommandInsert {
-    DocId docId = 1;
-    string contentJson = 2;
-
+    DocId doc_id = 1;
+    string content_json = 2;
 
     // What result(s) the command is allowed to return.  Anything outside this will fail the test.
-    repeated ExpectedResult expectedResult = 3;
+    repeated ExpectedResult expected_result = 3;
 }
 
 message CommandReplace {
-    DocId docId = 1;
-    string contentJson = 2;
+    DocId doc_id = 1;
+    string content_json = 2;
 
     // What result(s) the command is allowed to return.  Anything outside this will fail the test.
-    repeated ExpectedResult expectedResult = 3;
+    repeated ExpectedResult expected_result = 3;
 
     // Whether to use the result of the last get operation.
     // This will not be set inside a CommandBatch, due to the 'last' operation not being
     // a valid concept during parallel ops.
-    bool useStashedResult = 4;
+    bool use_stashed_result = 4;
 
     // Refer to `stashInSlot` in CommandGet for details.
     // `useStashedResult` and `useStashedSlot` will not be sent together.
-    optional int32 useStashedSlot = 5;
+    optional int32 use_stashed_slot = 5;
 }
 
 message CommandRemove {
-    DocId docId = 1;
+    DocId doc_id = 1;
 
     // What result(s) the command is allowed to return.  Anything outside this will fail the test.
-    repeated ExpectedResult expectedResult = 2;
+    repeated ExpectedResult expected_result = 2;
 
     // Whether to use the result of the last get operation
     // This will not be set inside a CommandBatch, due to the 'last' operation not being
     // a valid concept during parallel ops.
-    bool useStashedResult = 3;
+    bool use_stashed_result = 3;
 
     // Refer to `stashInSlot` in CommandGet for details.
     // `useStashedResult` and `useStashedSlot` will not be sent together.
-    optional int32 useStashedSlot = 4;
+    optional int32 use_stashed_slot = 4;
 }
 
 // ExtSDKIntegration performers should ignore.
 // Otherwise, perform an explicit ctx.commit()
 message CommandCommit {
     // What result(s) the command is allowed to return.  Anything outside this will fail the test.
-    repeated ExpectedResult expectedResult = 1;
+    repeated ExpectedResult expected_result = 1;
 }
 
 // ExtSDKIntegration performers: throw an exception (or raise an error) to cause an auto-rollback.
 // Otherwise, perform an explicit ctx.rollback()
 message CommandRollback {
     // What result(s) the command is allowed to return.  Anything outside this will fail the test.
-    repeated ExpectedResult expectedResult = 1;
+    repeated ExpectedResult expected_result = 1;
 }
 
 message CommandWaitOnLatch {
-    string latchName = 1;
+    string latch_name = 1;
 }
 
 message CommandSetLatch {
-    string latchName = 1;
+    string latch_name = 1;
 }
 
 // A batch of commands, often to be performed in parallel.
@@ -261,21 +260,21 @@ message CommandBatch {
 // Replace a document using a regular KV operation.  The command is expected to succeed.
 // Created long before SdkCommandReplace.
 message CommandReplaceRegularKV {
-    DocId docId = 1;
-    string contentJson = 2;
+    DocId doc_id = 1;
+    string content_json = 2;
 }
 
 // Remove a document using a regular KV operation.  The command is expected to succeed.
 // Created long before SdkCommandRemove.
 message CommandRemoveRegularKV {
-    DocId docId = 1;
+    DocId doc_id = 1;
 }
 
 // Insert a document using a regular KV operation.  The command is expected to succeed.
 // Created long before SdkCommandInsert.
 message CommandInsertRegularKV {
-    DocId docId = 1;
-    string contentJson = 2;
+    DocId doc_id = 1;
+    string content_json = 2;
 }
 
 // Run a query command.
@@ -283,31 +282,31 @@ message CommandQuery {
     string statement = 1;
 
     // What result(s) the command is allowed to return.  Anything outside this will fail the test.
-    repeated ExpectedResult expectedResult = 2;
+    repeated ExpectedResult expected_result = 2;
 
     // Whether to check the returned rows against expectedRows
-    bool checkRowContent = 3;
+    bool check_row_content = 3;
 
     // What rows the query should return, as JSON
-    repeated string expectedRows = 4;
+    repeated string expected_rows = 4;
 
     // Whether to check the number of returned rows against expectedRowCount
-    bool checkRowCount = 6;
+    bool check_row_count = 6;
 
     // How many rows the query should return
-    int32 expectedRowCount = 7;
+    int32 expected_row_count = 7;
 
     // Whether to check the returned mutations
-    bool checkMutations = 8;
+    bool check_mutations = 8;
 
     // How many mutations the query should create
-    int32 expectedMutations = 9;
+    int32 expected_mutations = 9;
 
     // Deprecated as of ExtSDKIntegration, replaced by queryOptions, which allows optional.
     // FIT will send both for now, performers should remove support for queryParameters.
-    CommandQueryParameters queryParameters = 10 [deprecated=true];
+    CommandQueryParameters query_parameters = 10 [ deprecated = true ];
 
-    optional TransactionQueryOptions queryOptions = 12;
+    optional TransactionQueryOptions query_options = 12;
 
     shared.Scope scope = 11;
 }
@@ -329,7 +328,7 @@ message Insert {
 
     // What result(s) the command is allowed to return.  Anything outside this will fail the test.
     // The performer must perform this validation.  If this is empty, the performer skips validation.
-    repeated ExpectedResult expectedResult = 3;
+    repeated ExpectedResult expected_result = 3;
 }
 
 message Get {
@@ -337,14 +336,14 @@ message Get {
 
     // What result(s) the command is allowed to return.  Anything outside this will fail the test.
     // The performer must perform this validation.  If this is empty, the performer skips validation.
-    repeated ExpectedResult expectedResult = 2;
+    repeated ExpectedResult expected_result = 2;
 
     // If this `stashInSlot` is set, the performer
     // needs to update or create a map of StashSlot (Int) -> TransactionGetResult.  This is stored per-transaction and
     // should be deleted at the end of the transaction.  Subsequent operations may
     // may reference to one of these stashed results.
     // transactions.CommandGet and transactions.Get share the same map.
-    optional int32 stashInSlot = 3;
+    optional int32 stash_in_slot = 3;
 }
 
 message Remove {
@@ -352,10 +351,10 @@ message Remove {
 
     // What result(s) the command is allowed to return.  Anything outside this will fail the test.
     // The performer must perform this validation.  If this is empty, the performer skips validation.
-    repeated ExpectedResult expectedResult = 2;
+    repeated ExpectedResult expected_result = 2;
 
     // Refer to `stashInSlot` in CommandGet for details.
-    optional int32 useStashedSlot = 3;
+    optional int32 use_stashed_slot = 3;
 }
 
 message Replace {
@@ -364,10 +363,10 @@ message Replace {
 
     // What result(s) the command is allowed to return.  Anything outside this will fail the test.
     // The performer must perform this validation.  If this is empty, the performer skips validation.
-    repeated ExpectedResult expectedResult = 3;
+    repeated ExpectedResult expected_result = 3;
 
     // Refer to `stashInSlot` in CommandGet for details.
-    optional int32 useStashedSlot = 4;
+    optional int32 use_stashed_slot = 4;
 }
 
 message TransactionCommand {
@@ -378,34 +377,34 @@ message TransactionCommand {
         CommandCommit commit = 4;
         CommandRollback rollback = 5;
         CommandGet get = 6;
-        CommandGetOptional getOptional = 7;
-        CommandWaitOnLatch waitOnLatch = 8;
-        CommandSetLatch setLatch = 9;
+        CommandGetOptional get_optional = 7;
+        CommandWaitOnLatch wait_on_latch = 8;
+        CommandSetLatch set_latch = 9;
 
         // All operations in the batch will be performed in parallel
         CommandBatch parallelize = 10;
 
-        CommandReplaceRegularKV replaceRegularKV = 11;
-        CommandRemoveRegularKV removeRegularKV = 12;
-        CommandInsertRegularKV insertRegularKV = 13;
+        CommandReplaceRegularKV replace_regular_kv = 11;
+        CommandRemoveRegularKV remove_regular_kv = 12;
+        CommandInsertRegularKV insert_regular_kv = 13;
 
-        CommandThrowException throwException = 14;
+        CommandThrowException throw_exception = 14;
 
         CommandQuery query = 15;
-        CommandTestFail testFail = 16;
+        CommandTestFail test_fail = 16;
 
         // Why do we have transactions.CommandInsert and transactions.Insert?  The former stems from the original days of FIT
         // that just did integration testing of transactions.  The latter is for modern FIT and supports the abstractions we
         // need now, including for performance testing.
-        Insert insertV2 = 17;
-        Get getV2 = 18;
-        Remove removeV2 = 19;
-        Replace replaceV2 = 20;
+        Insert insert_v2 = 17;
+        Get get_v2 = 18;
+        Remove remove_v2 = 19;
+        Replace replace_v2 = 20;
     }
 
     // Added for TXNJ-249: make the application (erroneously) catch and not propagate the error.
-    bool doNotPropagateError = 100;
+    bool do_not_propagate_error = 100;
 
     // If given, the transaction will pause for "waitMSecs" before executing the TransactionCommand
-    int32 waitMSecs = 101;
+    int32 wait_msecs = 101;
 }

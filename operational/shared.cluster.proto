@@ -12,38 +12,38 @@ import "observability.config.proto";
 
 message ClusterConfig {
     // Will only be sent to ExtSDKIntegration-enabled performers.
-    optional TransactionsConfig transactionsConfig = 1;
+    optional TransactionsConfig transactions_config = 1;
 
     // The performer should use a custom JsonSerializer when creating the Cluster.
     // This custom JsonSerializer is required to have specific serialization and deserialization logic, which the driver
     // will validate.  See the Java performer for implementation details.
-    bool useCustomSerializer = 2;
+    bool use_custom_serializer = 2;
 
     // Used for TLS enabled clusters such as Capella clusters
-    bool useTls = 3;
-    optional string certPath = 4;
+    bool use_tls = 3;
+    optional string cert_path = 4;
 
     // Following taken from:
     // https://github.com/couchbaselabs/sdk-rfcs/blob/master/rfc/0059-sdk3-foundation.md#configuration
-    optional int32 kvConnectTimeoutSecs = 5;
-    optional int32 kvTimeoutMillis = 6;
-    optional int32 kvDurableTimeoutMillis = 7;
-    optional int32 viewTimeoutSecs = 8;
-    optional int32 queryTimeoutSecs = 9;
-    optional int32 analyticsTimeoutSecs = 10;
-    optional int32 searchTimeoutSecs = 11;
-    optional int32 managementTimeoutSecs = 12;
+    optional int32 kv_connect_timeout_secs = 5;
+    optional int32 kv_timeout_millis = 6;
+    optional int32 kv_durable_timeout_millis = 7;
+    optional int32 view_timeout_secs = 8;
+    optional int32 query_timeout_secs = 9;
+    optional int32 analytics_timeout_secs = 10;
+    optional int32 search_timeout_secs = 11;
+    optional int32 management_timeout_secs = 12;
     optional Transcoder transcoder = 13;
-    optional bool enableMutationTokens = 14;
-    optional int32 tcpKeepAliveTimeMillis = 15;
-    optional bool enableTcpKeepAlives = 16;
-    optional bool forceIPV4 = 17;
-    optional int32 configPollIntervalSecs = 18;
-    optional int32 configPollFloorIntervalSecs = 19;
-    optional int32 configIdleRedialTimeoutSecs = 20;
-    optional int32 numKvConnections = 21;
-    optional int32 maxHttpConnections = 22;
-    optional int32 idleHttpConnectionTimeoutSecs = 23;
+    optional bool enable_mutation_tokens = 14;
+    optional int32 tcp_keep_alive_time_millis = 15;
+    optional bool enable_tcp_keep_alives = 16;
+    optional bool force_i_p_v4 = 17;
+    optional int32 config_poll_interval_secs = 18;
+    optional int32 config_poll_floor_interval_secs = 19;
+    optional int32 config_idle_redial_timeout_secs = 20;
+    optional int32 num_kv_connections = 21;
+    optional int32 max_http_connections = 22;
+    optional int32 idle_http_connection_timeout_secs = 23;
 
     // Whether some sort of observability (e.g. OpenTelemetry) output should be configured.  The performer should pass this in to the cluster
     // config's `requestTracer` and/or `meter` settings (depending on whether tracing and/or metrics is enabled).
@@ -51,34 +51,34 @@ message ClusterConfig {
     // These will generally create OpenTelemetry SDK objects, e.g. SdkTracerProvider and SdkMeterProvider.
     // These must be closed at the same time as this cluster connection is closed.  Otherwise the SdkMeterProvider will
     // continue outputting metrics until the application ends.
-    optional observability.Config observabilityConfig = 24;
+    optional observability.Config observability_config = 24;
 }
 
 // Only sent to ExtSDKIntegration-supporting performers.
 // Creates a cluster connection, with an optional cluster & transactions configuration.
 message ClusterConnectionCreateRequest {
     // The id to use for this connection.
-    string clusterConnectionId = 1;
+    string cluster_connection_id = 1;
 
     // Details of the cluster connection.
-    string clusterHostname = 2;
-    string clusterUsername = 3;
-    string clusterPassword = 4;
-    optional ClusterConfig clusterConfig = 5;
+    string cluster_hostname = 2;
+    string cluster_username = 3;
+    string cluster_password = 4;
+    optional ClusterConfig cluster_config = 5;
 }
 
 message ClusterConnectionCreateResponse {
     // The number of cluster connections the performer has, after opening this one.
-    int32 clusterConnectionCount = 1;
+    int32 cluster_connection_count = 1;
 }
 
 message ClusterConnectionCloseRequest {
-    string clusterConnectionId = 1;
+    string cluster_connection_id = 1;
 }
 
 message ClusterConnectionCloseResponse {
     // The number of cluster connections the performer has, after closing this one.
-    int32 clusterConnectionCount = 2;
+    int32 cluster_connection_count = 2;
 }
 
 message DisconnectConnectionsRequest {

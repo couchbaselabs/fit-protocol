@@ -34,6 +34,6 @@ message Workload {
   // 2. Reduce all performer logging to minimise impact.  The transactions/SDK logging though should not be affected - this
   // should be configured through the standard configuration paths.  Because we will want to measure the impact of
   // having it enabled.
-  bool performanceMode = 3;
+  bool performance_mode = 3;
 }
 
