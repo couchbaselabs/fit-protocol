@@ -8,5 +8,7 @@ option java_multiple_files = true;
 
 enum Caps {
   SDK_PRESERVE_EXPIRY = 0;
+
+  // KV range scan support.  See CBD-5161 for requirements.
   SDK_KV_RANGE_SCAN = 1;
 }

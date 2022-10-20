@@ -52,6 +52,8 @@ message ClusterConfig {
     // These must be closed at the same time as this cluster connection is closed.  Otherwise the SdkMeterProvider will
     // continue outputting metrics until the application ends.
     optional observability.Config observability_config = 24;
+
+    optional int32 kv_scan_timeout_secs = 25;
 }
 
 // Only sent to ExtSDKIntegration-supporting performers.

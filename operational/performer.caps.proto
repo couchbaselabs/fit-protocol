@@ -20,6 +20,9 @@ enum Caps {
     KV_SUPPORT_1 = 1;
 
     // Whether this performer has level 1 transactions support, e.g. it has implemented protocol 1.0+.
+    // It includes the top-level transactions rpcs: transactionCreate, closeTransactions, transactionStream, transactionCleanup
+    // transactionCleanupATR, cleanupSetFetch, clientRecordProcess.
+    // It does not include transactions.Workload - that is covered by TRANSACTIONS_WORKLOAD_1.
     TRANSACTIONS_SUPPORT_1 = 2;
 
     // The performer supports all parameters in ClusterConfig up to idleHttpConnectionTimeoutSecs, 23.
@@ -32,9 +35,6 @@ enum Caps {
     // The performer also needs to support the new commands: transactions.Insert,Replace,Remove,Get.
     // CLUSTER_CONFIG_1 must be supported.
     TRANSACTIONS_WORKLOAD_1 = 4;
-
-    // KV range scan support.
-    KV_RANGE_SCAN_1 = 5;
 
     // Support for requesting the performer output observability (OpenTelemetry) data.
     // The performer must support:

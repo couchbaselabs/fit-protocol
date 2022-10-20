@@ -27,18 +27,23 @@ enum Type {
 // Stream lifecycles:
 // In general, a golden path stream will return one streams.Created, zero or more run.Results corresponding to the actual
 // rows/items on the stream, and then one streams.Complete.
-// If the driver requests a stream be cancelled, it will raise a streams.Cancelled instead of the streams.Complete,
+//
+// Cancellation: If the driver requests a stream be cancelled, it will raise a streams.Cancelled instead of the streams.Complete,
 // and potentially instead of some of the run.Results.  The driver will only cancel a stream that has returned streams.Created.
-// If the performer hits any error while processing the stream, it should raise a streams.Error instead of the streams.Complete,
+
+// Errors: If the performer hits any error while processing the stream, it should raise a streams.Error instead of the streams.Complete,
 // and potentially instead of some of the run.Results.  It must have sent a streams.Created first.
-// To simplify the performer logic, the performer can assume it's a bug if the driver requests anything on a stream that has
+//
+// Safe assumptions: To simplify the performer logic, the performer can assume it's a bug if the driver requests anything on a stream that has
 // sent back a Complete, Error or Cancelled signal.
 
 // A request for the performer to cancel a stream.  Exactly what this entails is context and SDK dependent.  If the
 // SDK's stream has the concept of user-cancellation, this should be invoked.  At minimum, the performer should stop
 // streaming responses from that stream to the driver.
-// The performer can assume that if the driver tries to cancel a stream that doesn't exist (e.g. has stop streaming),
+// The performer can assume that if the driver tries to cancel a stream that doesn't exist (e.g. has stopped streaming),
 // this is a driver bug.
+// As a corollary, the driver will only cancel `stream_when.OnDemand` streams.  Otherwise it would be a race as to whether the stream
+// completes or is cancelled first.
 // On cancellation the performer should not proceed to the next stage of streaming.  E.g. it should not return a
 // streams.Complete.  But instead return a streams.Cancelled, after it has finished cancelling.
 message CancelRequest {
@@ -57,9 +62,13 @@ message CancelResponse {
 // Once all items in the stream have been streamed, the performer should automatically proceed to the next stage of
 // streaming (usually to return a streams.Complete).
 //
+// FIT is aware that some implementations (such as Go), don't have any lookahead, and that if the user/driver requests
+// N items on a N item stream, the implementation does not know the stream is complete yet - the user/driver needs
+// to request item N+1 first.
+//
 // To simplify the performer logic, the performer can assume that if the driver does any of these, it is a driver bug.
 // It should raise a standard GRPC UNKNOWN error code:
-// 1. If the driver tries to do this with a stream that doesn't exist (e.g. has stop streaming),
+// 1. If the driver tries to do this with a stream that doesn't exist (e.g. has stopped streaming),
 // 2. If the driver requests more items before the performer has finished streaming back the previously requested items.
 //
 // If the driver requests more items than are currently in the stream, this is not an error, the performer should
@@ -118,7 +127,7 @@ message Config {
   string stream_id = 1;
 
   // When the performer should stream back results.
-  oneof streamWhen {
+  oneof stream_when {
     Automatically automatically = 2;
     OnDemand on_demand = 3;
   }

@@ -8,6 +8,7 @@ option java_multiple_files = true;
 
 import "shared.basic.proto";
 import "shared.collection.proto";
+import "shared.content.proto";
 import "shared.transcoders.proto";
 import "streams.top_level.proto";
 
@@ -16,14 +17,22 @@ message ScanTerm {
   optional bool exclusive = 2;
 }
 
+message ScanTermChoice {
+  oneof choice {
+    bool minimum = 1;
+    bool maximum = 2;
+    ScanTerm term = 3;
+  }
+}
+
 message RangeScan {
-  ScanTerm from = 1;
-  ScanTerm to = 2;
+  ScanTermChoice from = 1;
+  ScanTermChoice to = 2;
 }
 
 message SamplingScan {
-  int64 limit = 1;
-  optional int64 seed = 2;
+  uint64 limit = 1;
+  optional uint64 seed = 2;
 }
 
 message ScanType {
@@ -39,21 +48,25 @@ enum ScanSort {
 }
 
 message ScanOptions {
-    optional bool without_content = 1;
-    optional shared.MutationState consistent_with = 2;
-    optional ScanSort sort = 3;
-    optional shared.Transcoder transcoder = 4;
-    optional int32 timeout_msecs = 5;
-    optional string parent_span_id = 6;
+  optional bool without_content = 1;
+  optional shared.MutationState consistent_with = 2;
+  optional ScanSort sort = 3;
+  optional shared.Transcoder transcoder = 4;
+  optional int32 timeout_msecs = 5;
+  // As usual, parent_span_id will only be sent if the performer declares support for Caps.OBSERVABILITY_1
+  optional string parent_span_id = 6;
+  optional int32 batch_byte_limit = 7;
+  optional int32 batch_item_limit = 8;
 }
 
 message ScanResult {
   string id = 1;
 
-  // Following three fields won't be present if withoutContent was set
+  // Following three fields shouldn't be present if withoutContent was set.
   optional bytes content = 2;
-  int64 expiry_time = 3;
-  int64 cas = 4;
+  // Represented as the number of seconds since January 1, 1970 (e.g. what the server returns)
+  optional int64 expiry_time = 3;
+  optional int64 cas = 4;
 
   // Not part of the SDK response - identifies what stream this is from.
   string stream_id = 5;
@@ -61,13 +74,21 @@ message ScanResult {
 
 // A Scan will result in the performer sending back a stream of (in the golden path):
 // (1) A stream.Created result with type STREAM_KV_RANGE_SCAN, followed by
-// (2) Zero or more ScanResult results, followed by
+// (2) Zero or more ScanResult results (and/or streams.Error), followed by
 // (1) A stream.Complete result.
+//
+// A streams.CancelRequest from the driver should be handled per the RFC - with a range scan cancellation sent to KV
+// on each vbucket stream.
 message Scan {
   shared.Collection collection = 1;
   ScanType scan_type = 2;
   optional ScanOptions options = 3;
 
-  // Not sent on to the performer - instead specifies how the performer should handle the streaming.
+  // Not sent on to the SDK - instead specifies how the performer should handle the streaming.
   streams.Config stream_config = 4;
+
+  // Controls how all ScanResult.contentAs() calls are done by the SDK for this scan.
+  // If not specified, the performer should not do contentAs.
+  // If there is any error from result.contentAs(), each error needs to raise a streams.Error, instead of the normal ScanResult.
+  optional shared.ContentAs content_as = 5;
 }
