@@ -24,7 +24,7 @@ message Workload {
   // Performance mode indicates that this is a performance test, where the performer should disable various functionality.
   // This includes:
   //
-  // 1. Minimuse the returned result
+  // 1. Minimise the returned result
   // A TransactionResult is heavy-weight, including things like a full log of the transaction.
   // This requests that a minimal TransactionResult be returned, to reduce the performance impact.
   // Specifically, on success the performer should only set exception=NO_EXCEPTION_THROWN, and populate no other fields.

@@ -240,6 +240,19 @@ message CommandSetLatch {
 // But not always, sometimes it's used so multiple threads can each run a series of commands in serial.
 // (E.g. nested CommandBatches).  So it's crucial that the performer respect the `parallelism` setting.
 // Created long before HorizontalScaling.
+//
+// Note the semantics of this command aren't as defined as they could be - see some discussion on
+// https://couchbase.slack.com/archives/C014WB8U2MQ/p1665062945395139
+//
+// The requirements are:
+// 1. The operations should be started in parallel (assuming `parallelism` > 1 of course)
+// 2. The ~first error should be propagated out of the lambda.  ("~first" as it's fine for this to be best-effort, e.g.
+//    it doesn't have to require atomic variables or locking.  Because the first concurrent failure is anyway non-deterministic).
+//
+// What is not defined is what happens to the other operations if one of them fails.  Are they left to run to completion,
+// are they cancelled, is that cancellation waited on?  These semantics probably need to be selectable.  Currently it
+// is acceptable to do whatever is easiest - e.g. Java reactor will automatically cancel the other operations, while in Go
+// it's easiest to wait for them all to complete.
 message CommandBatch {
     // A limited subset of commands are supported here:
     // CommandInsert, CommandReplace, CommandRemove and CommandGet.

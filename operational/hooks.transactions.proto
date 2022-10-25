@@ -49,6 +49,8 @@ enum HookPoint {
     AFTER_REMOVE_STAGED_INSERT = 39;
     AFTER_QUERY = 40;
     BEFORE_DOC_CHANGED_DURING_COMMIT = 41;
+    // The BEFORE_UNLOCK_ hooks are deprecated, removed from ExtThreadSafety, and FIT will not send them.  Performers
+    // do not need to implement them, and can remove them.
     BEFORE_UNLOCK_GET = 42;
     BEFORE_UNLOCK_INSERT = 43;
     BEFORE_UNLOCK_REPLACE = 44;
