@@ -48,6 +48,8 @@ enum ScanSort {
 }
 
 message ScanOptions {
+  // Note this field may have been subsequently renamed ids_only in the API.  Since it otherwise behaves identically and
+  // there are existing performers that would be affected by a change here, it's left unchanged.
   optional bool without_content = 1;
   optional shared.MutationState consistent_with = 2;
   optional ScanSort sort = 3;
