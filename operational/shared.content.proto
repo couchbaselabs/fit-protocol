@@ -10,6 +10,7 @@ message Content {
   oneof content {
     // This should be passed directly into the SDK, as string type - no initial conversion into a JsonObject or similar.
     // How this is treated by the SDK will depend on the transcoder set (if any), which is sent separately in the options.
+    // (Usually it will be sent with RawJsonTranscoder).
     string passthrough_string = 1;
 
     // The contents of this are JSON.
