@@ -13,9 +13,13 @@ import "shared.transcoders.proto";
 import "streams.top_level.proto";
 
 message ScanTerm {
-  // This is now represented as bytes and if a string is provided then it will be converted to a byte array
-  bytes term = 1;
-  optional bool exclusive = 2;
+  // This is now represented as either bytes or string to be passed to the sdk. Both will be used but not at the same time
+  oneof term {
+    string as_string = 1;
+    bytes as_bytes = 2;
+  }
+
+  optional bool exclusive = 3;
 }
 
 message ScanTermChoice {
@@ -26,13 +30,18 @@ message ScanTermChoice {
   }
 }
 
-message RangeScan {
-  // Both of these have been moved to optional. If they are not present then the SDK should default to the minimum for from or maximum for to
-  optional ScanTermChoice from = 1;
-  optional ScanTermChoice to = 2;
+// Moved to new message containing from and to
+message Range {
+  ScanTermChoice from = 1;
+  ScanTermChoice to = 2;
+}
 
-  // If this is present then the behaviour should instead be to use this prefix for the helper function for range scan creation
-  optional string doc_id_prefix = 3;
+message RangeScan {
+  // Only one of these will be passed. If your SDK isn't planning to support doc_id_prefix we will disable those tests through caps or some other method
+  oneof range {
+    Range from_to = 1;
+    string doc_id_prefix = 2;
+  }
 }
 
 message SamplingScan {
