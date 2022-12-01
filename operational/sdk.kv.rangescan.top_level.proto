@@ -27,6 +27,9 @@ message ScanTermChoice {
     bool minimum = 1;
     bool maximum = 2;
     ScanTerm term = 3;
+
+    // Since the behaviour if a term is not supplied is to use min for from and max for to then this option is to represent the user not supplying any term
+    bool default = 4;
   }
 }
 
