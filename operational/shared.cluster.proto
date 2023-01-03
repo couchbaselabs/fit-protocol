@@ -67,6 +67,19 @@ message ClusterConnectionCreateRequest {
     string cluster_username = 3;
     string cluster_password = 4;
     optional ClusterConfig cluster_config = 5;
+
+    // Can apply SDK tunables that can't be represented generically in GRPC.
+    //
+    // One example is for performance testing, where we may want to experiment with various approaches in say the Java SDK.
+    // So one run may send "com.couchbase.executorMaxThreadCount"="10", and the next set it to "20".
+    //
+    // Interpretation of the tunables, and how to apply them inside the SDK, is completely SDK-dependent.
+    //
+    // The intent is that the tunables be associated with the cluster connection, but this may not be possible in all
+    // implementations - e.g. Java uses global system properties instead.
+    //
+    // Generally performers can ignore this field unless they are explicitly planning on using it.
+    map<string, string> tunables = 6;
 }
 
 message ClusterConnectionCreateResponse {
