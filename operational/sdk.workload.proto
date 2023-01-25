@@ -11,6 +11,7 @@ import "shared.exceptions.proto";
 import "sdk.kv.rangescan.top_level.proto";
 import "sdk.kv.commands.proto";
 import "shared.basic.proto";
+import "sdk.management.query.proto";
 
 message Command {
   oneof command {
@@ -20,6 +21,13 @@ message Command {
     kv.Replace replace = 4;
     kv.Upsert upsert = 5;
     kv.rangescan.Scan range_scan = 7;
+    management.query.CreatePrimaryIndex create_primary_index = 9;
+    management.query.CreateIndex create_index = 10;
+    management.query.GetAllIndexes get_all_indexes = 11;
+    management.query.DropPrimaryIndex drop_primary_index = 12;
+    management.query.DropIndex drop_index = 13;
+    management.query.WatchIndexes watch_indexes = 14;
+    management.query.BuildDeferredIndexes build_deferred_indexes = 15;
   }
 
   // Whether the returned CommandResult should contain a full result or just `success`.  Used for performance tests
@@ -44,6 +52,9 @@ message Result {
     kv.GetResult get_result = 3;
     kv.MutationResult mutation_result = 4;
     kv.rangescan.ScanResult range_scan_result = 5;
+
+    // List of indexes returned by a GetAllIndexes request
+    management.query.QueryIndexes query_indexes = 6;
   }
 }
 
