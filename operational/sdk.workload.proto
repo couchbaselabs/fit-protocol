@@ -12,15 +12,19 @@ import "sdk.kv.rangescan.top_level.proto";
 import "sdk.kv.commands.proto";
 import "shared.basic.proto";
 import "sdk.management.query.proto";
+import "sdk.management.collection.query.proto";
 
 message Command {
   oneof command {
+    // KV commands
     kv.Insert insert = 1;
     kv.Get get = 2;
     kv.Remove remove = 3;
     kv.Replace replace = 4;
     kv.Upsert upsert = 5;
     kv.rangescan.Scan range_scan = 7;
+
+    // QueryIndexManager: cluster.queryIndexes()
     management.query.CreatePrimaryIndex create_primary_index = 9;
     management.query.CreateIndex create_index = 10;
     management.query.GetAllIndexes get_all_indexes = 11;
@@ -28,10 +32,15 @@ message Command {
     management.query.DropIndex drop_index = 13;
     management.query.WatchIndexes watch_indexes = 14;
     management.query.BuildDeferredIndexes build_deferred_indexes = 15;
+
+    // QueryCollectionIndexManager: collection.queryIndexes()
+    management.collection.query.Command query_collection_index_manager = 16;
   }
 
   // Whether the returned CommandResult should contain a full result or just `success`.  Used for performance tests
   // when the result doesn't matter so the small cost of creating it can be eliminated.
+  // It only affects successful results.  Failure should report the full exception, as that continues to be useful in
+  // performance tests.
   bool return_result = 6;
 
   // The API to use to execute this command.

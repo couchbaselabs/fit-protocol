@@ -12,6 +12,9 @@ enum Caps {
   // KV range scan support.  See CBD-5161 for requirements.
   SDK_KV_RANGE_SCAN = 1;
 
-  // Query index management support - All APIs available to the query index manager
+  // Query index management support - All APIs available to the Cluster level QueryIndexManager: cluster.queryIndexes()
   SDK_QUERY_INDEX_MANAGEMENT = 2;
+
+  // All APIs available to the Collection level QueryCollectionIndexManager: collection.queryIndexes()
+  SDK_QUERY_COLLECTION_INDEX_MANAGEMENT = 3;
 }

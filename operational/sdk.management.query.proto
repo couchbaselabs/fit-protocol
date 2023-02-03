@@ -9,6 +9,8 @@ option java_multiple_files = true;
 import "shared.collection.proto";
 import "sdk.management.query.options.proto";
 
+// This file is for QueryIndexManager: cluster.queryIndexes()
+// For Collection-level query index manager (collection.queryIndexes()), see sdk.management.collection.query.proto.
 
 message GetAllIndexes {
   string bucket_name = 1;
@@ -64,6 +66,9 @@ message QueryIndex {
   repeated string index_key = 6;
   optional string condition = 7;
   optional string partition = 8;
+  string bucket_name = 9;
+  optional string scope_name = 10;
+  optional string collection_name = 11;
 }
 
 enum QueryIndexType {
