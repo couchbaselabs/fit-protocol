@@ -19,7 +19,10 @@ message ClusterConfig {
     // will validate.  See the Java performer for implementation details.
     bool use_custom_serializer = 2;
 
-    // Used for TLS enabled clusters such as Capella clusters
+    // Used for TLS enabled clusters such as Capella clusters.
+    // Note that use_tls should only be used by SDKs that have such a field (e.g. Java).  Many SDKs do not have a
+    // use_tls equivalent, and TLS is enabled via couchbases:// on the connection string.  The driver will use the
+    // appropriate option.
     bool use_tls = 3;
     optional string cert_path = 4;
 
@@ -63,6 +66,8 @@ message ClusterConnectionCreateRequest {
     string cluster_connection_id = 1;
 
     // Details of the cluster connection.
+    // cluster_hostname is the connection string.  As with all fields (see rule 1 in README.md), the performer should
+    // pass this directly to the SDK without manipulation.  E.g. it should not prepend couchbase:// or similar.
     string cluster_hostname = 2;
     string cluster_username = 3;
     string cluster_password = 4;

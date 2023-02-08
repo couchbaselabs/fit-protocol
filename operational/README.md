@@ -2,6 +2,26 @@
 References:
 * https://developers.google.com/protocol-buffers/docs/proto3
 
+## Rules for Performers
+The 'golden rule' is that the performer is meant to be a dumb-as-rocks passthrough agent.  If there is something in the
+FIT GRPC that it cannot handle, please raise it with SDKQE to explore options, rather than trying to interpret or 
+manipulate it into something it or the SDK can use.  With that in mind:
+
+1. The performer should pass all fields to the SDK directly.
+   For instance, some performers were prepending "couchbase://" to the connection string, which a) masked an SDK bug and
+   b) caused problems when the driver did start sending the connection string.
+   If passing fields to the SDK causes an issue then raise with SDKQE to explore options.
+
+2. If the performer gets an RPC or parameter that either it or the SDK can't do anything with, or doesn't recognise, then
+   raise with SDKQE to explore options.  If they find there a reasonable case for the SDK not being able to handle 
+   something (remember that we want all SDKs to be consistent), then the performer should raise UNSUPPORTED if it receives it.
+   This may require appropriate driver-side logic to be added.
+   The performer should also raise UNSUPPORTED as the default on any `oneof` handling.
+
+3. Many fields are `optional`, especially configuration ones.  These help test default options.  If a configuration block
+   is optional and not provided, then the performer should call the appropriate no-option overload - e.g.
+   `cluster.query(statement)` rather than `cluster.query(statement, options)`.
+
 ## Packages
 The following rules are used for packages:
 
