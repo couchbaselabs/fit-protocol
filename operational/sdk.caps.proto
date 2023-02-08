@@ -15,6 +15,6 @@ enum Caps {
   // Query index management support - All APIs available to the Cluster level QueryIndexManager: cluster.queryIndexes()
   SDK_QUERY_INDEX_MANAGEMENT = 2;
 
-  // All APIs available to the Collection level QueryCollectionIndexManager: collection.queryIndexes()
-  SDK_QUERY_COLLECTION_INDEX_MANAGEMENT = 3;
+  // All APIs available to the Collection level CollectionQueryIndexManager: collection.queryIndexes()
+  SDK_COLLECTION_QUERY_INDEX_MANAGEMENT = 3;
 }

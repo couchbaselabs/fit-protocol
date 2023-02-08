@@ -10,7 +10,7 @@ import "shared.collection.proto";
 import "sdk.management.query.options.proto";
 
 
-// This file is for QueryCollectionIndexManager: collection.queryIndexes()
+// This file is for CollectionQueryIndexManager: collection.queryIndexes()
 // For Cluster-level query index manager (cluster.queryIndexes()), see sdk.management.query.proto.
 //
 // They have very similar, but not identical, APIs, and the APIs may diverge further in future.  So they are separated.

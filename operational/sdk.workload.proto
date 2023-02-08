@@ -33,8 +33,8 @@ message Command {
     management.query.WatchIndexes watch_indexes = 14;
     management.query.BuildDeferredIndexes build_deferred_indexes = 15;
 
-    // QueryCollectionIndexManager: collection.queryIndexes()
-    management.collection.query.Command query_collection_index_manager = 16;
+    // CollectionQueryIndexManager: collection.queryIndexes()
+    management.collection.query.Command collection_query_index_manager = 16;
   }
 
   // Whether the returned CommandResult should contain a full result or just `success`.  Used for performance tests
