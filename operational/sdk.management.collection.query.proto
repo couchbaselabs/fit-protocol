@@ -57,12 +57,14 @@ message BuildDeferredIndexes {
 }
 
 message Command {
-  CreatePrimaryIndex create_primary_index = 1;
-  CreateIndex create_index = 2;
-  GetAllIndexes get_all_indexes = 3;
-  DropPrimaryIndex drop_primary_index = 4;
-  DropIndex drop_index = 5;
-  WatchIndexes watch_indexes = 6;
-  BuildDeferredIndexes build_deferred_indexes = 7;
+  oneof command {
+    CreatePrimaryIndex create_primary_index = 1;
+    CreateIndex create_index = 2;
+    GetAllIndexes get_all_indexes = 3;
+    DropPrimaryIndex drop_primary_index = 4;
+    DropIndex drop_index = 5;
+    WatchIndexes watch_indexes = 6;
+    BuildDeferredIndexes build_deferred_indexes = 7;
+  }
 }
 
