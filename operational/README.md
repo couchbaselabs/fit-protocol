@@ -39,6 +39,19 @@ The following rules are used for packages:
    option csharp_namespace = "Couchbase.Grpc.Protocol.Sdk.Kv";
    option java_package = "com.couchbase.client.performer.protocol.sdk.kv";
    ```
+9. With Serverless it's becoming increasingly common to need similar interfaces at the Cluster, Bucket Scope and/or Collection level.
+   To help, the new package naming scheme is `sdk.[cluster/scope/collection]...`
+   More broadly, the idea now is that the right-most part of the package identifies broadly what it is, with each preceding
+   part of the package revealing more and more specificity.
+   Taking example `sdk.cluster.query.index_manager`: the right-most part identifies the broad strokes, e.g. that this is
+   an IndexManager.  What type of IndexManager is it?  A QueryIndexManager.  What level is it at?  Cluster.
+   We're following the precedent set in the SDK here, e.g. CollectionQueryIndexManager.
+   Where there is a Cluster and Scope/Collection version of the same interface, they will often share some messages.
+   The convention here is EITHER create 3 files with packages "sdk.cluster.search.index_manager", "sdk.scope.search.index_manager"
+   and "sdk.search.index_manager" (for the shared messages).  
+   OR just one package "sdk.search".  
+   The approach selected should depend on how complex the interface is (e.g. does it have multiple methods), how much 
+   it differs from Cluster/Bucket vs Scope/Collection forms, and whether that could change in future.
 
 ## Import package cycles
 A Go-specific issue exists that impacted the design:

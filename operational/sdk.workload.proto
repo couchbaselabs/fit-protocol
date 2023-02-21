@@ -11,12 +11,46 @@ import "shared.exceptions.proto";
 import "sdk.kv.rangescan.top_level.proto";
 import "sdk.kv.commands.proto";
 import "shared.basic.proto";
-import "sdk.management.query.proto";
-import "sdk.management.collection.query.proto";
+import "sdk.query.index_manager.proto";
+import "sdk.cluster.query.index_manager.proto";
+import "sdk.collection.query.index_manager.proto";
+import "sdk.scope.search.index_manager.proto";
+import "sdk.cluster.search.index_manager.proto";
+import "sdk.search.proto";
+import "shared.collection.proto";
+import "sdk.search.index_manager.proto";
+
+message ClusterLevelCommand {
+  oneof command {
+    // QueryIndexManager: cluster.queryIndexes()
+    cluster.query.index_manager.Command query_index_manager = 1;
+  }
+}
+
+message BucketLevelCommand {
+  string bucket_name = 1;
+
+  // no commands yet - just a placeholder
+}
+
+message ScopeLevelCommand {
+  protocol.shared.Scope scope = 1;
+
+  // no commands yet - just a placeholder
+}
+
+message CollectionLevelCommand {
+  protocol.shared.Collection collection = 1;
+
+  oneof command {
+    // CollectionQueryIndexManager: collection.queryIndexes()
+    collection.query.index_manager.Command query_index_manager = 16;
+  }
+}
 
 message Command {
   oneof command {
-    // KV commands
+    // KV commands.  These would be added to CollectionLevelCommand if added now.
     kv.Insert insert = 1;
     kv.Get get = 2;
     kv.Remove remove = 3;
@@ -24,17 +58,12 @@ message Command {
     kv.Upsert upsert = 5;
     kv.rangescan.Scan range_scan = 7;
 
-    // QueryIndexManager: cluster.queryIndexes()
-    management.query.CreatePrimaryIndex create_primary_index = 9;
-    management.query.CreateIndex create_index = 10;
-    management.query.GetAllIndexes get_all_indexes = 11;
-    management.query.DropPrimaryIndex drop_primary_index = 12;
-    management.query.DropIndex drop_index = 13;
-    management.query.WatchIndexes watch_indexes = 14;
-    management.query.BuildDeferredIndexes build_deferred_indexes = 15;
-
-    // CollectionQueryIndexManager: collection.queryIndexes()
-    management.collection.query.Command collection_query_index_manager = 16;
+    // With Serverless making it increasingly common that we have similar APIs at Cluster, Scope and/or Collection levels,
+    // it's becoming more important to separate them.  GRPC added from now on should go into one of these four.
+    ClusterLevelCommand cluster_command = 17;
+    BucketLevelCommand bucket_command = 18;
+    ScopeLevelCommand scope_command = 19;
+    CollectionLevelCommand collection_command = 20;
   }
 
   // Whether the returned CommandResult should contain a full result or just `success`.  Used for performance tests
@@ -44,7 +73,7 @@ message Command {
   bool return_result = 6;
 
   // The API to use to execute this command.
-  shared.API api = 8;
+  protocol.shared.API api = 8;
 }
 
 // The result of executing a single sdk.Command.
@@ -55,7 +84,7 @@ message Result {
     bool success = 1;
 
     // If the operation failed.
-    shared.Exception exception = 2;
+    protocol.shared.Exception exception = 2;
 
     // If the operation succeeded and sdk.Command.returnResult==true, return one of these.
     kv.GetResult get_result = 3;
@@ -63,7 +92,7 @@ message Result {
     kv.rangescan.ScanResult range_scan_result = 5;
 
     // List of indexes returned by a GetAllIndexes request
-    management.query.QueryIndexes query_indexes = 6;
+    query.index_manager.QueryIndexes query_indexes = 6;
   }
 }
 
@@ -82,6 +111,6 @@ message Workload {
 
   // Controls how the commands should be run.
   // If it's not present, just run the commands through once.
-  optional shared.Bounds bounds = 2;
+  optional protocol.shared.Bounds bounds = 2;
 }
 

@@ -1,9 +1,9 @@
 syntax = "proto3";
 
-package protocol.sdk.management.query;
-option csharp_namespace = "Couchbase.Grpc.Protocol.Sdk.Management.Query";
-option java_package = "com.couchbase.client.protocol.sdk.management.query";
-option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/sdk/management/query";
+package protocol.sdk.query.index_manager;
+option csharp_namespace = "Couchbase.Grpc.Protocol.Sdk.Query.IndexManager";
+option java_package = "com.couchbase.client.protocol.sdk.query.indexmanager";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/sdk/query/index/manager";
 option java_multiple_files = true;
 
 import "shared.collection.proto";
