@@ -10,6 +10,7 @@ import "shared.exceptions.proto";
 
 enum Type {
   STREAM_KV_RANGE_SCAN = 0;
+  STREAM_FULL_TEXT_SEARCH = 1;
 }
 
 // Streams.

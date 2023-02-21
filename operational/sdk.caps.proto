@@ -17,4 +17,20 @@ enum Caps {
 
   // All APIs available to the Collection level CollectionQueryIndexManager: collection.queryIndexes()
   SDK_COLLECTION_QUERY_INDEX_MANAGEMENT = 3;
+
+  // Can execute cluster.search() with all SearchOptions.
+  // This is everything under sdk.search.proto.
+  SDK_SEARCH = 4;
+
+  // Can execute all APIs under cluster.searchIndexes(), with all options.
+  // This is everything under sdk.management.search.proto.
+  SDK_SEARCH_INDEX_MANAGEMENT = 5;
+
+  // Can execute cluster.search() with all SearchOptions.
+  // This is everything under sdk.seark.proto.
+  SDK_SCOPE_SEARCH = 6;
+
+  // Can execute all APIs under scope.searchIndexes(), with all options.
+  // This is everything under sdk.management.scope.search.proto.
+  SDK_SCOPE_SEARCH_INDEX_MANAGEMENT = 7;
 }

@@ -15,11 +15,21 @@ import "sdk.query.index_manager.proto";
 import "sdk.cluster.query.index_manager.proto";
 import "sdk.collection.query.index_manager.proto";
 import "shared.collection.proto";
+import "sdk.search.index_manager.proto";
+import "sdk.scope.search.index_manager.proto";
+import "sdk.cluster.search.index_manager.proto";
+import "sdk.search.proto";
 
 message ClusterLevelCommand {
   oneof command {
     // QueryIndexManager: cluster.queryIndexes()
     cluster.query.index_manager.Command query_index_manager = 1;
+
+    // cluster.search()
+    search.Search search = 2;
+
+    // SearchIndexManager: cluster.searchIndexes()
+    cluster.search.index_manager.Command search_index_manager = 3;
   }
 }
 
@@ -32,7 +42,13 @@ message BucketLevelCommand {
 message ScopeLevelCommand {
   protocol.shared.Scope scope = 1;
 
-  // no commands yet - just a placeholder
+  oneof command {
+    // scope.search()
+    search.Search search = 2;
+
+    // ScopeSearchIndexManager: scope.searchIndexes()
+    scope.search.index_manager.Command search_index_manager = 3;
+  }
 }
 
 message CollectionLevelCommand {
@@ -89,6 +105,11 @@ message Result {
 
     // List of indexes returned by a GetAllIndexes request
     query.index_manager.QueryIndexes query_indexes = 6;
+
+    // Search results.
+    search.BlockingSearchResult search_blocking_result = 7;
+    search.StreamingSearchResult search_streaming_result = 8;
+    search.index_manager.Result search_index_manager_result = 9;
   }
 }
 
