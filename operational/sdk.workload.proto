@@ -14,11 +14,7 @@ import "shared.basic.proto";
 import "sdk.query.index_manager.proto";
 import "sdk.cluster.query.index_manager.proto";
 import "sdk.collection.query.index_manager.proto";
-import "sdk.scope.search.index_manager.proto";
-import "sdk.cluster.search.index_manager.proto";
-import "sdk.search.proto";
 import "shared.collection.proto";
-import "sdk.search.index_manager.proto";
 
 message ClusterLevelCommand {
   oneof command {
