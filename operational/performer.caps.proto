@@ -4,6 +4,7 @@ package protocol.performer;
 option csharp_namespace = "Couchbase.Grpc.Protocol.Performer";
 option java_package = "com.couchbase.client.protocol.performer";
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/performer";
+option ruby_package = "FIT::Protocol::Performer";
 option java_multiple_files = true;
 
 import "transactions.extensions.proto";

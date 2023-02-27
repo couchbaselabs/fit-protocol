@@ -5,6 +5,7 @@ option csharp_namespace = "Couchbase.Grpc.Protocol.Metrics";
 option java_package = "com.couchbase.client.protocol.metrics";
 option java_multiple_files = true;
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/metrics";
+option ruby_package = "FIT::Protocol::Metrics";
 
 import "google/protobuf/timestamp.proto";
 

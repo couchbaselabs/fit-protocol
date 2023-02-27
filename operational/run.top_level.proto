@@ -5,6 +5,7 @@ option csharp_namespace = "Couchbase.Grpc.Protocol.Run";
 option java_package = "com.couchbase.client.protocol.run";
 option java_multiple_files = true;
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/run";
+option ruby_package = "FIT::Protocol::Run";
 
 import "sdk.workload.proto";
 import "meta.workload.proto";

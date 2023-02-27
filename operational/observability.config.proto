@@ -4,6 +4,7 @@ package protocol.observability;
 option csharp_namespace = "Couchbase.Grpc.Protocol.Observability";
 option java_package = "com.couchbase.client.protocol.observability";
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/observability";
+option ruby_package = "FIT::Protocol::Observability";
 option java_multiple_files = true;
 
 import "observability.top.proto";

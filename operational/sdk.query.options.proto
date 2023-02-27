@@ -4,6 +4,7 @@ package protocol.sdk.query;
 option csharp_namespace = "Couchbase.Grpc.Protocol.Sdk.Query";
 option java_package = "com.couchbase.client.protocol.sdk.query";
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/sdk/query";
+option ruby_package = "FIT::Protocol::SDK::Query";
 option java_multiple_files = true;
 
 import "shared.basic.proto";

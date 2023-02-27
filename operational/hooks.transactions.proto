@@ -5,6 +5,7 @@ package protocol.hooks.transactions;
 option csharp_namespace = "Couchbase.Grpc.Protocol.Hooks.Transactions";
 option java_package = "com.couchbase.client.protocol.hooks.transactions";
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/hooks/transactions";
+option ruby_package = "FIT::Protocol::Hooks::Transactions";
 option java_multiple_files = true;
 
 // Generally the BEFORE_ hook is used to inject an error, e.g. as if the server had returned a failure

@@ -5,6 +5,7 @@ package protocol.transactions;
 option csharp_namespace = "Couchbase.Grpc.Protocol.Transactions";
 option java_package = "com.couchbase.client.protocol.transactions";
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/transactions";
+option ruby_package = "FIT::Protocol::Transactions";
 option java_multiple_files = true;
 
 import "hooks.transactions.proto";

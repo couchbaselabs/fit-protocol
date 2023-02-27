@@ -4,6 +4,7 @@ package protocol.sdk;
 option csharp_namespace = "Couchbase.Grpc.Protocol.Sdk";
 option java_package = "com.couchbase.client.protocol.sdk";
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/sdk";
+option ruby_package = "FIT::Protocol::SDK";
 option java_multiple_files = true;
 
 enum Caps {

@@ -5,6 +5,7 @@ option csharp_namespace = "Couchbase.Grpc.Protocol.Streams";
 option java_package = "com.couchbase.client.protocol.streams";
 option java_multiple_files = true;
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/streams";
+option ruby_package = "FIT::Protocol::Streams";
 
 import "shared.exceptions.proto";
 
