@@ -63,7 +63,8 @@ message Result {
   // a few operations ending up in the wrong bucket each second will not dramatically impact the results.  It is ok
   // to set `initiated` before the GRPC work, due to the reduced precision.
   // If the operation fails, the performer does not need to set `elapsedNanos` - it will not be used.  However `initiated`
-  // must always be sent.
+  // must always be sent - and it needs to be the wallclock time the operation was initiated, not when it failed which can
+  // be potentially X seconds later.
   int64 elapsedNanos = 1;
   google.protobuf.Timestamp initiated = 2;
 }
