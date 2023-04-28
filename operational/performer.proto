@@ -18,6 +18,7 @@ import "streams.top_level.proto";
 import "shared.echo.proto";
 import "observability.config.proto";
 import "observability.top.proto";
+import "sdk.cluster.wait_until_ready.proto";
 
 // All rpcs related to transactions and SDK performance and integration testing.
 service PerformerService {
@@ -36,6 +37,8 @@ service PerformerService {
   // Required for performers that implement RealPerformerCaps.KV_SUPPORT_1.
   // If any of performerCapsFetch, clusterConnectionCreate and clusterConnectionClose is implemented, they must all
   // be implemented.
+  // The performer should not call waitUntilReady as part of the cluster connection. Tests that require a reliable
+  // cluster connection should use the WaitUntilReady ClusterLevelCommand.
   rpc clusterConnectionCreate (shared.ClusterConnectionCreateRequest) returns (shared.ClusterConnectionCreateResponse);
 
   // Close a particular cluster connection.

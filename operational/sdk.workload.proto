@@ -20,6 +20,7 @@ import "sdk.search.index_manager.proto";
 import "sdk.scope.search.index_manager.proto";
 import "sdk.cluster.search.index_manager.proto";
 import "sdk.search.proto";
+import "sdk.cluster.wait_until_ready.proto";
 
 message ClusterLevelCommand {
   oneof command {
@@ -31,13 +32,17 @@ message ClusterLevelCommand {
 
     // SearchIndexManager: cluster.searchIndexes()
     cluster.search.index_manager.Command search_index_manager = 3;
+
+    cluster.wait_until_ready.WaitUntilReadyRequest wait_until_ready = 4;
   }
 }
 
 message BucketLevelCommand {
   string bucket_name = 1;
 
-  // no commands yet - just a placeholder
+  oneof command {
+    cluster.wait_until_ready.WaitUntilReadyRequest wait_until_ready = 2;
+  }
 }
 
 message ScopeLevelCommand {

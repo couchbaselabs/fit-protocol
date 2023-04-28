@@ -34,4 +34,7 @@ enum Caps {
   // Can execute all APIs under scope.searchIndexes(), with all options.
   // This is everything under sdk.management.scope.search.proto.
   SDK_SCOPE_SEARCH_INDEX_MANAGEMENT = 7;
+
+  //The performer supports WaitUntilReady with options, at cluster and bucket level
+  WAIT_UNTIL_READY = 8;
 }
