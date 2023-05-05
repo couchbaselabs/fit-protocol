@@ -25,7 +25,22 @@ message ClusterConfig {
     // use_tls equivalent, and TLS is enabled via couchbases:// on the connection string.  The driver will use the
     // appropriate option.
     bool use_tls = 3;
+
+    // If specified, it's the path to an certificate in PEM format, that the SDK should apply in whatever way makes sense
+    // for it.
+    // If `cert_path` is specified, `cert` will not be.  (They are not `oneof`, for backwards compatibility).
     optional string cert_path = 4;
+
+    // If specified, it's an X509 certificate in PEM format, e.g.
+    //-----BEGIN CERTIFICATE-----
+    //MIIDKDCCAhCgAwIBAgIGAYfmPG2mMA0GCSqGSIb3DQEBCwUAMDYxNDAyBgNVBAMT
+    //K2FwcHMuY2xvdWQtbmF0aXZlLmZnMWIucDEub3BlbnNoaWZ0YXBwcy5jb20wHhcN
+    //...
+    //I+VkRC5NwrqMsnR3149LAVcj6Jen8hMjLM0wR8Frqu2zV9HW5yHMQmOTOKE=
+    //-----END CERTIFICATE-----
+    // The SDK should apply it in whatever way makes sense for it.
+    // If `cert_path` is specified, `cert` will not be.  (They are not `oneof`, for backwards compatibility).
+    optional string cert = 26;
 
     // Following taken from:
     // https://github.com/couchbaselabs/sdk-rfcs/blob/master/rfc/0059-sdk3-foundation.md#configuration

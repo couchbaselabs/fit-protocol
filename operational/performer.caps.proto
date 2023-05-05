@@ -29,6 +29,9 @@ enum Caps {
     // The performer supports all parameters in ClusterConfig up to idleHttpConnectionTimeoutSecs, 23.
     CLUSTER_CONFIG_1 = 3;
 
+    // Support `ClusterConfig.cert`.
+    CLUSTER_CONFIG_CERT = 7;
+
     // Whether this performer supports transactions.Workload, allowing it to do performance testing of transactions.
     // All GRPC messages transitively required by this workload must also be supported.
     // The exception here is TransactionOptions.hooks: these can be significant work for an implementation, and are
