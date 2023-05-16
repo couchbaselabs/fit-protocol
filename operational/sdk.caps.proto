@@ -40,4 +40,12 @@ enum Caps {
 
   //The performer supports protostellar:// connection strings
   PROTOSTELLAR = 9;
+
+  //The performer supports the BucketManager API.
+  //This is everything under sdk.cluster.bucket_manager
+  SDK_BUCKET_MANAGEMENT = 10;
+
+  //The performer supports the EventingFunctionManager API.
+  //This is everything under sdk.cluster.eventing_function_manager
+  SDK_EVENTING_FUNCTION_MANAGER = 11;
 }

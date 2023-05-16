@@ -1,0 +1,153 @@
+syntax = "proto3";
+import "shared.basic.proto";
+import "google/protobuf/duration.proto";
+
+package protocol.sdk.cluster.bucket_manager;
+option csharp_namespace = "Couchbase.Grpc.Protocol.Sdk.Cluster.BucketManager";
+option java_package = "com.couchbase.client.protocol.sdk.cluster.bucketmanager";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/sdk/cluster/bucketmanager";
+option ruby_package = "FIT::Protocol::SDK::Cluster::BucketManager";
+option java_multiple_files = true;
+
+message Command {
+
+  oneof command {
+
+    GetBucketRequest get_bucket = 1;
+
+    GetAllBucketsRequest get_all_buckets = 2;
+
+    CreateBucketRequest create_bucket = 3;
+
+    DropBucketRequest drop_bucket = 4;
+
+    FlushBucketRequest flush_bucket = 5;
+
+    UpdateBucketRequest update_bucket = 6;
+
+  }
+
+}
+
+//Returns Result.bucket_settings
+message GetBucketRequest {
+  string bucketName = 1;
+  optional GetBucketOptions options = 2;
+}
+
+message GetBucketOptions {
+  optional google.protobuf.Duration timeout = 1;
+  optional string parent_span_id = 2;
+}
+
+//Returns Result.get_all_buckets_result
+message GetAllBucketsRequest {
+  optional GetAllBucketsOptions options = 1;
+}
+
+message GetAllBucketsOptions {
+  optional google.protobuf.Duration timeout = 1;
+  optional string parent_span_id = 2;
+}
+
+//Returns void (Result.success)
+message CreateBucketRequest {
+  BucketSettings settings = 1;
+  optional CreateBucketOptions options = 2;
+}
+
+message CreateBucketOptions {
+  optional google.protobuf.Duration timeout = 1;
+  optional string parent_span_id = 2;
+}
+
+//Returns void (Result.success)
+message DropBucketRequest {
+  string bucketName = 1;
+  optional DropBucketRequest options = 2;
+}
+
+message DropBucketOptions {
+  optional google.protobuf.Duration timeout = 1;
+  optional string parent_span_id = 2;
+}
+
+//Returns void (Result.success)
+message FlushBucketRequest {
+  string bucketName = 1;
+  optional FlushBucketOptions options = 2;
+}
+
+message FlushBucketOptions {
+  optional google.protobuf.Duration timeout = 1;
+  optional string parent_span_id = 2;
+}
+
+//Returns void (Result.success)
+message UpdateBucketRequest {
+  BucketSettings settings = 1;
+  optional UpdateBucketOptions options = 2;
+}
+
+message UpdateBucketOptions {
+  optional google.protobuf.Duration timeout = 1;
+  optional string parent_span_id = 2;
+}
+
+
+
+
+message Result {
+  oneof result {
+    BucketSettings bucket_settings = 1;
+
+    GetAllBucketsResult get_all_buckets_result = 2;
+  }
+}
+
+
+message BucketSettings {
+  string name = 1;
+  bool flush_enabled = 2;
+  int64 ram_quota_MB = 3;
+  int32 num_replicas = 4;
+  bool replica_indexes = 5;
+  BucketType bucket_type = 6;
+  EvictionPolicyType eviction_policy = 7;
+  google.protobuf.Duration max_expiry = 8;
+  CompressionMode compression_mode = 9;
+  shared.Durability minimum_durability_level = 10;
+  StorageBackend storage_backend = 11;
+}
+
+message GetAllBucketsResult {
+  map<string, BucketSettings> result = 1;
+}
+
+enum BucketType {
+  COUCHBASE = 0;
+  EPHEMERAL = 1;
+  MEMCACHED = 2;
+}
+
+message EjectionPolicy {
+  EvictionPolicyType ejection_policy = 1;
+}
+
+enum EvictionPolicyType {
+  FULL = 0;
+  NO_EVICTION = 1;
+  NOT_RECENTLY_USED = 2;
+  VALUE_ONLY = 3;
+}
+
+enum CompressionMode {
+  ACTIVE = 0;
+  OFF = 1;
+  PASSIVE = 2;
+}
+
+enum StorageBackend {
+  COUCHSTORE = 0;
+  MAGMA = 1;
+}

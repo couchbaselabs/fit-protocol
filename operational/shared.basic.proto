@@ -1,4 +1,6 @@
 syntax = "proto3";
+import "google/protobuf/duration.proto";
+
 
 package protocol.shared;
 option csharp_namespace = "Couchbase.Grpc.Protocol.Shared";
