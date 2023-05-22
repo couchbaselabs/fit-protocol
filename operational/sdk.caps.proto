@@ -37,4 +37,7 @@ enum Caps {
 
   //The performer supports WaitUntilReady with options, at cluster and bucket level
   WAIT_UNTIL_READY = 8;
+
+  //The performer supports protostellar:// connection strings
+  PROTOSTELLAR = 9;
 }
