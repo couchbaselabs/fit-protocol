@@ -32,14 +32,20 @@ message ClusterConfig {
     optional string cert_path = 4;
 
     // If specified, it's an X509 certificate in PEM format, e.g.
+    //
     //-----BEGIN CERTIFICATE-----
     //MIIDKDCCAhCgAwIBAgIGAYfmPG2mMA0GCSqGSIb3DQEBCwUAMDYxNDAyBgNVBAMT
     //K2FwcHMuY2xvdWQtbmF0aXZlLmZnMWIucDEub3BlbnNoaWZ0YXBwcy5jb20wHhcN
     //...
     //I+VkRC5NwrqMsnR3149LAVcj6Jen8hMjLM0wR8Frqu2zV9HW5yHMQmOTOKE=
     //-----END CERTIFICATE-----
-    // The SDK should apply it in whatever way makes sense for it.
+    //
+    // The SDK should apply it in whatever way makes sense for it.  Some SDKs (e.g. the C++ wrappers) cannot pass
+    // in such a certificate directly to the SDK.  In this case they should write it to a temporary file first.
+    //
     // If `cert_path` is specified, `cert` will not be.  (They are not `oneof`, for backwards compatibility).
+    // `cert` can be used where it's not easy to pass `cert_path`, such as when the driver and performer are on
+    // separate nodes or Docker containers.
     optional string cert = 26;
 
     // Following taken from:
