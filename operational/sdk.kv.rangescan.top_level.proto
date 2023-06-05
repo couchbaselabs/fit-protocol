@@ -60,16 +60,17 @@ message ScanType {
   }
 }
 
+//Sorting is not supported for RangeScans anymore.
 enum ScanSort {
-  KV_RANGE_SCAN_SORT_NONE = 0;
-  KV_RANGE_SCAN_SORT_ASCENDING = 1;
+  KV_RANGE_SCAN_SORT_NONE = 0 [deprecated = true];
+  KV_RANGE_SCAN_SORT_ASCENDING = 1 [deprecated = true];
 }
 
 message ScanOptions {
   // Renamed in the RFC. Used to be "without_content" and will need changing in performers
   optional bool ids_only = 1;
   optional shared.MutationState consistent_with = 2;
-  optional ScanSort sort = 3;
+  optional ScanSort sort = 3 [deprecated = true]; //Sorting is not supported for RangeScans anymore.
   optional shared.Transcoder transcoder = 4;
   optional int32 timeout_msecs = 5;
   // As usual, parent_span_id will only be sent if the performer declares support for Caps.OBSERVABILITY_1
