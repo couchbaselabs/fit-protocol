@@ -14,19 +14,24 @@ import "shared.transcoders.proto";
 import "streams.top_level.proto";
 
 message ScanTerm {
-  // This is now represented as either bytes or string to be passed to the sdk. Both will be used but not at the same time
+  // This is now stored as a string and the user can only pass a string.
+  // Deprecating the bytes method but not removing for the same reasons as below
   oneof term {
     string as_string = 1;
-    bytes as_bytes = 2;
+    bytes as_bytes = 2 [deprecated=true];
   }
 
+  // If exclusive is set to false then the SDK should explicitly set it to false not leave it as default
   optional bool exclusive = 3;
 }
 
 message ScanTermChoice {
   oneof choice {
-    bool minimum = 1;
-    bool maximum = 2;
+    // These options are deprecated as they were removed from the RFC.
+    // I have not removed them as it breaks compilation on existing uses which will slow down this work. Please remove when you can
+    bool minimum = 1 [deprecated=true];
+    bool maximum = 2 [deprecated=true];
+
     ScanTerm term = 3;
 
     // Since the behaviour if a term is not supplied is to use min for from and max for to then this option is to represent the user not supplying any term
@@ -44,6 +49,9 @@ message RangeScan {
   // Only one of these will be passed. If your SDK isn't planning to support doc_id_prefix we will disable those tests through caps or some other method
   oneof range {
     Range from_to = 1;
+
+    // This was created and named before it became "a first class part of the API".
+    // Rather than break existing implementations this will remain the same, but now represents the PrefixScan ScanType
     string doc_id_prefix = 2;
   }
 }
@@ -80,6 +88,9 @@ message ScanOptions {
 
   // Since this isn't going to be present in all sdks then the logic to not use it will be on the test-driver side with @ignoreWhen
   optional uint32 batch_time_limit = 9;
+
+  // Since all SDKs do not support this option the logic to not use it will be on the driver side with @ignoreWhen
+  optional uint32 concurrency = 10;
 }
 
 message ScanResult {
