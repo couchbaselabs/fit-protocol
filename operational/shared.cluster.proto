@@ -29,6 +29,8 @@ message ClusterConfig {
     // If specified, it's the path to an certificate in PEM format, that the SDK should apply in whatever way makes sense
     // for it.
     // If `cert_path` is specified, `cert` will not be.  (They are not `oneof`, for backwards compatibility).
+    // Note that now FIT is mainly tested through Docker, `cert_path` is generally not usable since it's non-trivial
+    // to pass files between Docker containers.  `cert` should generally be used instead.
     optional string cert_path = 4;
 
     // If specified, it's an X509 certificate in PEM format, e.g.
