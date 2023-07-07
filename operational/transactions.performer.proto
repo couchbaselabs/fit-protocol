@@ -14,7 +14,7 @@ import "transactions.legacy.proto";
 import "shared.latch.proto";
 import "shared.basic.proto";
 import "shared.collection.proto";
-import "sdk.query.options.proto";
+import "sdk.query.proto";
 import "shared.transaction_config.proto";
 
 

@@ -48,4 +48,9 @@ enum Caps {
   //The performer supports the EventingFunctionManager API.
   //This is everything under sdk.cluster.eventing_function_manager
   SDK_EVENTING_FUNCTION_MANAGER = 11;
+
+  //The performer supports ClusterLevelCommand.query, ScopeLevelCommand.query,
+  //and everything needed by sdk.query.Command
+  //it supports sending results back with sdk.query.QueryResult
+  SDK_QUERY = 12;
 }

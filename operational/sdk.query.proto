@@ -9,6 +9,57 @@ option java_multiple_files = true;
 
 import "shared.basic.proto";
 import "hooks.transactions.proto";
+import "streams.top_level.proto";
+import "google/protobuf/duration.proto";
+
+message Command {
+    string statement = 1;
+    optional sdk.query.QueryOptions options = 2;
+}
+
+message QueryResult {
+    repeated bytes content = 1;
+    QueryMetaData metaData = 2;
+}
+
+message QueryMetaData {
+    string requestId = 1;
+    string clientContextId = 2;
+    QueryStatus status = 3;
+    optional bytes signature = 4;
+    repeated QueryWarning warnings = 5;
+    optional QueryMetrics metrics = 6;
+    optional bytes profile = 7;
+}
+
+enum QueryStatus {
+    Running = 0;
+    Success = 1;
+    Errors = 2;
+    Completed = 3;
+    Stopped = 4;
+    Timeout = 5;
+    Closed = 6;
+    Fatal = 7;
+    Aborted = 8;
+    Unknown = 9;
+}
+
+message QueryWarning {
+    int32 code = 1;
+    string message = 2;
+}
+
+message QueryMetrics {
+    google.protobuf.Duration elapsedTime = 1;
+    google.protobuf.Duration executionTime = 2;
+    uint64 sortCount = 3;
+    uint64 resultCount = 4;
+    uint64 resultSize = 5;
+    uint64 mutationCount = 6;
+    uint64 errorCount = 7;
+    uint64 warningCount = 8;
+}
 
 message QueryOptions {
     optional shared.ScanConsistency scan_consistency = 1;
