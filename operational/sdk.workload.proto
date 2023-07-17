@@ -24,6 +24,7 @@ import "sdk.cluster.wait_until_ready.proto";
 import "sdk.cluster.bucket_manager.proto";
 import "sdk.cluster.eventing_function_manager.proto";
 import "sdk.query.proto";
+import "sdk.kv.lookup_in.proto";
 
 message ClusterLevelCommand {
   oneof command {
@@ -74,6 +75,12 @@ message CollectionLevelCommand {
   oneof command {
     // CollectionQueryIndexManager: collection.queryIndexes()
     collection.query.index_manager.Command query_index_manager = 16;
+
+    kv.lookup_in.LookupIn lookup_in = 17;
+
+    kv.lookup_in.LookupInAllReplicas lookup_in_all_replicas = 18;
+
+    kv.lookup_in.LookupInAnyReplicas lookup_in_any_replicas = 19;
   }
 }
 
@@ -136,6 +143,11 @@ message Result {
 
     //Query results
     query.QueryResult query_result = 12;
+
+    // LookupIn results
+    kv.lookup_in.LookupInResult lookup_in_result = 13;
+    kv.lookup_in.LookupInAllReplicasOptions lookup_in_all_replicas_result = 14;
+    kv.lookup_in.LookupInAnyReplicasOptions lookup_in_any_replicas_result = 15;
   }
 }
 

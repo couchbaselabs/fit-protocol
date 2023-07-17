@@ -80,6 +80,8 @@ message QueryOptions {
     optional bool metrics = 15;
     optional SingleQueryTransactionOptions single_query_transaction_options = 16;
     optional string parent_span_id = 17;
+
+    optional bool use_replica = 18;
 }
 
 // Ideally this would be in the transactions package, but that would introduce a Go package import cycle

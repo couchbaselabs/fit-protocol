@@ -52,5 +52,12 @@ enum Caps {
   //The performer supports ClusterLevelCommand.query, ScopeLevelCommand.query,
   //and everything needed by sdk.query.Command
   //it supports sending results back with sdk.query.QueryResult
+  //Does not include the use_replica Query option
   SDK_QUERY = 12;
+
+  // Implements LookupIn and LookupInReplica messages from sdk.collection.lookup_in.proto
+  SDK_LOOKUP_IN = 13;
+
+  // Implements use_replica Query option
+  SDK_QUERY_READ_FROM_REPLICA = 14;
 }

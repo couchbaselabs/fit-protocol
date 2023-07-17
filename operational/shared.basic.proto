@@ -60,7 +60,6 @@ enum ScanConsistency {
   NOT_BOUNDED = 1;
 }
 
-
 message MutationToken {
   // This is a short really, but GRPC doesn't have int16
   int32 partition_id = 1;
