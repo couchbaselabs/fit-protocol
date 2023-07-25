@@ -82,6 +82,7 @@ message QueryOptions {
     optional string parent_span_id = 17;
 
     optional bool use_replica = 18;
+    optional string client_context_id = 19;
 }
 
 // Ideally this would be in the transactions package, but that would introduce a Go package import cycle
