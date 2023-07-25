@@ -19,12 +19,12 @@ message Command {
 
 message QueryResult {
     repeated bytes content = 1;
-    QueryMetaData metaData = 2;
+    QueryMetaData meta_data = 2;
 }
 
 message QueryMetaData {
-    string requestId = 1;
-    string clientContextId = 2;
+    string request_id = 1;
+    string client_context_id = 2;
     QueryStatus status = 3;
     optional bytes signature = 4;
     repeated QueryWarning warnings = 5;
@@ -33,16 +33,16 @@ message QueryMetaData {
 }
 
 enum QueryStatus {
-    Running = 0;
-    Success = 1;
-    Errors = 2;
-    Completed = 3;
-    Stopped = 4;
-    Timeout = 5;
-    Closed = 6;
-    Fatal = 7;
-    Aborted = 8;
-    Unknown = 9;
+    RUNNING = 0;
+    SUCCESS = 1;
+    ERRORS = 2;
+    COMPLETED = 3;
+    STOPPED = 4;
+    TIMEOUT = 5;
+    CLOSED = 6;
+    FATAL = 7;
+    ABORTED = 8;
+    UNKNOWN = 9;
 }
 
 message QueryWarning {
@@ -51,14 +51,14 @@ message QueryWarning {
 }
 
 message QueryMetrics {
-    google.protobuf.Duration elapsedTime = 1;
-    google.protobuf.Duration executionTime = 2;
-    uint64 sortCount = 3;
-    uint64 resultCount = 4;
-    uint64 resultSize = 5;
-    uint64 mutationCount = 6;
-    uint64 errorCount = 7;
-    uint64 warningCount = 8;
+    google.protobuf.Duration elapsed_time = 1;
+    google.protobuf.Duration execution_time = 2;
+    uint64 sort_count = 3;
+    uint64 result_count = 4;
+    uint64 result_size = 5;
+    uint64 mutation_count = 6;
+    uint64 error_count = 7;
+    uint64 warning_count = 8;
 }
 
 message QueryOptions {
