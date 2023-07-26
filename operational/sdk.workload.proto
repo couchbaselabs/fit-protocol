@@ -146,8 +146,8 @@ message Result {
 
     // LookupIn results
     kv.lookup_in.LookupInResult lookup_in_result = 13;
-    kv.lookup_in.LookupInAllReplicasOptions lookup_in_all_replicas_result = 14;
-    kv.lookup_in.LookupInAnyReplicasOptions lookup_in_any_replicas_result = 15;
+    kv.lookup_in.LookupInAllReplicasResult lookup_in_all_replicas_result = 14;
+    kv.lookup_in.LookupInAnyReplicasResult lookup_in_any_replicas_result = 15;
   }
 }
 
