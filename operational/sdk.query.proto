@@ -83,6 +83,8 @@ message QueryOptions {
 
     optional bool use_replica = 18;
     optional string client_context_id = 19;
+    optional shared.MutationState consistent_with = 20;
+    optional bool preserve_expiry = 21;
 }
 
 // Ideally this would be in the transactions package, but that would introduce a Go package import cycle

@@ -69,6 +69,8 @@ message ScopeLevelCommand {
   }
 }
 
+// If the command specifies a docLocation use the collection within it, otherwise fall back on
+// CollectionLevelCommand.collection.
 message CollectionLevelCommand {
   protocol.shared.Collection collection = 1;
 
