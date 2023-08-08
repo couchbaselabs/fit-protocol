@@ -69,7 +69,7 @@ message SearchRow {
   // If result.locations is missing, return nothing here.
   repeated SearchRowLocation locations = 5;
   map<string, SearchFragments> fragments = 6;
-  bytes fields = 7;
+  shared.ContentTypes fields = 7;
 }
 
 message SearchMetrics {

@@ -7,6 +7,8 @@ option go_package = "github.com/couchbaselabs/transactions-fit-performer/protoco
 option ruby_package = "FIT::Protocol::Shared";
 option java_multiple_files = true;
 
+import "shared.exceptions.proto";
+
 message Content {
   oneof content {
     // This should be passed directly into the SDK, as string type - no initial conversion into a JsonObject or similar.
@@ -40,10 +42,57 @@ message ContentAs {
     bool as_byte_array = 2;
 
     // JSON handling is very platform-dependent.  The intent is to get the result in your platform's most standard/natural
-    // representation of JSON, and then convert it into bytes, again using the most standard way of doing that.
+    // representation of JSON Objects, and then convert it into bytes, again using the most standard way of doing that.
     // E.g. this is intended to represent how most users will use the SDK.
     // var result = someResult.contentAs[JsonObject]
     // var returnOverGRPC = result.toBytes()
-    bool as_json = 3;
+    bool as_json_object = 3;
+
+    // JSON handling is very platform-dependent.  The intent is to get the result in your platform's most standard/natural
+    // representation of JSON Arrays, and then convert it into bytes, again using the most standard way of doing that.
+    // E.g. this is intended to represent how most users will use the SDK.
+    // var result = someResult.contentAs[JsonArray]
+    // var returnOverGRPC = result.toBytes()
+    bool as_json_array = 4;
+
+    // This is a way to represent an SDK deserializing content as a Boolean.
+    // Results where this is used should include a boolean in the oneof selection for content
+    bool as_boolean = 5;
+
+    // The driver is requesting someResult.contentAs[Integer].  The performer is free
+    // to interpret `Integer` in a platform-specific way.  Tests will only be
+    // expecting values well below the limits of a 32 bit signed integer, and the
+    // performer can safely use the platform-specific version of such a type to hold
+    // the value: for example, an `int` or `long` are both fine.
+    bool as_integer = 6;
+
+    // The driver is requesting someResult.contentAs[Float].  The performer is free
+    // to interpret `Float` in a platform-specific way.  Tests will only be
+    // expecting values well below the limits of a 32 bit signed floating point, and the
+    // performer can safely use the platform-specific version of such a type to hold
+    // the value: for example, a `float` or `double` are both fine.
+    bool as_floating_point = 7;
+  }
+}
+
+message ContentOrError {
+  oneof result {
+    ContentTypes content = 1;
+    protocol.shared.Exception exception = 2;
+  }
+}
+
+message ContentTypes {
+  oneof content {
+    // Used for content as bytes and JSON
+    bytes content_as_bytes = 1;
+
+    string content_as_string = 2;
+
+    int64 content_as_int64 = 3;
+
+    double content_as_double = 4;
+
+    bool content_as_bool = 5;
   }
 }

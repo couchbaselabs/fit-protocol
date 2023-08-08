@@ -21,6 +21,8 @@ message Insert {
 message Get {
   shared.DocLocation location = 1;
   optional GetOptions options = 2;
+
+  shared.ContentAs content_as = 3;
 }
 
 message Remove {
@@ -47,7 +49,7 @@ message MutationResult {
 
 message GetResult {
   int64 cas = 1;
-  bytes content = 2;
+  shared.ContentTypes content = 2;
   // Represented as the number of seconds since January 1, 1970 (e.g. what the server returns)
   optional int64 expiry_time = 3;
 }

@@ -72,7 +72,9 @@ message ScopeLevelCommand {
 // If the command specifies a docLocation use the collection within it, otherwise fall back on
 // CollectionLevelCommand.collection.
 message CollectionLevelCommand {
-  protocol.shared.Collection collection = 1;
+  
+  // Should be passed in any collection level command that does not have a Location in the message for the command
+  optional protocol.shared.Collection collection = 1;
 
   oneof command {
     // CollectionQueryIndexManager: collection.queryIndexes()
@@ -82,7 +84,7 @@ message CollectionLevelCommand {
 
     kv.lookup_in.LookupInAllReplicas lookup_in_all_replicas = 18;
 
-    kv.lookup_in.LookupInAnyReplicas lookup_in_any_replicas = 19;
+    kv.lookup_in.LookupInAnyReplica lookup_in_any_replica = 19;
   }
 }
 
@@ -149,7 +151,7 @@ message Result {
     // LookupIn results
     kv.lookup_in.LookupInResult lookup_in_result = 13;
     kv.lookup_in.LookupInAllReplicasResult lookup_in_all_replicas_result = 14;
-    kv.lookup_in.LookupInAnyReplicasResult lookup_in_any_replicas_result = 15;
+    kv.lookup_in.LookupInReplicaResult lookup_in_any_replica_result = 15;
   }
 }
 

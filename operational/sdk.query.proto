@@ -16,13 +16,11 @@ import "shared.content.proto";
 message Command {
     string statement = 1;
     optional sdk.query.QueryOptions options = 2;
-
-    // Performers should assume that this is set as ContentAs.as_json if not supplied
-    optional shared.ContentAs content_as = 3;
+    shared.ContentAs content_as = 3;
 }
 
 message QueryResult {
-    repeated bytes content = 1;
+    repeated shared.ContentTypes content = 1;
     QueryMetaData meta_data = 2;
 }
 

@@ -55,11 +55,14 @@ enum Caps {
   //Does not include the use_replica Query option
   SDK_QUERY = 12;
 
-  // Implements LookupIn and LookupInReplica messages from sdk.collection.lookup_in.proto
+  // Implements base LookupIn functionality from sdk.collection.lookup_in.proto
   SDK_LOOKUP_IN = 13;
 
+  // Implements LookupInAllReplicas and LookupInAnyReplica messages from sdk.collection.lookup_in.proto
+  SDK_LOOKUP_IN_REPLICAS = 14;
+
   // Implements use_replica Query option
-  SDK_QUERY_READ_FROM_REPLICA = 14;
+  SDK_QUERY_READ_FROM_REPLICA = 15;
 
   // Supports Extended SDK Observability SDK-RFC 67 revision 24.  E.g. the SDK is sending additional metric tags.
   // Support for performer cap OBSERVABILITY_1 is a pre-requisite.

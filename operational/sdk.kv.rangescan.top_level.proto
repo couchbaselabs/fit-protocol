@@ -97,7 +97,8 @@ message ScanResult {
   string id = 1;
 
   // Following three fields shouldn't be present if withoutContent was set.
-  optional bytes content = 2;
+  optional shared.ContentTypes content = 2; // This field should also be empty if the test did not set ContentAs in the Scan message
+
   // Represented as the number of seconds since January 1, 1970 (e.g. what the server returns)
   optional int64 expiry_time = 3;
   optional int64 cas = 4;

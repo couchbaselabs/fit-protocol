@@ -1,10 +1,10 @@
 syntax = "proto3";
 
 package protocol.sdk.kv.lookup_in;
-option csharp_namespace = "Couchbase.Grpc.Protocol.Sdk.Collection.LookupIn";
-option java_package = "com.couchbase.client.protocol.sdk.collection.lookupin";
-option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/sdk/collection/lookupin";
-option ruby_package = "FIT::Protocol::SDK::Collection::LookupIn";
+option csharp_namespace = "Couchbase.Grpc.Protocol.Sdk.Kv.LookupIn";
+option java_package = "com.couchbase.client.protocol.sdk.kv.lookupin";
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/sdk/kv/lookupin";
+option ruby_package = "FIT::Protocol::SDK::KV::LookupIn";
 option java_multiple_files = true;
 
 import "shared.basic.proto";
@@ -20,8 +20,6 @@ message LookupIn {
   repeated LookupInSpec spec = 2;
 
   optional LookupInOptions options = 3;
-
-  optional shared.ContentAs content_as = 4;
 }
 
 // A Scan will result in the performer sending back a stream of (in the golden path):
@@ -37,25 +35,21 @@ message LookupInAllReplicas {
 
   // Not sent on to the SDK - instead specifies how the performer should handle the streaming.
   streams.Config stream_config = 4;
-
-  // Controls how all ILookupInReplicaResult.contentAs() calls are done by the SDK for this scan.
-  // If there is any error from result.contentAs(), each error needs to raise a streams.Error, instead of the normal ILookupInReplicaResult.
-  optional shared.ContentAs content_as = 5;
 }
 
-message LookupInAnyReplicas {
+message LookupInAnyReplica {
   shared.DocLocation location = 1;
 
   repeated LookupInSpec spec = 2;
 
-  optional LookupInAnyReplicasOptions options = 3;
-
-  optional shared.ContentAs content_as = 4;
+  optional LookupInAnyReplicaOptions options = 3;
 }
 
 message LookupInResult {
   // For each LookupInSpec we should return a LookupInSpecResult within the total LookupInResult
   repeated LookupInSpecResult results = 1;
+
+  int64 cas = 2;
 }
 
 message LookupInSpecResult {
@@ -63,17 +57,10 @@ message LookupInSpecResult {
   // Either an error propagated from exists_result or the value of exists_result converted to the requested content type
   // Otherwise:
   // Returns an exception or the value of the result in the requested content type
-  ContentOrError content_as_result = 1;
+  shared.ContentOrError content_as_result = 1;
 
   // True if a result was found, false if the path was not found. Otherwise will be an exception
   BooleanOrError exists_result = 2;
-}
-
-message ContentOrError {
-  oneof result {
-    bytes content = 1;
-    protocol.shared.Exception exception = 2;
-  }
 }
 
 message BooleanOrError {
@@ -84,30 +71,19 @@ message BooleanOrError {
 }
 
 message LookupInAllReplicasResult {
-  // For each LookupInSpec we should return a LookupInReplicaSpecResult within the total LookupInAllReplicasResult
-  repeated LookupInReplicaSpecResult results = 1;
+  LookupInReplicaResult lookup_in_replica_result = 1;
 
   // Not part of the SDK response - identifies what stream this is from.
-  string stream_id = 4;
+  string stream_id = 2;
 }
 
-message LookupInAnyReplicasResult {
-  // For each LookupInSpec we should return a LookupInReplicaSpecResult within the total LookupInAnyReplicasResult
-  repeated LookupInReplicaSpecResult results = 1;
-}
-
-message LookupInReplicaSpecResult {
-  // If from an exists lookup:
-  // Either an error propagated from exists_result or the value of exists_result converted to the requested content type
-  // Otherwise:
-  // Returns an exception or the value of the result in the requested content type
-  ContentOrError content_as_result = 1;
-
-  // True if a result was found, false if the path was not found. Otherwise will be an exception
-  BooleanOrError exists_result = 2;
-
+message LookupInReplicaResult {
+  // For each LookupInSpec we should return a LookupInSpecResult within the total LookupInAnyReplicasResult
+  repeated LookupInSpecResult results = 1;
   // Returns true if the read was from a replica node
-  bool is_replica = 3;
+  bool is_replica = 2;
+
+  int64 cas = 3;
 }
 
 message LookupInOptions {
@@ -116,6 +92,8 @@ message LookupInOptions {
   // Serializer - Needs to think on implementation and follow up
 
   optional bool access_deleted = 3;
+
+  optional string parent_span_id = 4;
 }
 
 message LookupInAllReplicasOptions {
@@ -128,7 +106,7 @@ message LookupInAllReplicasOptions {
   // optional shared.RetryStrategy retry_strategy = 4; - Need to think on FIT wide retry strategy implementation
 }
 
-message LookupInAnyReplicasOptions {
+message LookupInAnyReplicaOptions {
   optional uint32 timeout_millis = 1;
 
   // Serializer - Needs to think on implementation and follow up
@@ -146,6 +124,8 @@ message LookupInSpec {
 
     CountOperation count = 3;
   }
+
+  shared.ContentAs content_as = 4;
 }
 
 message ExistsOperation {
