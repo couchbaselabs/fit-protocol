@@ -107,10 +107,7 @@ message UpsertOperation {
 message InsertOperation {
   string path = 1;
 
-  oneof macro_or_content {
-    ContentOrMacro content = 2;
-    MutateInMacro macro = 5;
-  }
+  ContentOrMacro content = 2;
 
   optional bool xattr = 3;
 
@@ -165,7 +162,7 @@ message ArrayInsertOperation {
 message ArrayAddUniqueOperation {
   string path = 1;
 
-  repeated ContentOrMacro content = 2;
+  ContentOrMacro content = 2;
 
   optional bool xattr = 3;
 
