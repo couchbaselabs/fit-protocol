@@ -60,4 +60,8 @@ enum Caps {
 
   // Implements use_replica Query option
   SDK_QUERY_READ_FROM_REPLICA = 14;
+
+  // Supports Extended SDK Observability SDK-RFC 67 revision 24.  E.g. the SDK is sending additional metric tags.
+  // Support for performer cap OBSERVABILITY_1 is a pre-requisite.
+  SDK_OBSERVABILITY_RFC_REV_24 = 16;
 }
