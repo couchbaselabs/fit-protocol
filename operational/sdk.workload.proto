@@ -27,6 +27,7 @@ import "sdk.cluster.eventing_function_manager.proto";
 import "sdk.query.proto";
 import "sdk.kv.lookup_in.proto";
 import "sdk.kv.mutate_in.proto";
+import "sdk.bucket.collection_manager.proto";
 
 message ClusterLevelCommand {
   oneof command {
@@ -54,6 +55,8 @@ message BucketLevelCommand {
 
   oneof command {
     cluster.wait_until_ready.WaitUntilReadyRequest wait_until_ready = 2;
+
+    bucket.collection_manager.Command collection_manager = 3;
   }
 }
 
@@ -190,6 +193,9 @@ message Result {
     kv.lookup_in.LookupInResult lookup_in_result = 13;
     kv.lookup_in.LookupInAllReplicasResult lookup_in_all_replicas_result = 14;
     kv.lookup_in.LookupInReplicaResult lookup_in_any_replica_result = 15;
+
+    //Collection manager results
+    bucket.collection_manager.Result collection_manager_result = 20;
   }
 }
 

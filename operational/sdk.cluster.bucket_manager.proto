@@ -1,6 +1,5 @@
 syntax = "proto3";
 import "shared.basic.proto";
-import "google/protobuf/duration.proto";
 
 package protocol.sdk.cluster.bucket_manager;
 option csharp_namespace = "Couchbase.Grpc.Protocol.Sdk.Cluster.BucketManager";
@@ -36,7 +35,7 @@ message GetBucketRequest {
 }
 
 message GetBucketOptions {
-  optional google.protobuf.Duration timeout = 1;
+  optional int32 timeout_msecs = 1;
   optional string parent_span_id = 2;
 }
 
@@ -46,29 +45,29 @@ message GetAllBucketsRequest {
 }
 
 message GetAllBucketsOptions {
-  optional google.protobuf.Duration timeout = 1;
+  optional int32 timeout_msecs = 1;
   optional string parent_span_id = 2;
 }
 
 //Returns void (Result.success)
 message CreateBucketRequest {
-  BucketSettings settings = 1;
+  CreateBucketSettings settings = 1;
   optional CreateBucketOptions options = 2;
 }
 
 message CreateBucketOptions {
-  optional google.protobuf.Duration timeout = 1;
+  optional int32 timeout_msecs = 1;
   optional string parent_span_id = 2;
 }
 
 //Returns void (Result.success)
 message DropBucketRequest {
   string bucketName = 1;
-  optional DropBucketRequest options = 2;
+  optional DropBucketOptions options = 2;
 }
 
 message DropBucketOptions {
-  optional google.protobuf.Duration timeout = 1;
+  optional int32 timeout_msecs = 1;
   optional string parent_span_id = 2;
 }
 
@@ -79,7 +78,7 @@ message FlushBucketRequest {
 }
 
 message FlushBucketOptions {
-  optional google.protobuf.Duration timeout = 1;
+  optional int32 timeout_msecs = 1;
   optional string parent_span_id = 2;
 }
 
@@ -90,12 +89,9 @@ message UpdateBucketRequest {
 }
 
 message UpdateBucketOptions {
-  optional google.protobuf.Duration timeout = 1;
+  optional int32 timeout_msecs = 1;
   optional string parent_span_id = 2;
 }
-
-
-
 
 message Result {
   oneof result {
@@ -105,19 +101,26 @@ message Result {
   }
 }
 
+message CreateBucketSettings {
+  BucketSettings settings = 1;
+  optional ConflictResolutionType conflict_resolution_type = 2;
+}
 
 message BucketSettings {
   string name = 1;
-  bool flush_enabled = 2;
+  optional bool flush_enabled = 2;
   int64 ram_quota_MB = 3;
-  int32 num_replicas = 4;
-  bool replica_indexes = 5;
-  BucketType bucket_type = 6;
-  EvictionPolicyType eviction_policy = 7;
-  google.protobuf.Duration max_expiry = 8;
-  CompressionMode compression_mode = 9;
-  shared.Durability minimum_durability_level = 10;
-  StorageBackend storage_backend = 11;
+  optional int32 num_replicas = 4;
+  optional  bool replica_indexes = 5;
+  optional BucketType bucket_type = 6;
+  optional EvictionPolicyType eviction_policy = 7;
+  optional int32 max_expiry_seconds = 8;
+  optional CompressionMode compression_mode = 9;
+  optional shared.Durability minimum_durability_level = 10;
+  optional StorageBackend storage_backend = 11;
+  optional bool history_retention_collection_default = 12;
+  optional int64 history_retention_seconds = 13;
+  optional uint64 history_retention_bytes = 14;
 }
 
 message GetAllBucketsResult {
@@ -150,4 +153,10 @@ enum CompressionMode {
 enum StorageBackend {
   COUCHSTORE = 0;
   MAGMA = 1;
+}
+
+enum ConflictResolutionType {
+  TIMESTAMP = 0;
+  SEQUENCE_NUMBER = 1;
+  CUSTOM = 2;
 }

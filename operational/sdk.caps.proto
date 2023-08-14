@@ -62,6 +62,7 @@ enum Caps {
   SDK_LOOKUP_IN_REPLICAS = 14;
 
   // Implements use_replica Query option
+
   SDK_QUERY_READ_FROM_REPLICA = 15;
 
   // The performer implements everything under sdk.kv.commands and sdk.kv.mutate_in,
@@ -72,4 +73,11 @@ enum Caps {
   // Supports Extended SDK Observability SDK-RFC 67 revision 24.  E.g. the SDK is sending additional metric tags.
   // Support for performer cap OBSERVABILITY_1 is a pre-requisite.
   SDK_OBSERVABILITY_RFC_REV_24 = 16;
+
+  // Implements history retention settings for bucket and collection management.
+  SDK_MANAGEMENT_HISTORY_RETENTION = 18;
+
+  //The performer supports the CollectionManager API.
+  //This is everything under sdk.bucket.collection_manager
+  SDK_COLLECTION_MANAGEMENT = 19;
 }
