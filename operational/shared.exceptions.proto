@@ -11,6 +11,25 @@ option java_multiple_files = true;
 // The performer should return the most specific error possible.  E.g. not SDK_COUCHBASE_EXCEPTION, unless a raw CouchbaseException
 // is what the SDK raised.
 // From https://github.com/couchbaselabs/sdk-rfcs/blob/master/rfc/0058-error-handling.md
+//
+//
+// Go specific notes:
+// Go deviates from the error handling RFC in a few ways, and gets some special handling in the performer to map it into
+// the RFC model so it can work with the FIT GRPC:
+//
+// 1. It doesn't really have `ErrorContext` in the same way.  Instead it has `KeyValueError`, `QueryError` et al., which
+//    perform a similar purpose to `ErrorContext`.
+// 2. It doesn't have a base `CouchbaseException` error.  Errors don't derive from `CouchbaseException`, and generic
+//    errors that would be just a `CouchbaseException` in another SDK, become a `KeyValueError`, `QueryError` etc.
+//    (Assuming the error did originate from the SDK.)
+//
+// We accommodate (2)) in the FIT model by having the Go performer check for all specific exceptions first
+// with e.g. `errors.Is(err, ErrTimeout)`.  If these all fail, it then checks if the error is a `QueryError` etc. with
+// `errors.As()`.  If one of those succeeds, it's regarded as a generic CouchbaseException.
+// If all those checks fail, the error is classified as `ExceptionOther`.
+//
+// (1) is accommodated by just converted `QueryError` et al. into a serialized `ErrorContext`-esque string, as they
+// are serving very similar purposes.
 enum CouchbaseExceptionType {
   SDK_COUCHBASE_EXCEPTION = 0;
   SDK_TIMEOUT_EXCEPTION = 1;
