@@ -11,6 +11,7 @@ import "shared.bounds.proto";
 import "shared.exceptions.proto";
 import "sdk.kv.rangescan.top_level.proto";
 import "sdk.kv.commands.proto";
+import "sdk.kv.binary.commands.proto";
 import "shared.basic.proto";
 import "sdk.query.index_manager.proto";
 import "sdk.cluster.query.index_manager.proto";
@@ -25,6 +26,7 @@ import "sdk.cluster.bucket_manager.proto";
 import "sdk.cluster.eventing_function_manager.proto";
 import "sdk.query.proto";
 import "sdk.kv.lookup_in.proto";
+import "sdk.kv.mutate_in.proto";
 
 message ClusterLevelCommand {
   oneof command {
@@ -72,7 +74,7 @@ message ScopeLevelCommand {
 // If the command specifies a docLocation use the collection within it, otherwise fall back on
 // CollectionLevelCommand.collection.
 message CollectionLevelCommand {
-  
+
   // Should be passed in any collection level command that does not have a Location in the message for the command
   optional protocol.shared.Collection collection = 1;
 
@@ -84,7 +86,39 @@ message CollectionLevelCommand {
 
     kv.lookup_in.LookupInAllReplicas lookup_in_all_replicas = 18;
 
+    kv.mutate_in.MutateIn mutate_in = 20;
+
+    kv.GetAndLock get_and_lock = 21;
+
+    kv.Unlock unlock = 25;
+
+    kv.GetAndTouch get_and_touch = 22;
+
+    kv.Exists exists = 23;
+
+    kv.Touch touch = 24;
+
+    kv.GetAnyReplica get_any_replica = 30;
+
+    kv.GetAllReplicas get_all_replicas = 31;
+
     kv.lookup_in.LookupInAnyReplica lookup_in_any_replica = 19;
+
+    BinaryCollectionLevelCommand binary = 32;
+  }
+}
+
+// If the command specifies a docLocation use the collection within it, otherwise fall back on
+// CollectionLevelCommand.collection.
+message BinaryCollectionLevelCommand {
+  oneof command {
+    kv.Append append = 1;
+
+    kv.Prepend prepend = 2;
+
+    kv.Increment increment = 3;
+
+    kv.Decrement decrement = 4;
   }
 }
 
@@ -130,6 +164,10 @@ message Result {
     kv.GetResult get_result = 3;
     kv.MutationResult mutation_result = 4;
     kv.rangescan.ScanResult range_scan_result = 5;
+    kv.ExistsResult exists_result = 16;
+    kv.CounterResult counter_result = 17;
+    kv.GetReplicaResult get_replica_result = 18;
+    kv.mutate_in.MutateInResult mutate_in_result = 19;
 
     // List of indexes returned by a GetAllIndexes request
     query.index_manager.QueryIndexes query_indexes = 6;

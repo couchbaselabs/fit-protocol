@@ -23,7 +23,11 @@ message Content {
     // transcoder, is the intent here.
     bytes convert_to_json = 2;
 
-    // In future we may want to passthrough raw byte strings, or the SDK to encode it first into various forms
+    // Treat this content as a byte array and pass it directly through the SDK.
+    bytes byte_array = 3;
+
+    // If this is sent then the performer should pass null/nil/none (depending on language) as the content.
+    bool null = 4;
   }
 }
 

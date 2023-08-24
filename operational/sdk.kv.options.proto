@@ -52,3 +52,40 @@ message GetOptions {
     optional shared.Transcoder transcoder = 4;
     optional string parent_span_id = 5;
 }
+
+message GetAndTouchOptions {
+    optional int32 timeout_msecs = 1;
+    optional shared.Transcoder transcoder = 2;
+    optional string parent_span_id = 3;
+}
+
+message GetAndLockOptions {
+    optional int32 timeout_msecs = 1;
+    optional shared.Transcoder transcoder = 2;
+    optional string parent_span_id = 3;
+}
+
+message UnlockOptions {
+    optional int32 timeout_msecs = 1;
+    optional string parent_span_id = 3;
+}
+
+message ExistsOptions {
+    optional int32 timeout_msecs = 1;
+    optional string parent_span_id = 2;
+}
+
+message TouchOptions {
+    optional int32 timeout_msecs = 1;
+    optional string parent_span_id = 2;
+}
+
+message GetAllReplicasOptions {
+    optional int32 timeout_msecs = 1;
+    optional shared.Transcoder transcoder = 2;
+}
+
+message GetAnyReplicaOptions {
+    optional int32 timeout_msecs = 1;
+    optional shared.Transcoder transcoder = 2;
+}
