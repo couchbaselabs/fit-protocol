@@ -100,11 +100,15 @@ message UpsertOperation {
 message InsertOperation {
   string path = 1;
 
-  shared.Content content = 2;
+  oneof macro_or_content {
+    shared.Content content = 2;
+    MutateInMacro macro = 5;
+  }
 
   optional bool xattr = 3;
 
   optional bool create_path = 4;
+
 }
 
 message ReplaceOperation {
@@ -179,4 +183,10 @@ message DecrementOperation {
   optional bool xattr = 3;
 
   optional bool create_path = 4;
+}
+
+enum MutateInMacro {
+  CAS = 0;
+  SEQ_NO = 1;
+  VALUE_CRC_32C = 2;
 }
