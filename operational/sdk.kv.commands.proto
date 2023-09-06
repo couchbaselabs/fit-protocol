@@ -46,12 +46,16 @@ message GetAllReplicas {
 
   // Not sent on to the SDK - instead specifies how the performer should handle the streaming.
   streams.Config stream_config = 3;
+
+  shared.ContentAs content_as = 4;
 }
 
 // Performer will return a GetReplicaResult
 message GetAnyReplica {
   shared.DocLocation location = 1;
   optional GetAnyReplicaOptions options = 2;
+
+  shared.ContentAs content_as = 3;
 }
 
 // Performer will return an empty result with success set
