@@ -58,7 +58,6 @@ message ScopeSpec {
 
 //Returns Result.get_all_scopes_result
 message GetAllScopesRequest {
-  string name = 1;
   optional GetAllScopesOptions options = 2;
 }
 
