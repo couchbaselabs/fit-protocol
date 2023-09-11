@@ -30,7 +30,7 @@ message Command {
 
 //Returns Result.bucket_settings
 message GetBucketRequest {
-  string bucketName = 1;
+  string bucket_name = 1;
   optional GetBucketOptions options = 2;
 }
 
@@ -62,7 +62,7 @@ message CreateBucketOptions {
 
 //Returns void (Result.success)
 message DropBucketRequest {
-  string bucketName = 1;
+  string bucket_name = 1;
   optional DropBucketOptions options = 2;
 }
 
@@ -73,7 +73,7 @@ message DropBucketOptions {
 
 //Returns void (Result.success)
 message FlushBucketRequest {
-  string bucketName = 1;
+  string bucket_name = 1;
   optional FlushBucketOptions options = 2;
 }
 
