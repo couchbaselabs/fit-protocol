@@ -87,10 +87,17 @@ message MutateInSpec {
   optional shared.ContentAs content_as = 11;
 }
 
+message ContentOrMacro {
+  oneof content_or_macro {
+    shared.Content content = 2;
+    MutateInMacro macro = 5;
+  }
+}
+
 message UpsertOperation {
   string path = 1;
 
-  shared.Content content = 2;
+  ContentOrMacro content = 2;
 
   optional bool xattr = 3;
 
@@ -101,7 +108,7 @@ message InsertOperation {
   string path = 1;
 
   oneof macro_or_content {
-    shared.Content content = 2;
+    ContentOrMacro content = 2;
     MutateInMacro macro = 5;
   }
 
@@ -114,7 +121,7 @@ message InsertOperation {
 message ReplaceOperation {
   string path = 1;
 
-  shared.Content content = 2;
+  ContentOrMacro content = 2;
 
   optional bool xattr = 3;
 }
@@ -128,7 +135,7 @@ message RemoveOperation {
 message ArrayAppendOperation {
   string path = 1;
 
-  repeated shared.Content content = 2;
+  repeated ContentOrMacro content = 2;
 
   optional bool xattr = 3;
 
@@ -138,7 +145,7 @@ message ArrayAppendOperation {
 message ArrayPrependOperation {
   string path = 1;
 
-  repeated shared.Content content = 2;
+  repeated ContentOrMacro content = 2;
 
   optional bool xattr = 3;
 
@@ -148,7 +155,7 @@ message ArrayPrependOperation {
 message ArrayInsertOperation {
   string path = 1;
 
-  repeated shared.Content content = 2;
+  repeated ContentOrMacro content = 2;
 
   optional bool xattr = 3;
 
@@ -158,7 +165,7 @@ message ArrayInsertOperation {
 message ArrayAddUniqueOperation {
   string path = 1;
 
-  repeated shared.Content content = 2;
+  repeated ContentOrMacro content = 2;
 
   optional bool xattr = 3;
 
