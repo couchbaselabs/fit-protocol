@@ -5,7 +5,7 @@ package protocol.sdk.bucket.collection_manager;
 option csharp_namespace = "Couchbase.Grpc.Protocol.Sdk.Bucket.CollectionManager";
 option java_package = "com.couchbase.client.protocol.sdk.bucket.collectionmanager";
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/sdk/bucket/collectionmanager";
-option ruby_package = "FIT::Protocol::SDK::Collection::CollectionManager";
+option ruby_package = "FIT::Protocol::SDK::Bucket::CollectionManager";
 option java_multiple_files = true;
 
 message Command {
