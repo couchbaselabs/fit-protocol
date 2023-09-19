@@ -39,5 +39,6 @@ enum Caps {
     EXT_INSERT_EXISTING = 22;
     EXT_OBSERVABILITY = 23;
     EXT_QUERY_CONTEXT = 24;
+    EXT_PARALLEL_UNSTAGING = 25;
     // Remember to add a test to ForwardCompatibilityTest for each extension
 }
