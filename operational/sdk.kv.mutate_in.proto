@@ -4,7 +4,7 @@ package protocol.sdk.kv.mutate_in;
 option csharp_namespace = "Couchbase.Grpc.Protocol.Sdk.Collection.MutateIn";
 option java_package = "com.couchbase.client.protocol.sdk.collection.mutatein";
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/sdk/collection/mutatein";
-option ruby_package = "FIT::Protocol::SDK::Collection::MutateIn";
+option ruby_package = "FIT::Protocol::SDK::KV::MutateIn";
 option java_multiple_files = true;
 
 import "shared.basic.proto";
