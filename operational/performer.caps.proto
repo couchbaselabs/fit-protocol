@@ -32,6 +32,9 @@ enum Caps {
     // Support `ClusterConfig.cert`.
     CLUSTER_CONFIG_CERT = 7;
 
+    // Support `ClusterConfig.insecure`.
+    CLUSTER_CONFIG_INSECURE = 8;
+
     // Whether this performer supports transactions.Workload, allowing it to do performance testing of transactions.
     // All GRPC messages transitively required by this workload must also be supported.
     // The exception here is TransactionOptions.hooks: these can be significant work for an implementation, and are

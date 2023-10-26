@@ -50,6 +50,13 @@ message ClusterConfig {
     // separate nodes or Docker containers.
     optional string cert = 26;
 
+    // The SDK should skip certificate validation.  It's SDK dependent how to implement this.  On JVM it may involve
+    // applying InsecureTrustManager, while on a C++ wrapper it may require manipulating the connstr to pass "?tls_verify=none".
+    // Not every SDK can support this option against every backend.  See internal discussion:
+    // https://couchbase.slack.com/archives/G9682CWN7/p1698333449931709
+    // Behind cap CLUSTER_CONFIG_INSECURE.
+    optional bool insecure = 27;
+
     // Following taken from:
     // https://github.com/couchbaselabs/sdk-rfcs/blob/master/rfc/0059-sdk3-foundation.md#configuration
     optional int32 kv_connect_timeout_secs = 5;
