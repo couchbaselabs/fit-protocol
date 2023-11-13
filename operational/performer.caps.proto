@@ -55,6 +55,9 @@ enum Caps {
     // * RequestSpan.recordException
     // * Counter support
     OBSERVABILITY_1 = 6;
+
+    // The performer will set `elapsedNanos` for failed operations as well as successful ones.
+    TIMING_ON_FAILED_OPS = 9;
 }
 
 message PerformerCapsFetchRequest {

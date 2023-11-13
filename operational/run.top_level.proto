@@ -62,9 +62,11 @@ message Result {
   // accurate as the platform can provide (often realistically this is only accurate to 10 millis or so).  Hopefully
   // a few operations ending up in the wrong bucket each second will not dramatically impact the results.  It is ok
   // to set `initiated` before the GRPC work, due to the reduced precision.
-  // If the operation fails, the performer does not need to set `elapsedNanos` - it will not be used.  However `initiated`
-  // must always be sent - and it needs to be the wallclock time the operation was initiated, not when it failed which can
+  // For failed operations:
+  // `initiated` needs to be the wallclock time the operation was initiated, not when it failed which can
   // be potentially X seconds later.
+  // `elapsedNanos` historically was not required by the performer, but some tests do now use it.  The SDK can opt into
+  // these tests by always returning this field and declaring support for performer cap TIMING_ON_FAILED_OPS.
   int64 elapsedNanos = 1;
   google.protobuf.Timestamp initiated = 2;
 }
