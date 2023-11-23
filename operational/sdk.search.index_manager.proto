@@ -4,6 +4,7 @@ package protocol.sdk.search.index_manager;
 option csharp_namespace = "Couchbase.Grpc.Protocol.Sdk.Search.IndexManager";
 option java_package = "com.couchbase.client.protocol.sdk.search.indexmanager";
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/sdk/search/index-manager";
+option ruby_package = "FIT::Protocol::SDK::Search::IndexManager";
 option java_multiple_files = true;
 
 // Messages shared by sdk.management.search.proto and sdk.management.scope.search.proto.
