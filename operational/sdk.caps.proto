@@ -80,4 +80,8 @@ enum Caps {
   //The performer supports the CollectionManager API.
   //This is everything under sdk.bucket.collection_manager
   SDK_COLLECTION_MANAGEMENT = 19;
+
+  // SDK can report the SDK_DOCUMENT_NOT_LOCKED_EXCEPTION error.
+  // The SDK_KV cap is a pre-requisite.
+  SDK_DOCUMENT_NOT_LOCKED = 20;
 }
