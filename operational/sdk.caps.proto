@@ -88,4 +88,6 @@ enum Caps {
   // SDK can report the SDK_DOCUMENT_NOT_LOCKED_EXCEPTION error.
   // The SDK_KV cap is a pre-requisite.
   SDK_DOCUMENT_NOT_LOCKED = 20;
+
+  SDK_CIRCUIT_BREAKERS = 21;
 }

@@ -10,6 +10,7 @@ option java_multiple_files = true;
 import "shared.transaction_config.proto";
 import "shared.transcoders.proto";
 import "observability.config.proto";
+import "sdk.circuit_breaker.config.proto";
 
 message ClusterConfig {
     // Will only be sent to ExtSDKIntegration-enabled performers.
@@ -88,6 +89,8 @@ message ClusterConfig {
     optional observability.Config observability_config = 24;
 
     optional int32 kv_scan_timeout_secs = 25;
+
+    optional sdk.circuit_breaker.Config circuit_breaker_config = 28;
 }
 
 // Only sent to ExtSDKIntegration-supporting performers.
