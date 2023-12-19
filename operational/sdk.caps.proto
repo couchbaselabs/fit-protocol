@@ -20,8 +20,12 @@ enum Caps {
   SDK_COLLECTION_QUERY_INDEX_MANAGEMENT = 3;
 
   // Can execute cluster.search() with all SearchOptions.
-  // This is everything under sdk.search.proto.
+  // This is everything under sdk.search.proto, except VectorQuery.
   SDK_SEARCH = 4;
+
+  // Supports sdk.search.VectorQuery.
+  // Support for SDK_SEARCH is a prerequisite.
+  SDK_VECTOR_SEARCH = 22;
 
   // Can execute all APIs under cluster.searchIndexes(), with all options.
   // This is everything under sdk.management.search.proto.
@@ -38,7 +42,7 @@ enum Caps {
   //The performer supports WaitUntilReady with options, at cluster and bucket level
   WAIT_UNTIL_READY = 8;
 
-  //The performer supports protostellar:// connection strings
+  //The SDK supports couchbase2:// connection strings
   PROTOSTELLAR = 9;
 
   //The performer supports the BucketManager API.

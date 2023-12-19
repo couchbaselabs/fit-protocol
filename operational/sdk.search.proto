@@ -14,10 +14,85 @@ import "google/protobuf/timestamp.proto";
 import "streams.top_level.proto";
 
 // Executing either a `cluster.search()` or `scope.search()` FTS query.
+// This is the new API, replacing `cluster/scope.searchQuery()`, that also supports vector search.
+//
+// The performer can return one of these 3:
+//
+// 1. An protocol.sdk.Result.exception, if the `cluster/scope.search()` call immediately fails.
+//
+// 2. A BlockingSearchResult, but only if that's genuinely the most natural representation.  For example, the Java SDK's
+//    blocking API would return this.  The performer should not select this just because it's easier to
+//    implement than the stream!  Supporting streams allows more sophisticated FIT tests to be performed.
+//    Most SDK APIs have streaming responses and should instead use:
+//
+// 3. A stream.  This consists of streaming back:
+//       3.1 A streams.Created, with type STREAM_FULL_TEXT_SEARCH.
+//       3.2 Zero+ StreamingSearchResults, which contain the FTS rows, facets and metadata.
+//       3.3 A streams.Complete.
+//    And as usual the performer should handle requests for more items, stream cancellation requests, and
+//    look at stream_config for details of how to stream.
+//    See streams.top_level.proto for details.
+//    If any error occurs on the stream (as opposed to from the initial cluster/scope.search() call)
+//    as usual return a streams.Error.
+//    Note the same types are used as for `cluster/scope.searchQuery()`, reflecting the API.
+message SearchWrapper {
+  // Represents the SDK search.
+  SearchV2 search = 1;
+
+  // Specifies how the performer should convert SearchRow.fields.  If not present, the performer should not do result.fieldsAs().
+  optional protocol.shared.ContentAs fields_as = 2;
+
+  // Specifies how the performer should handle any streaming.
+  // Can be ignored if the performer is returning a BlockingSearchResult rather than a stream.
+  streams.Config stream_config = 3;
+}
+
+// Note that "V2" naming should not be used anywhere in the SDK itself for this feature.  It's purely to workaround
+// having an existing "Search" wrapper message in the GRPC.
+message SearchV2 {
+  string indexName = 1;
+  SearchRequest request = 2;
+  optional SearchOptions options = 3;
+}
+
+// At least one of these will usually be specified.  If both are not specified, the SDK should simulate the user
+// not providing either - e.g. providing null or similar for both.
+message SearchRequest {
+  optional SearchQuery search_query = 1;
+  optional VectorSearch vector_search = 2;
+}
+
+message VectorQuery {
+  repeated float vector_query = 1;
+  string vector_field_name = 2;
+  optional VectorQueryOptions options = 3;
+}
+
+message VectorQueryOptions {
+  optional int32 num_candidates = 1;
+  optional float boost = 2;
+}
+
+message VectorSearch {
+  repeated VectorQuery vector_query = 1;
+  optional VectorSearchOptions options = 2;
+}
+
+message VectorSearchOptions {
+  optional VectorQueryCombination vector_query_combination = 1;
+}
+
+enum VectorQueryCombination {
+  AND = 0;
+  OR = 1;
+}
+
+
+// Executing either a `cluster.searchQuery()` or `scope.searchQuery()` FTS query.
 //
 // The performer can return either:
 //
-// 1. An error.
+// 1. An protocol.sdk.Result.exception, if the `cluster/scope.searchQuery()` call immediately fails.
 //
 // 2. A BlockingSearchResult, iff that's the most natural representation.  For example, the Java SDK's
 //    blocking API would return this.  The performer should not select this just because it's easier to

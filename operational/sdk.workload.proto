@@ -34,8 +34,11 @@ message ClusterLevelCommand {
     // QueryIndexManager: cluster.queryIndexes()
     cluster.query.index_manager.Command query_index_manager = 1;
 
-    // cluster.search()
+    // cluster.searchQuery() - original FTS API
     search.Search search = 2;
+
+    // cluster.search() - updated FTS API
+    search.SearchWrapper search_v2 = 8;
 
     // SearchIndexManager: cluster.searchIndexes()
     cluster.search.index_manager.Command search_index_manager = 3;
@@ -64,8 +67,11 @@ message ScopeLevelCommand {
   protocol.shared.Scope scope = 1;
 
   oneof command {
-    // scope.search()
+    // scope.searchQuery() - original FTS API
     search.Search search = 2;
+
+    // scope.search() - updated FTS API
+    search.SearchWrapper search_v2 = 5;
 
     // ScopeSearchIndexManager: scope.searchIndexes()
     scope.search.index_manager.Command search_index_manager = 3;
