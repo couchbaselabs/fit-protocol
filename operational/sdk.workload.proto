@@ -67,9 +67,6 @@ message ScopeLevelCommand {
   protocol.shared.Scope scope = 1;
 
   oneof command {
-    // scope.searchQuery() - original FTS API
-    search.Search search = 2;
-
     // scope.search() - updated FTS API
     search.SearchWrapper search_v2 = 5;
 
@@ -77,6 +74,12 @@ message ScopeLevelCommand {
     scope.search.index_manager.Command search_index_manager = 3;
 
     sdk.query.Command query = 4;
+
+    // scope.searchQuery() - original FTS API
+    // Now deprecated as revision 10 of the RFC removes this (it was only implemented by one SDK).
+    // The SDK should implement only scope.search(), not scope.searchQuery().
+    // FIT will not use this field.
+    search.Search search = 2 [deprecated = true];
   }
 }
 

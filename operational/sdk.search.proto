@@ -15,7 +15,7 @@ import "google/protobuf/timestamp.proto";
 import "streams.top_level.proto";
 
 // Executing either a `cluster.search()` or `scope.search()` FTS query.
-// This is the new API, replacing `cluster/scope.searchQuery()`, that also supports vector search.
+// This is the new API, replacing `cluster.searchQuery()`, that also supports vector search.
 //
 // The performer can return one of these 3:
 //
@@ -89,7 +89,7 @@ enum VectorQueryCombination {
 }
 
 
-// Executing either a `cluster.searchQuery()` or `scope.searchQuery()` FTS query.
+// Executing a `cluster.searchQuery()` FTS query.
 //
 // The performer can return either:
 //

@@ -31,8 +31,8 @@ enum Caps {
   // This is everything under sdk.management.search.proto.
   SDK_SEARCH_INDEX_MANAGEMENT = 5;
 
-  // Can execute cluster.search() with all SearchOptions.
-  // This is everything under sdk.seark.proto.
+  // Can execute scope.search() with all SearchOptions.
+  // Support for SDK_SEARCH is a prerequisite.
   SDK_SCOPE_SEARCH = 6;
 
   // Can execute all APIs under scope.searchIndexes(), with all options.
