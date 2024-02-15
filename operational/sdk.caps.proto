@@ -27,13 +27,17 @@ enum Caps {
   // Support for SDK_SEARCH is a prerequisite.
   SDK_VECTOR_SEARCH = 22;
 
-  // Can execute all APIs under cluster.searchIndexes(), with all options.
-  // This is everything under sdk.management.search.proto.
-  SDK_SEARCH_INDEX_MANAGEMENT = 5;
-
   // Can execute scope.search() with all SearchOptions.
   // Support for SDK_SEARCH is a prerequisite.
   SDK_SCOPE_SEARCH = 6;
+
+  // The SDK implements support for search SDK-RFC 52 revision 11.
+  // (Improved FeatureNotAvailable handling against older clusters for scoped and vector indexes)
+  SDK_SEARCH_RFC_REVISION_11 = 24;
+
+  // Can execute all APIs under cluster.searchIndexes(), with all options.
+  // This is everything under sdk.management.search.proto.
+  SDK_SEARCH_INDEX_MANAGEMENT = 5;
 
   // Can execute all APIs under scope.searchIndexes(), with all options.
   // This is everything under sdk.management.scope.search.proto.
@@ -90,4 +94,8 @@ enum Caps {
   SDK_DOCUMENT_NOT_LOCKED = 20;
 
   SDK_CIRCUIT_BREAKERS = 21;
+
+  // The SDK implements support for index management SDK-RFC 54 revision 25.
+  // (Improved FeatureNotAvailable handling against older clusters for scoped and vector indexes)
+  SDK_INDEX_MANAGEMENT_RFC_REVISION_25 = 25;
 }
