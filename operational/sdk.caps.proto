@@ -98,4 +98,7 @@ enum Caps {
   // The SDK implements support for index management SDK-RFC 54 revision 25.
   // (Improved FeatureNotAvailable handling against older clusters for scoped and vector indexes)
   SDK_INDEX_MANAGEMENT_RFC_REVISION_25 = 25;
+
+  // The SDK implements support for observability with couchbase2, as specified in SDK-RFC 77.
+  SDK_COUCHBASE2_OBSERVABILITY = 26;
 }

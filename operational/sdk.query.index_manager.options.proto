@@ -57,6 +57,7 @@ message WatchIndexesOptions {
   optional bool watch_primary = 1;
   optional string scope_name = 2;
   optional string collection_name = 3;
+  optional string parent_span_id = 4;
 }
 
 message BuildDeferredIndexesOptions {
