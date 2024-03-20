@@ -58,6 +58,9 @@ enum Caps {
 
     // The performer will set `elapsedNanos` for failed operations as well as successful ones.
     TIMING_ON_FAILED_OPS = 9;
+
+    // The performer supports sending and receiving values of up to 25MiB.
+    LARGE_VALUES = 10;
 }
 
 message PerformerCapsFetchRequest {
