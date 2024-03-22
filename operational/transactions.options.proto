@@ -11,6 +11,7 @@ option java_multiple_files = true;
 import "hooks.transactions.proto";
 import "shared.collection.proto";
 import "shared.basic.proto";
+import "shared.transcoders.proto";
 
 enum UnstagingMode {
   TIME_OPTIMIZED = 0;
@@ -56,4 +57,14 @@ message TransactionOptions {
   optional string parent_span_id = 5;
 }
 
+message TransactionGetOptions {
+  optional shared.Transcoder transcoder = 1;
+}
 
+message TransactionInsertOptions {
+  optional shared.Transcoder transcoder = 1;
+}
+
+message TransactionReplaceOptions {
+  optional shared.Transcoder transcoder = 1;
+}

@@ -40,7 +40,7 @@ message ContentAs {
     // var returnOverGRPC = result.getBytes(StandardCharsets.UTF_8)
     bool as_string = 1;
 
-    // Intended to get the result as a String, then convert it into bytes.  Something like this:
+    // Intended to get the result as a byte array, then convert it into bytes.  Something like this:
     // var returnOverGRPC = someResult.contentAs[Array[Byte]]()
     // var returnOverGRPC = someResult.contentAsBytes()
     bool as_byte_array = 2;
@@ -99,4 +99,27 @@ message ContentTypes {
 
     bool content_as_bool = 5;
   }
+}
+
+// For subsystems (such as transactions) that rely on performer-side validation.
+// Many result types have a `SomeResult.contentAs[SomeType]()` call, and this message controls how the performer
+// executes those, and what validation it performs.
+message ContentAsPerformerValidation {
+  // How the performer should perform SomeResult.contentAs[SomeType]().
+  shared.ContentAs content_as = 1;
+
+  // If true, the contentAs operation is expected to succeed and the performer needs to validate this, raising a
+  // GRPC FAILED_PRECONDITION error if not.
+  // If false, the contentAs operation is expected to fail and similarly the performer needs to validate this and
+  // raise a GRPC INVALID_ARGUMENT error if validation fails.
+  // Specifically the operation would be expected to fail with an SDK3 DecodingFailureException.  However, it is
+  // known that some SDKs do not follow the model, and so it is not a required part of the validation.  The performer
+  // can choose to optionally validate it is a DecodingFailureException, for an extra level of regression safety.
+  bool expect_success = 2;
+
+  // If specified, the performer will check the results of contentAs operation against this.
+  // The results of the contentAs operation should be converted to a byte[] first.
+  // Iff the expected content does not equal the actual content, the performer should raise a GRPC FAILED_PRECONDITION
+  // error.
+  optional bytes expected_content_bytes = 3;
 }

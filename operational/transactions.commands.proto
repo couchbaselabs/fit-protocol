@@ -146,7 +146,12 @@ message CommandGet {
     repeated ExpectedResult expected_result = 2;
 
     // If not-null, the performer will check the fetched data equals this.  Useful for read-your-own-write tests.
+    // This is superceded by content_as_validation, but that is only available with CONTENT_AS_PERFORMER_VALIDATION, so tests will
+    // continue to use this until that extension is fully rolled out.
     string expected_content_json = 3;
+
+    // Added with cap CONTENT_AS_PERFORMER_VALIDATION and will only be sent if performer declares support for that.
+    optional shared.ContentAsPerformerValidation content_as_validation = 6;
 
     // If not DO_NOT_CHECK, the performer will check the fetched document status equals this.
     // Fully deprecated as of ExtSDKIntegration.  The driver will only specify DO_NOT_CHECK now.
@@ -161,6 +166,9 @@ message CommandGet {
     // should be deleted at the end of the transaction.  Subsequent CommandReplace and CommandReplace operations may
     // may reference to one of these stashed results.
     optional int32 stash_in_slot = 5;
+
+    // Added with EXT_BINARY_SUPPORT and will only be sent if performer declares support for that.
+    optional TransactionGetOptions options = 7;
 }
 
 // There are two ways the implementation can implement getOptional:
@@ -172,19 +180,42 @@ message CommandGetOptional {
 
     // Use this instead of passing EXPECT_FAIL_DOC_NOT_FOUND or EXPECT_FAIL_DOC_ALREADY_EXISTS
     bool expect_doc_present = 2;
+
+    // Added with cap CONTENT_AS_PERFORMER_VALIDATION and will only be sent if performer declares support for that.
+    optional shared.ContentAsPerformerValidation content_as_validation = 6;
+
+    // Added with EXT_BINARY_SUPPORT and will only be sent if performer declares support for that.
+    optional TransactionGetOptions options = 4;
 }
 
 message CommandInsert {
     DocId doc_id = 1;
-    string content_json = 2;
+
+    oneof content_option {
+        // This is superceded by `content`, but that is only available with EXT_BINARY_SUPPORT, so tests will
+        // continue to use this until that extension is fully rolled out.
+        string content_json = 2;
+
+        // Added with EXT_BINARY_SUPPORT and will only be sent if performer declares support for that.
+        shared.Content content = 5;
+    }
 
     // What result(s) the command is allowed to return.  Anything outside this will fail the test.
     repeated ExpectedResult expected_result = 3;
+
+    // Added with EXT_BINARY_SUPPORT and will only be sent if performer declares support for that.
+    optional TransactionInsertOptions options = 4;
 }
 
 message CommandReplace {
     DocId doc_id = 1;
-    string content_json = 2;
+
+    oneof content_option {
+        string content_json = 2;
+
+        // Added with EXT_BINARY_SUPPORT and will only be sent if performer declares support for that.
+        shared.Content content = 7;
+    }
 
     // What result(s) the command is allowed to return.  Anything outside this will fail the test.
     repeated ExpectedResult expected_result = 3;
@@ -197,6 +228,9 @@ message CommandReplace {
     // Refer to `stashInSlot` in CommandGet for details.
     // `useStashedResult` and `useStashedSlot` will not be sent together.
     optional int32 use_stashed_slot = 5;
+
+    // Added with EXT_BINARY_SUPPORT and will only be sent if performer declares support for that.
+    optional TransactionReplaceOptions options = 6;
 }
 
 message CommandRemove {
@@ -343,6 +377,9 @@ message Insert {
     // What result(s) the command is allowed to return.  Anything outside this will fail the test.
     // The performer must perform this validation.  If this is empty, the performer skips validation.
     repeated ExpectedResult expected_result = 3;
+
+    // Added with EXT_BINARY_SUPPORT and will only be sent if performer declares support for that.
+    optional TransactionInsertOptions options = 4;
 }
 
 message Get {
@@ -358,6 +395,13 @@ message Get {
     // may reference to one of these stashed results.
     // transactions.CommandGet and transactions.Get share the same map.
     optional int32 stash_in_slot = 3;
+
+    // Determines if and how the performer should execute transactionGetResult.contentAs().
+    // Added with CONTENT_AS_PERFORMER_VALIDATION and will only be sent if performer declares support for that.
+    optional shared.ContentAs content_as = 4;
+
+    // Added with EXT_BINARY_SUPPORT and will only be sent if performer declares support for that.
+    optional TransactionGetOptions options = 5;
 }
 
 message Remove {
@@ -381,6 +425,9 @@ message Replace {
 
     // Refer to `stashInSlot` in CommandGet for details.
     optional int32 use_stashed_slot = 4;
+
+    // Added with EXT_BINARY_SUPPORT and will only be sent if performer declares support for that.
+    optional TransactionReplaceOptions options = 5;
 }
 
 message TransactionCommand {
@@ -410,6 +457,7 @@ message TransactionCommand {
         // Why do we have transactions.CommandInsert and transactions.Insert?  The former stems from the original days of FIT
         // that just did integration testing of transactions.  The latter is for modern FIT and supports the abstractions we
         // need now, including for performance testing.
+        // These will only be sent if the performer declares support for TRANSACTIONS_WORKLOAD_1.
         Insert insert_v2 = 17;
         Get get_v2 = 18;
         Remove remove_v2 = 19;
@@ -419,6 +467,6 @@ message TransactionCommand {
     // Added for TXNJ-249: make the application (erroneously) catch and not propagate the error.
     bool do_not_propagate_error = 100;
 
-    // If given, the transaction will pause for "waitMSecs" before executing the TransactionCommand
+    // If given, the performer will pause (blocking) for `wait_msecs` before executing the TransactionCommand
     int32 wait_msecs = 101;
 }

@@ -61,6 +61,9 @@ enum Caps {
 
     // The performer supports sending and receiving values of up to 25MiB.
     LARGE_VALUES = 10;
+
+    // If the performer supports ContentAsPerformerValidation.
+    CONTENT_AS_PERFORMER_VALIDATION = 11;
 }
 
 message PerformerCapsFetchRequest {
