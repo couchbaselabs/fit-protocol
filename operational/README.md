@@ -31,7 +31,7 @@ The following rules are used for packages:
 4. Otherwise aim to put new GRPC into a package, or create a package.  Most will go under `sdk`, e.g. `sdk.query`.
 5. Avoid import package cycles (see below) to allow Go to compile.
 6. We use 'sdk.kv.Get' naming, rather than say 'sdk.kv.SdkKvGet'.
-   1. One exception to this are transactions, e.g. `transactions.TransactionResult`.  These messages existed prior to this rule, and to reduce breakage, they were not renamed.
+   6.1. One exception to this are transactions, e.g. `transactions.TransactionResult`.  These messages existed prior to this rule, and to reduce breakage, they were not renamed.
 7. Don't have filenames that match message/enum names.  E.g. "PerformerCaps" enum exists, so can't have "performer_caps.proto".  It produces non-compilable Java.
 8. For simplicity we keep a one-to-one mapping between the GRPC package and the generated packages.  E.g.:
    ```
@@ -52,6 +52,24 @@ The following rules are used for packages:
    OR just one package "sdk.search".  
    The approach selected should depend on how complex the interface is (e.g. does it have multiple methods), how much 
    it differs from Cluster/Bucket vs Scope/Collection forms, and whether that could change in future.
+
+## Columnar
+// todo tidyup
+1.  Continues to apply.
+2.  Probably tweaking.
+3.  Continues to apply.  "protocol.shared" package now used for everything that applies to both SDKs.
+4.  Probably tweaking.
+5.  Continues to apply.
+6.  Continues to apply, but we are using much shorter package names following feedback.
+7.  Continues to apply.
+8.  Probably Continues to apply.
+10. Follow standard industry conventions:
+    - Protobuf best practices
+      - https://protobuf.dev/programming-guides/api
+      - https://protobuf.dev/programming-guides/dos-donts/
+    - (Note Google's GRPC errors (https://cloud.google.com/apis/design/errors) AREN'T followed, as we need more
+      flexibility to express exactly what the SDK returned)
+
 
 ## Import package cycles
 A Go-specific issue exists that impacted the design:
