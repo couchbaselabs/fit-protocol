@@ -67,6 +67,7 @@ message VectorQuery {
   repeated float vector_query = 1;
   string vector_field_name = 2;
   optional VectorQueryOptions options = 3;
+  optional string base64_vector_query = 4;
 }
 
 message VectorQueryOptions {

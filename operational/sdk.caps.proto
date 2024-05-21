@@ -27,6 +27,9 @@ enum Caps {
   // Support for SDK_SEARCH is a prerequisite.
   SDK_VECTOR_SEARCH = 22;
 
+  // Support for SDK_VECTOR_SEARCH is a prerequisite.
+  SDK_VECTOR_SEARCH_BASE64 = 23;
+
   // Can execute scope.search() with all SearchOptions.
   // Support for SDK_SEARCH is a prerequisite.
   SDK_SCOPE_SEARCH = 6;
