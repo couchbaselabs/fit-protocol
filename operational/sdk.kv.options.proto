@@ -83,9 +83,15 @@ message TouchOptions {
 message GetAllReplicasOptions {
     optional int32 timeout_msecs = 1;
     optional shared.Transcoder transcoder = 2;
+
+    // Will only be sent if support is declared for SDK_ZONE_AWARE_READ_FROM_REPLICA
+    optional shared.ReadPreference read_preference = 3;
 }
 
 message GetAnyReplicaOptions {
     optional int32 timeout_msecs = 1;
     optional shared.Transcoder transcoder = 2;
+
+    // Will only be sent if support is declared for SDK_ZONE_AWARE_READ_FROM_REPLICA
+    optional shared.ReadPreference read_preference = 3;
 }

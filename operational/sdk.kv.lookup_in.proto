@@ -104,6 +104,9 @@ message LookupInAllReplicasOptions {
   optional string parent_span_id = 3;
 
   // optional shared.RetryStrategy retry_strategy = 4; - Need to think on FIT wide retry strategy implementation
+
+  // Will only be sent if support is declared for SDK_ZONE_AWARE_READ_FROM_REPLICA
+  optional shared.ReadPreference read_preference = 5;
 }
 
 message LookupInAnyReplicaOptions {
@@ -114,6 +117,9 @@ message LookupInAnyReplicaOptions {
   optional string parent_span_id = 3;
 
   // optional shared.RetryStrategy retry_strategy = 4; - Need to think on FIT wide retry strategy implementation
+
+  // Will only be sent if support is declared for SDK_ZONE_AWARE_READ_FROM_REPLICA
+  optional shared.ReadPreference read_preference = 5;
 }
 
 message LookupInSpec {

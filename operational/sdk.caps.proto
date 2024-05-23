@@ -101,4 +101,8 @@ enum Caps {
 
   // The SDK implements support for observability with couchbase2, as specified in SDK-RFC 77.
   SDK_COUCHBASE2_OBSERVABILITY = 26;
+
+  // The SDK implements support for Zone aware read from replica in Lookupin and Get operations
+  // The options requiring support are SELECTED_SERVER_GROUP & SELECTED_SERVER_GROUP_OR_ALL_AVAILABLE.
+  SDK_ZONE_AWARE_READ_FROM_REPLICA = 27;
 }

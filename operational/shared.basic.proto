@@ -87,3 +87,10 @@ enum API {
   DEFAULT = 0;
   ASYNC = 1;
 }
+
+// Zone Aware Read from Replica options
+enum ReadPreference {
+  NO_PREFERENCE = 0;
+  SELECTED_SERVER_GROUP = 1;
+  SELECTED_SERVER_GROUP_OR_ALL_AVAILABLE = 2;
+}

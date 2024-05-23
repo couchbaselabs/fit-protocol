@@ -91,6 +91,8 @@ message ClusterConfig {
     optional int32 kv_scan_timeout_secs = 25;
 
     optional sdk.circuit_breaker.Config circuit_breaker_config = 28;
+
+    optional string preferred_server_group = 29;
 }
 
 // Only sent to ExtSDKIntegration-supporting performers.
