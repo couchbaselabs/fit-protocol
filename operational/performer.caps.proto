@@ -82,6 +82,9 @@ enum Caps {
 
     // The performer supports content types as null value.
     AS_NULL_CONTENT_TYPE_SUPPORT = 13;
+
+    // The performer supports client_context_id as Transaction Query Option.
+    TXN_CLIENT_CONTEXT_ID_SUPPORT = 14;
 }
 
 message PerformerCapsFetchRequest {
