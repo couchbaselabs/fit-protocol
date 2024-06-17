@@ -188,6 +188,23 @@ message CommandGetOptional {
     optional TransactionGetOptions options = 4;
 }
 
+message CommandGetReplicaFromPreferredServerGroup {
+    DocId doc_id = 1;
+
+    // What result(s) the command is allowed to return.  Anything outside this will fail the test.
+    repeated ExpectedResult expected_result = 2;
+
+    // Added with cap CONTENT_AS_PERFORMER_VALIDATION and will only be sent if performer declares support for that.
+    optional shared.ContentAsPerformerValidation content_as_validation = 6;
+
+    // Refer to `stashInSlot` in CommandGet for details.
+    // `useStashedResult` and `useStashedSlot` will not be sent together.
+    optional int32 stash_in_slot = 5;
+
+    // Added with EXT_BINARY_SUPPORT and will only be sent if performer declares support for that.
+    optional TransactionGetOptions options = 7;
+}
+
 message CommandInsert {
     DocId doc_id = 1;
 
@@ -462,6 +479,8 @@ message TransactionCommand {
         Get get_v2 = 18;
         Remove remove_v2 = 19;
         Replace replace_v2 = 20;
+
+        CommandGetReplicaFromPreferredServerGroup get_from_preferred_server_group = 21;
     }
 
     // Added for TXNJ-249: make the application (erroneously) catch and not propagate the error.

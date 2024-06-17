@@ -43,5 +43,7 @@ enum Caps {
 
     // Support for Caps.CONTENT_AS_PERFORMER_VALIDATION is a pre-requisite.
     EXT_BINARY_SUPPORT = 26;
+    EXT_REPLICA_FROM_PREFERRED_GROUP = 27;
+
     // Remember to add a test to ForwardCompatibilityTest for each extension
 }
