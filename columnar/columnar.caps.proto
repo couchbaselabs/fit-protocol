@@ -173,6 +173,15 @@ message FetchPerformerCapsResponse {
   // choose from.
   //
   // SDKs that only have one mode of operation should just use mode_index = 0 for all elements.
+  //
+  // Per-mode cluster connections
+  // ----------------------------
+  // The driver assumes either:
+  //   (1) There is only one cluster_new_instance mode which is used for operations of all modes.
+  //     OR
+  //   (2) For all operation modes that have been declared (e.g. for execute_query), the same mode has been declared
+  //       in cluster_new_instance. The driver will ensure that the cluster connection used for the operation has been
+  //       created with the same mode.
 
   // ColumnarService.ClusterNewInstance and everything that exists at time of commit under those messages.
   map<int32, PerApiElementGeneric> cluster_new_instance = 3;
