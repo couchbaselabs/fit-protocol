@@ -8,6 +8,15 @@ message PerApiElementGeneric {
   // Currently empty.
 }
 
+message PerApiElementClusterNewInstance {
+  //  The SDK implements a dispatch timeout, which is optional. The SDK may or may not implement this feature.
+  bool supports_dispatch_timeout = 1;
+}
+
+message PerApiElementClusterClose {
+  // Currently empty.
+}
+
 // How the SDK exposes executeQuery().
 message PerApiElementExecuteQuery {
   // Covers whether the SDK follows the "standard" model of an initial `executeQuery()` call returning a `QueryResult`
@@ -122,6 +131,49 @@ message PerApiElementExecuteQuery {
   bool supports_passthrough_deserializer = 4;
 }
 
+message SdkConnectionError {
+  // Enum to specify the type of invalid credential error.
+  enum InvalidCredentialErrorType {
+    // Should never be sent.  Included as a standard protobuf best practice.
+    UNSPECIFIED_CREDENTIAL_ERROR = 0;
+
+    // The SDK returns an error of type INVALID_CREDENTIAL_EXCEPTION when a
+    // connection attempt fails due to incorrect username or password.
+    AS_INVALID_CREDENTIAL_EXCEPTION = 1;
+
+    // The SDK returns error type for COLUMNAR_TIMEOUT_EXCEPTION, when a connection attempt fails
+    // after the minimum of the three timeout expires ie connect, dispatch and query
+    AS_TIMEOUT_EXCEPTION = 2;
+
+    // The SDK returns a error which driver can't understand
+    UNKNOWN_CREDENTIAL_ERROR_EXCEPTION = 3;
+  }
+
+  // Enum to specify the type of bootstrap error.
+  enum BootstrapErrorType {
+    // Should never be sent.  Included as a standard protobuf best practice.
+    UNSPECIFIED_BOOTSTRAP_ERROR = 0;
+
+    // The SDK returns error type for COLUMNAR_TIMEOUT_EXCEPTION, when a connection attempt fails
+    // after the minimum of the three timeout expires ie connect, dispatch and query
+    ERROR_AS_TIMEOUT_EXCEPTION = 1;
+
+    // The SDK returns an error of type COLUMNAR_ERROR
+    // when a connection attempt fast fails without any sub exception like timeout.
+    AS_COLUMNAR_ERROR = 2;
+
+    // The SDK returns a error of some other type of topology tracking error when a connection attempt fails.
+    OTHER_BOOTSTRAP_ERROR = 3;
+
+    // The SDK returns a error which driver can't understand
+    UNKNOWN_BOOTSTRAP_ERROR_EXCEPTION = 4;
+  }
+
+  // The type of error sdk returns if cluster connection fails when user passes wrong username or password.
+  InvalidCredentialErrorType invalid_cred_error_type = 1;
+  BootstrapErrorType bootstrap_error_type = 2;
+}
+
 message FetchPerformerCapsRequest {
 }
 
@@ -184,14 +236,16 @@ message FetchPerformerCapsResponse {
   //       created with the same mode.
 
   // ColumnarService.ClusterNewInstance and everything that exists at time of commit under those messages.
-  map<int32, PerApiElementGeneric> cluster_new_instance = 3;
+  map<int32, PerApiElementClusterNewInstance> cluster_new_instance = 3;
 
   // ColumnarService.ClusterClose and ColumnarService.CloseAllClusters, and everything that exists at time of commit under those messages.
-  map<int32, PerApiElementGeneric> cluster_close = 4;
+  map<int32, PerApiElementClusterClose> cluster_close = 4;
 
   // ColumnarCrossService.ExecuteQuery and everything that exists at time of commit under those messages, for instance.executeQuery().
   map<int32, PerApiElementExecuteQuery> cluster_execute_query = 5;
 
   // ColumnarCrossService.ExecuteQuery and everything that exists at time of commit under those messages, for scope.executeQuery().
   map<int32, PerApiElementExecuteQuery> scope_execute_query = 6;
+
+  map<int32, SdkConnectionError> sdk_connection_error = 7;
 }
