@@ -4,18 +4,13 @@ package fit.columnar;
 option java_package = "fit.columnar";
 option java_multiple_files = true;
 
-enum ColumnarErrorType {
-  // Should never be sent and performers do not need to handle it.  Included as a standard protobuf best practice.
-  COLUMNAR_EXCEPTION_UNSPECIFIED = 0;
-  COLUMNAR_EXCEPTION_INVALID_CREDENTIAL = 1;
-  COLUMNAR_EXCEPTION_TIMEOUT = 2;
-  COLUMNAR_EXCEPTION_QUERY = 3;
-}
-
 // An exception derived from ColumnarError
 message ColumnarError {
-  ColumnarErrorType type = 1;
-  optional Error cause = 2;
+  optional Error cause = 1;
+
+  // If the ColumnarError is a specific subclass exception, include the specific error.
+  // If not provided then this is to be a generic ColumnarError
+  optional SubColumnarError sub_exception = 2;
 
   // Broadly this is the result of outputting the exception - what the user would see if they wrote it into their logs.
   // E.g. for Java `ex.toString()`, for C++ `std::cout << err`.
@@ -40,6 +35,31 @@ message PlatformError {
   // Broadly this is the result of outputting the exception - what the user would see if they wrote it into their logs.
   // E.g. for Java `ex.toString()`.
   string as_string = 2;
+}
+
+// Used to represent the detailed QueryException sub-ColumnarError type
+message QueryException {
+  int32 error_code = 1;
+  string server_message = 2;
+}
+
+// Used to represent the detailed TimeoutException sub-ColumnarError type
+message TimeoutException {
+// No additional info here yet
+}
+
+// Used to represent the detailed InvalidCredentialException sub-ColumnarError type
+message InvalidCredentialException {
+  // No additional info here yet
+}
+
+// Represents the ColumnarError's sub types
+message SubColumnarError {
+  oneof sub_error {
+    QueryException query_exception = 1;
+    TimeoutException timeout_exception = 2;
+    InvalidCredentialException invalid_credential_exception = 3;
+  }
 }
 
 message Error {
