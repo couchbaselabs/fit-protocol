@@ -72,11 +72,9 @@ message ClusterNewInstanceRequest {
 // It can safely assume that if that instance does not exist, then this is a driver bug - it does not have to handle this.
 message ClusterCloseRequest {
   ExecutionContextClusterLevel execution_context = 1;
-  google.protobuf.Duration grace_period = 2;
 }
 
 // The performer should close all Columnar Cluster objects it has open.  In the RFC this is `cluster.close()`.
 message CloseAllColumnarClustersRequest {
   ExecutionContext execution_context = 1;
-  google.protobuf.Duration grace_period = 2;
 }
