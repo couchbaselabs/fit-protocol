@@ -17,7 +17,7 @@ message ClusterNewInstanceRequest {
       // trustOnlyPemFile is not exposed, as it will not work well with Docker-based FIT
       optional string trust_only_pem_string = 3;
       optional bool trust_only_platform = 4;
-      optional bool verify_server_certificate = 5;
+      optional bool disable_server_certificate_verification = 5;
       repeated string cipher_suites = 6;
     }
 
