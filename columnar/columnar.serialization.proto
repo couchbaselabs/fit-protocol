@@ -60,5 +60,10 @@ message ContentWas {
     bytes content_was_bytes = 1;
     google.protobuf.Struct content_was_map = 2;
     google.protobuf.ListValue content_was_list = 3;
+    bool content_was_boolean = 4;
+    string content_was_string = 5;
+    double content_was_double = 6;
+    int64 content_was_integer = 7;
+    google.protobuf.NullValue content_was_null = 8;
   }
 }
