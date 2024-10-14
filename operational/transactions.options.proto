@@ -12,6 +12,7 @@ import "hooks.transactions.proto";
 import "shared.collection.proto";
 import "shared.basic.proto";
 import "shared.transcoders.proto";
+import "google/protobuf/duration.proto";
 
 enum UnstagingMode {
   TIME_OPTIMIZED = 0;
@@ -60,6 +61,10 @@ message TransactionOptions {
 
 message TransactionGetOptions {
   optional shared.Transcoder transcoder = 1;
+}
+
+message TransactionGetMultiOptions {
+  optional google.protobuf.Duration bound = 1;
 }
 
 message TransactionInsertOptions {
