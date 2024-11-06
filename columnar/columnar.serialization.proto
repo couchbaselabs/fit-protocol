@@ -9,11 +9,15 @@ import "google/protobuf/struct.proto";
 message Deserializer {
   message JsonDeserializer {}
   message PassthroughDeserializer {}
+  // Target Data Type to deserialize to. Currently supporting basic types that are supported by ContentAs.
+  message CustomDeserializer {}
 
   oneof type {
     JsonDeserializer json = 1;
     // Will only be sent if performer declares support for supports_passthrough_deserializer.
     PassthroughDeserializer passthrough = 2;
+    // Will only be sent if performer declares support for supports_custom_deserializer.
+    CustomDeserializer custom = 3;
   }
 }
 
@@ -34,7 +38,7 @@ message ContentAs {
     bool as_byte_array = 1;
 
     // T = Map
-    // This will usually be used for JSON objects, e.g. the list items can be heterogenous and can be any of the
+    // This will usually be used for JSON objects, e.g. the list items can be heterogeneous and can be any of the
     // JSON types, including further lists or maps.
     // The result is returned in ContentTypes.content_was_map.
     // Pseudocode for performer:
@@ -43,13 +47,20 @@ message ContentAs {
     bool as_map = 2;
 
     // T = List
-    // This will usually be used for JSON lists, e.g. the list items can be heterogenous and can be any of the
+    // This will usually be used for JSON lists, e.g. the list items can be heterogeneous and can be any of the
     // JSON types, including further lists or maps.
     // The result is returned in ContentTypes.content_was_list.
     // Pseudocode for performer:
     //     List result = row.contentAs<List>()   or    queryResult.rowsAs<List>()
     //     byte[] returnOverGRPC = platformDependentMethodToSerializeToJSON(result)
     bool as_list = 3;
+
+    // T = String
+    // Intended to get the result as string, and return that directly.
+    // The result is returned in ContentTypes.content_was_string.
+    // Pseudocode for performer:
+    //     String result = row.contentAs<String>()   or    queryResult.rowsAs<String>()
+    bool as_string = 4;
   }
 }
 

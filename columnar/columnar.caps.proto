@@ -77,7 +77,7 @@ message PerApiElementExecuteQuery {
     // If your SDK does not fall into one of these paradigms, or you're not sure which is the best fit: please escalate for discussion.
   }
 
-    RowIteration row_iteration = 2;
+  RowIteration row_iteration = 2;
 
   // Covers how/if SDKs allow users to convert rows directly into specific types.
   enum RowDeserialization {
@@ -125,10 +125,11 @@ message PerApiElementExecuteQuery {
     // If your SDK does not fall into one of these paradigms, or you're not sure which is the best fit: please escalate for discussion.
   }
 
-    RowDeserialization row_deserialization = 3;
+  RowDeserialization row_deserialization = 3;
 
   // If the SDK includes the PassthroughDeserializer.  This is likely to go hand-in-hand with ROW_DESERIALIZATION_DYNAMIC_ROW_TYPING.
   bool supports_passthrough_deserializer = 4;
+  bool supports_custom_deserializer = 5;
 }
 
 message SdkConnectionError {
