@@ -8,8 +8,40 @@ import "google/protobuf/struct.proto";
 
 message Deserializer {
   message JsonDeserializer {}
+
   message PassthroughDeserializer {}
-  // Target Data Type to deserialize to. Currently supporting basic types that are supported by ContentAs.
+
+  /**
+  * **Custom Deserializer**
+  *
+  * Uses a custom `Deserializer` implementation with specific serialization and deserialization logic.
+  *
+  * **Deserialization Logic:**
+  * ```java
+  * public <T> T deserialize(Class<T> target, byte[] input) {
+  *     // Parse the byte array into a JSON object
+  *     JsonObject jsonObject = parseByteArrayToJsonObject(input);
+  *
+  *     // Upsert the "Serialized" field to false, "Serialized" key may or may not present while deserializing.
+  *     jsonObject.put("Serialized", false);
+  *
+  *     // Convert the JSON object back to the target type and return
+  *     return convertJsonObjectToTargetType(jsonObject, target);
+  * }
+  * ```
+  *
+  * **Implementation Details:**
+  * - **`parseByteArrayToJsonObject(byte[] input)`**:
+  *   - Deserializes the byte array into a `JsonObject`.
+  * - **`convertJsonObjectToTargetType(JsonObject jsonObject, Class<T> target)`**:
+  *   - Converts the `JsonObject` to the specified target type `T`.
+  *
+  * **Notes for Performers:**
+  * - Implementations in other languages should follow the same logical steps using equivalent constructs.
+  * - Proper error handling should be included to manage deserialization exceptions.
+  * - This deserializer assumes that the row is a JSON object. If the byte array cannot be parsed into a JSON object,
+  *   then the deserializer should return/raise an error.
+  */
   message CustomDeserializer {}
 
   oneof type {
