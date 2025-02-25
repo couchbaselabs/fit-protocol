@@ -5,6 +5,7 @@ import "columnar.errors.proto";
 package fit.columnar;
 option java_package = "fit.columnar";
 option java_multiple_files = true;
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/result";
 import "columnar.metadata.proto";
 
 message EmptyResultOrFailureResponse {

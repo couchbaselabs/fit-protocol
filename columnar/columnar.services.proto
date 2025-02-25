@@ -11,6 +11,7 @@ import "columnar.serialization.proto";
 package fit.columnar;
 option java_package = "fit.columnar";
 option java_multiple_files = true;
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol";
 
 // All RPCs related to the Columnar SDK.
 service ColumnarService {

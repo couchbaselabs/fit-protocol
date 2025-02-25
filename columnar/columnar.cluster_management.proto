@@ -7,6 +7,7 @@ import "google/protobuf/duration.proto";
 package fit.columnar;
 option java_package = "fit.columnar";
 option java_multiple_files = true;
+option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/clustermanagement";
 
 
 // Requests the performer use the SDK to create a connection to a Columnar cluster.
