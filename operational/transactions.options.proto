@@ -64,7 +64,13 @@ message TransactionGetOptions {
 }
 
 message TransactionGetMultiOptions {
-  optional google.protobuf.Duration bound = 1;
+  enum TransactionGetMultiMode {
+      PRIORITISE_LATENCY = 0;
+      DISABLE_READ_SKEW_DETECTION = 1;
+      PRIORITISE_READ_SKEW_DETECTION = 2;
+  }
+
+  optional TransactionGetMultiMode mode = 1;
 }
 
 message TransactionInsertOptions {
