@@ -121,4 +121,7 @@ enum Caps {
 
   // The SDK implements the num_vbuckets attribute of BucketSettings
   SDK_BUCKET_SETTINGS_NUM_VBUCKETS = 31;
+
+  // The SDK implements support for Vector Search prefiltering.
+  SDK_PREFILTER_VECTOR_SEARCH = 32;
 }
