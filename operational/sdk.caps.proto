@@ -118,4 +118,7 @@ enum Caps {
 
   // The SDK implements support for the Application Telemetry feature, as detailed in SDK-RFC 84.
   SDK_APP_TELEMETRY = 30;
+
+  // The SDK implements the num_vbuckets attribute of BucketSettings
+  SDK_BUCKET_SETTINGS_NUM_VBUCKETS = 31;
 }
