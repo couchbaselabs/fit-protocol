@@ -236,7 +236,7 @@ message CommandGetMulti {
     repeated ExpectedResult expected_result = 3;
 
     // Iff true, performer should use ctx.getMultiReplicasFromPreferredServerGroup() instead of ctx.getMulti()
-    bool getMultiReplicasFromPreferredServerGroup = 4;
+    bool get_multi_replicas_from_preferred_server_group = 4;
 }
 
 message CommandInsert {
