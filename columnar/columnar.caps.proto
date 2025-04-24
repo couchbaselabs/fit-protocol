@@ -194,6 +194,14 @@ enum SDK {
   SDK_CXX = 10;
 }
 
+enum AnalyticsProduct {
+  // The SDKs for Capella Columnar
+  COLUMNAR = 0;
+
+  // The SDKs for Enterprise Analytics and (in future) Capella Analytics
+  ANALYTICS = 1;
+}
+
 message FetchPerformerCapsResponse {
 
   SDK sdk = 1;
@@ -250,4 +258,6 @@ message FetchPerformerCapsResponse {
   map<int32, PerApiElementExecuteQuery> scope_execute_query = 6;
 
   map<int32, SdkConnectionError> sdk_connection_error = 7;
+
+  AnalyticsProduct analytics_product = 8;
 }
