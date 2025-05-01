@@ -124,4 +124,9 @@ enum Caps {
 
   // The SDK implements support for Vector Search prefiltering.
   SDK_PREFILTER_VECTOR_SEARCH = 32;
+
+  // The SDK supports setting both positional and named parameters for query and analytics_query.
+  //  * SDK3 Query RFC Revision #9
+  //  * SDK3 Analytics RFC Revision #3
+  SDK_QUERY_BOTH_POSITIONAL_AND_NAMED_PARAMETERS = 33;
 }
