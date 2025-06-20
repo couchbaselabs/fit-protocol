@@ -4,6 +4,7 @@ package fit.columnar;
 option java_package = "fit.columnar";
 option java_multiple_files = true;
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/query";
+option csharp_namespace = "Couchbase.Grpc.Protocol.Columnar";
 
 import "columnar.errors.proto";
 import "columnar.execution_context.proto";

@@ -4,6 +4,7 @@ package fit.columnar;
 option java_package = "fit.columnar";
 option java_multiple_files = true;
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/executioncontext";
+option csharp_namespace = "Couchbase.Grpc.Protocol.Columnar";
 
 // Some metadata and config on how the SDK should execute the request and return responses.
 message ExecutionContext {

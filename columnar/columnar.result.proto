@@ -6,6 +6,8 @@ package fit.columnar;
 option java_package = "fit.columnar";
 option java_multiple_files = true;
 option go_package = "github.com/couchbaselabs/transactions-fit-performer/protocol/result";
+option csharp_namespace = "Couchbase.Grpc.Protocol.Columnar";
+
 import "columnar.metadata.proto";
 
 message EmptyResultOrFailureResponse {
