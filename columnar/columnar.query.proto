@@ -49,7 +49,8 @@ message ExecuteQueryRequest {
       SCAN_CONSISTENCY_REQUEST_PLUS = 1;
     }
 
-    optional bool priority = 2;
+    // The priority option is NOT in the Analytics SDKs, its only in the Columnar SDKs
+    optional bool priority = 2 [deprecated = true];
     // A google.protobuf.ListValue is essentially a JSON array
     optional google.protobuf.ListValue parameters_positional = 3;
     // A google.protobuf.Struct is essentially a JSON object
