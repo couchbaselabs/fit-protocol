@@ -32,6 +32,7 @@ message ClusterNewInstanceRequest {
     optional Deserializer deserializer = 1;
     optional SecurityOptions security = 2;
     optional TimeoutOptions timeout = 3;
+    optional int32 max_retries = 4;
   }
 
   message Credential {

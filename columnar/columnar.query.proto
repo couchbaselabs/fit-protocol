@@ -61,6 +61,7 @@ message ExecuteQueryRequest {
     optional google.protobuf.Struct raw = 7;
     google.protobuf.Duration timeout = 8;
     optional Deserializer deserializer = 9;
+    optional int32 max_retries = 10;
   }
 
   oneof level {
