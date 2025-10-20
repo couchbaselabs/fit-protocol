@@ -129,4 +129,7 @@ enum Caps {
   //  * SDK3 Query RFC Revision #9
   //  * SDK3 Analytics RFC Revision #3
   SDK_QUERY_BOTH_POSITIONAL_AND_NAMED_PARAMETERS = 33;
+
+  // The SDK supports the Authenticator type.
+  SUPPORTS_AUTHENTICATOR = 34;
 }
