@@ -135,4 +135,7 @@ enum Caps {
 
   // The SDK supports setting a new Authenticator.
   SDK_SET_AUTHENTICATOR = 35;
+
+  // The SDK supports JwtAuthenticator.
+  SDK_JWT = 36;
 }

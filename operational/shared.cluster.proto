@@ -135,9 +135,14 @@ message Authenticator {
         string key = 2;
     }
 
+    message JwtAuthenticator {
+        string jwt = 1;
+    }
+
     oneof authenticator {
         PasswordAuthenticator password_auth = 1;
         CertificateAuthenticator certificate_auth = 2;
+        JwtAuthenticator jwt_auth = 3;
     }
 }
 
