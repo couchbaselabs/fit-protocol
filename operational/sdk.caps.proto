@@ -138,4 +138,12 @@ enum Caps {
 
   // The SDK supports JwtAuthenticator.
   SDK_JWT = 36;
+
+  // The SDK supports the stable OpenTelemetry semantic conventions (ExtendedObservability RFC Rev 26)
+  SDK_STABLE_OTEL_SEMANTIC_CONVENTIONS = 37;
+
+  // The SDK emits the stable OpenTelemetry semantic conventions by default.
+  // SDK_STABLE_OTEL_SEMANTIC_CONVENTIONS is a pre-requisite. This should only be declared by SDKs that do not
+  // support the legacy semantic conventions (C++ & wrappers, Rust).
+  SDK_STABLE_OTEL_SEMANTIC_CONVENTIONS_EMITTED_BY_DEFAULT = 38;
 }
