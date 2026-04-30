@@ -40,7 +40,7 @@ service ColumnarCrossService {
   // RPCs pertaining to server async query execution via StartQuery()
   rpc AsyncFetchStatus (AsyncFetchStatusRequest) returns (AsyncFetchStatusResponse);
   rpc AsyncCancelHandle (AsyncCancelHandleRequest) returns (EmptyResultOrFailureResponse);
-  rpc AsyncQueryStatusResultHandle (AsyncQueryStatusResultHandleRequest) returns (AsyncQueryStatusResultHandleResponse);
+  rpc AsyncQueryStatusResultHandle (AsyncQueryStatusResultHandleRequest) returns (EmptyResultOrFailureResponse);
   rpc AsyncFetchResults (AsyncFetchResultsRequest) returns (EmptyResultOrFailureResponse);
   rpc AsyncDiscardResults (AsyncDiscardResultsRequest) returns (EmptyResultOrFailureResponse);
 

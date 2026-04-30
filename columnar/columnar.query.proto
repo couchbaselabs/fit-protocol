@@ -341,13 +341,6 @@ message AsyncQueryStatusResultHandleRequest {
     string query_handle = 1;
 }
 
-message AsyncQueryStatusResultHandleResponse {
-    oneof result {
-        bool success = 1;
-        Error failure = 2;
-    }
-}
-
 // AsyncCancelHandleRequest
 // ==================
 // Calls the cancel function on the QueryHandle returned from startQuery().
